@@ -1,0 +1,185 @@
+# ============================================
+# Expiry Rescue App - Combined .gitignore
+# For both web-app (Nuxt 3) and web-server (Spring Boot)
+# ============================================
+
+# ============================================
+# Operating System Files
+# ============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.directory
+
+# ============================================
+# IDE and Editor Files
+# ============================================
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Eclipse
+.project
+.classpath
+.settings/
+.metadata/
+
+# NetBeans
+nbproject/
+nbbuild/
+nbdist/
+
+# JetBrains
+.idea_modules/
+*.swp
+*.swo
+*~
+
+# ============================================
+# Node.js / Nuxt 3 (web-app)
+# ============================================
+web-app/node_modules/
+web-app/.nuxt/
+web-app/.output/
+web-app/dist/
+web-app/.cache/
+web-app/.temp/
+web-app/.nitro/
+web-app/.env
+web-app/.env.local
+web-app/.env.*.local
+web-app/npm-debug.log*
+web-app/yarn-debug.log*
+web-app/yarn-error.log*
+web-app/pnpm-debug.log*
+web-app/.pnpm-store/
+web-app/.eslintcache
+
+# Logs
+web-app/logs/
+web-app/*.log
+
+# Runtime data
+web-app/pids/
+web-app/*.pid
+web-app/*.seed
+web-app/*.pid.lock
+
+# ============================================
+# Java / Spring Boot / Maven (web-server)
+# ============================================
+web-server/target/
+web-server/build/
+web-server/out/
+web-server/.gradle/
+web-server/gradle/
+web-server/gradlew
+web-server/gradlew.bat
+web-server/.mvn/
+web-server/mvnw
+web-server/mvnw.cmd
+
+# Spring Boot
+web-server/*.jar
+web-server/*.war
+web-server/*.ear
+web-server/*.class
+web-server/.springBeans
+web-server/.sts4-cache/
+
+# Logs
+web-server/logs/
+web-server/*.log
+web-server/log/
+
+# Database
+web-server/*.db
+web-server/*.sqlite
+web-server/*.h2.db
+
+# Environment variables
+web-server/.env
+web-server/.env.local
+web-server/application-local.properties
+web-server/application-local.yml
+
+# Test coverage
+web-server/coverage/
+web-server/.nyc_output/
+web-server/jacoco/
+
+# ============================================
+# Database Files
+# ============================================
+*.db
+*.sqlite
+*.sqlite3
+
+# ============================================
+# Security & Credentials
+# ============================================
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.jks
+credentials.json
+secrets.json
+.env
+.env.local
+.env.*.local
+application-secret.properties
+application-secret.yml
+
+# ============================================
+# Build Artifacts
+# ============================================
+dist/
+build/
+target/
+out/
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
+# ============================================
+# Temporary Files
+# ============================================
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# ============================================
+# Package Manager Lock Files (Optional)
+# Uncomment if you want to ignore lock files
+# ============================================
+# web-app/package-lock.json
+# web-app/yarn.lock
+# web-app/pnpm-lock.yaml
