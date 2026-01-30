@@ -100,6 +100,7 @@ web-server/gradlew.bat
 web-server/.mvn/
 web-server/mvnw
 web-server/mvnw.cmd
+web-server/run.bat
 
 # Spring Boot
 web-server/*.jar
