@@ -22,7 +22,7 @@ export const useAuthStore = defineStore('auth', {
       if (typeof window !== 'undefined') {
         const token = localStorage.getItem('auth_token')
         const user = localStorage.getItem('auth_user')
-        
+
         if (token) {
           this.token = token
         }
@@ -107,11 +107,51 @@ export const useAuthStore = defineStore('auth', {
     },
 
     /**
+     * Fetch user profile data from backend
+     */
+    async fetchUser() {
+      if (!this.token) return
+
+      try {
+        const runtimeConfig = useRuntimeConfig()
+        const endpoint = `${runtimeConfig.public.apiBase}/auth/me`
+        console.log('🔍 Fetching user profile from:', endpoint)
+        console.log('🔑 Using token:', this.token.substring(0, 20) + '...')
+
+        const response = await fetch(endpoint, {
+          headers: {
+            'Authorization': `Bearer ${this.token}`
+          }
+        })
+
+        console.log('📡 Response status:', response.status)
+
+        if (response.ok) {
+          const userData = await response.json()
+          console.log('✅ User data received:', userData)
+          this.user = userData.data
+
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('auth_user', JSON.stringify(userData.data))
+          }
+        } else {
+          console.error('❌ Failed to fetch user data, status:', response.status)
+          const errorText = await response.text()
+          console.error('Error response:', errorText)
+        }
+      } catch (error) {
+        console.error('❌ Error fetching user data:', error)
+      }
+    },
+
+    /**
      * Handle OAuth2 callback with token
      */
-    handleOAuthCallback(token) {
+    async handleOAuthCallback(token) {
       if (token) {
         this.setAuth(token)
+        // Fetch user data after setting token
+        await this.fetchUser()
         return true
       }
       return false
