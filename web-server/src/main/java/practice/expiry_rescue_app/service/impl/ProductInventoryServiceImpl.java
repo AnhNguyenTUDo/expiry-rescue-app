@@ -8,7 +8,7 @@ import practice.expiry_rescue_app.model.product.CreateProductInventoryRequest;
 import practice.expiry_rescue_app.model.product.ProductInventoryResponse;
 import practice.expiry_rescue_app.model.product.UpdateProductInventoryRequest;
 import practice.expiry_rescue_app.entity.ProductInventory;
-import practice.expiry_rescue_app.entity.enums.InventoryStatus;
+import practice.expiry_rescue_app.enums.InventoryStatus;
 import practice.expiry_rescue_app.service.ProductInventoryService;
 
 import java.util.Date;

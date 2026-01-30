@@ -20,25 +20,31 @@ public class OrderItem extends BaseEntity {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_inventory_id", nullable = false)
-    private ProductInventory productInventory;
+    @Column(nullable = false)
+    private Long productInventoryId;
 
+    @Column(nullable = false)
+    private Long productMasterId;
+
+    @Column(nullable = false)
     private String productName;
-
-    private String supermarketName;
 
     @Column(nullable = false)
     private Integer quantity;
 
-    private String unit;
-
-    @Column(precision = 10, scale = 2)
-    private BigDecimal originalPrice;
-
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    private BigDecimal unitPrice;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal subtotal;
+
+    @Column(nullable = false)
+    private Long supermarketId;
+
+    @Column(nullable = false)
+    private String supermarketName;
+
+    @Column(nullable = false)
+    private Long expiryDate;
 }
+

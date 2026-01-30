@@ -3,7 +3,7 @@ package practice.expiry_rescue_app.service;
 import practice.expiry_rescue_app.model.product.CreateProductInventoryRequest;
 import practice.expiry_rescue_app.model.product.ProductInventoryResponse;
 import practice.expiry_rescue_app.model.product.UpdateProductInventoryRequest;
-import practice.expiry_rescue_app.entity.enums.InventoryStatus;
+import practice.expiry_rescue_app.enums.InventoryStatus;
 
 import java.util.List;
 import java.util.UUID;

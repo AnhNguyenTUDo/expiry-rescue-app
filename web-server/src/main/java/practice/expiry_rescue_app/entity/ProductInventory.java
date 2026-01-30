@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import practice.expiry_rescue_app.entity.enums.InventoryStatus;
+import practice.expiry_rescue_app.enums.InventoryStatus;
 
 import java.math.BigDecimal;
 
@@ -37,7 +37,7 @@ public class ProductInventory extends BaseEntity {
     @Column(nullable = false)
     private Long expiryDate;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private InventoryStatus status = InventoryStatus.AVAILABLE;
 

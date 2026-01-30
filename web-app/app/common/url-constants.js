@@ -15,5 +15,12 @@ export default {
     product_category: {
       GET_ALL_CATEGORIES: '/product-categories',
     },
+    order: {
+      CREATE_ORDER: '/orders',
+      GET_USER_ORDERS: '/orders',
+      GET_ORDER_BY_ID: (id) => `/orders/${id}`,
+      CANCEL_ORDER: (id) => `/orders/${id}/cancel`,
+      DELETE_ORDER: (id) => `/orders/${id}`,
+    },
   },
 }
