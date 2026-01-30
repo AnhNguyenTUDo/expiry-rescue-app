@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import practice.expiry_rescue_app.entity.ProductInventory;
-import practice.expiry_rescue_app.entity.enums.InventoryStatus;
+import practice.expiry_rescue_app.enums.InventoryStatus;
 
 import java.util.List;
 import java.util.UUID;

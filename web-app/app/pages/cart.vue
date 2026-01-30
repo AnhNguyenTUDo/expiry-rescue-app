@@ -91,7 +91,7 @@
                     <button
                       @click="cartStore.decreaseQuantity(item.inventoryId)"
                       :disabled="item.quantity <= 1"
-                      class="px-3 py-1 text-lg font-bold hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                      class="px-3 py-1 text-lg font-bold hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     >
                       −
                     </button>
@@ -101,7 +101,7 @@
                     <button
                       @click="cartStore.increaseQuantity(item.inventoryId)"
                       :disabled="item.quantity >= item.quantityAvailable"
-                      class="px-3 py-1 text-lg font-bold hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                      class="px-3 py-1 text-lg font-bold hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     >
                       +
                     </button>
@@ -119,7 +119,7 @@
                 </div>
                 <button
                   @click="cartStore.removeFromCart(item.inventoryId)"
-                  class="text-red-600 hover:text-red-800 text-sm font-semibold"
+                  class="text-red-600 hover:text-red-800 text-sm font-semibold cursor-pointer"
                 >
                   Delete
                 </button>
@@ -151,16 +151,17 @@
         <div class="flex gap-3">
           <button
             @click="cartStore.clearCart()"
-            class="flex-1 py-3 px-6 rounded-lg font-semibold text-lg bg-gray-500 text-white hover:bg-gray-600 transition"
+            class="flex-1 py-3 px-6 rounded-lg font-semibold text-lg bg-gray-500 text-white hover:bg-gray-600 transition cursor-pointer"
           >
             Clear Cart
           </button>
           <button
+            @click="handleCheckout"
             :disabled="cartStore.selectedItems.length === 0"
             class="flex-1 py-3 px-6 rounded-lg font-semibold text-lg transition"
             :class="cartStore.selectedItems.length === 0
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-green-600 text-white hover:bg-green-700'"
+              : 'bg-green-600 text-white hover:bg-green-700 cursor-pointer'"
           >
             Checkout ({{ cartStore.selectedItems.length }})
           </button>
@@ -171,9 +172,54 @@
 </template>
 
 <script setup>
-import { useCartStore } from '~/stores/cart';
+import { useCartStore } from '~/stores/cart'
+import { useOrderStore } from '~/stores/order'
+import { useRouter } from 'vue-router'
 
-const cartStore = useCartStore();
+const cartStore = useCartStore()
+const orderStore = useOrderStore()
+const router = useRouter()
+
+// Checkout handler
+const handleCheckout = async () => {
+  if (cartStore.selectedItems.length === 0) {
+    alert('Please select items to checkout')
+    return
+  }
+
+  try {
+    // Prepare order data
+    const orderData = {
+      items: cartStore.selectedItems.map(item => ({
+        inventoryId: item.inventoryId,
+        productMasterId: item.productMasterId,
+        productName: item.productName,
+        quantity: item.quantity,
+        unitPrice: item.sellingPrice,
+        supermarketId: item.supermarketId,
+        supermarketName: item.supermarketName,
+        expiryDate: item.expiryDate,
+      }))
+    }
+
+    // Create order
+    const order = await orderStore.createOrder(orderData)
+
+    if (order) {
+      // Remove checked out items from cart
+      cartStore.selectedItems.forEach(item => {
+        cartStore.removeFromCart(item.inventoryId)
+      })
+
+      // Redirect to order detail page
+      alert(`Order #${order.orderNumber} created successfully!`)
+      router.push(`/orders/${order.id}`)
+    }
+  } catch (error) {
+    console.error('Checkout failed:', error)
+    alert('Failed to create order. Please try again.')
+  }
+}
 
 // Helper functions
 const formatDate = (timestamp) => {

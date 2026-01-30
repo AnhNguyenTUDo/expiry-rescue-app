@@ -1,7 +1,7 @@
 package practice.expiry_rescue_app.business;
 
 import practice.expiry_rescue_app.entity.Staff;
-import practice.expiry_rescue_app.entity.enums.StaffRole;
+import practice.expiry_rescue_app.enums.StaffRole;
 
 import java.util.List;
 import java.util.UUID;

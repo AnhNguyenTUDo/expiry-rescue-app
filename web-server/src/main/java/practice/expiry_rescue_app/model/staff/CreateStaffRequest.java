@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import practice.expiry_rescue_app.entity.enums.StaffRole;
+import practice.expiry_rescue_app.enums.StaffRole;
 
 @Data
 @NoArgsConstructor

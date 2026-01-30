@@ -1,7 +1,7 @@
 package practice.expiry_rescue_app.business;
 
 import practice.expiry_rescue_app.entity.ProductInventory;
-import practice.expiry_rescue_app.entity.enums.InventoryStatus;
+import practice.expiry_rescue_app.enums.InventoryStatus;
 
 import java.math.BigDecimal;
 import java.util.List;
