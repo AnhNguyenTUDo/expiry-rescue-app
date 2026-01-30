@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 @Slf4j
-@Component
+// @Component // DISABLED: This is legacy code. The active filter is in config/security package
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 

@@ -9,7 +9,7 @@ import practice.expiry_rescue_app.business.StaffBusiness;
 import practice.expiry_rescue_app.exception.DuplicateResourceException;
 import practice.expiry_rescue_app.exception.ResourceNotFoundException;
 import practice.expiry_rescue_app.entity.Staff;
-import practice.expiry_rescue_app.entity.enums.StaffRole;
+import practice.expiry_rescue_app.enums.StaffRole;
 import practice.expiry_rescue_app.repository.StaffRepository;
 
 import java.util.Date;

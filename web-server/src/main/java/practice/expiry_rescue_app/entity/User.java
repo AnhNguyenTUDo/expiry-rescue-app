@@ -22,11 +22,15 @@ public class User extends BaseEntity {
 
     private String phone;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String passwordHash;
 
     private String fullName;
 
     @Column(nullable = false)
     private Boolean isActive = true;
+
+    private String provider;
+    private String providerId;
+    private String profilePictureUrl;
 }

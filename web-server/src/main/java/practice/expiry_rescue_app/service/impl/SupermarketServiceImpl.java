@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import practice.expiry_rescue_app.business.SupermarketBusiness;
+import practice.expiry_rescue_app.enums.InventoryStatus;
 import practice.expiry_rescue_app.model.product.ProductInventoryResponse;
 import practice.expiry_rescue_app.model.supermarket.CreateSupermarketRequest;
 import practice.expiry_rescue_app.model.supermarket.SupermarketResponse;
@@ -171,7 +172,7 @@ public class SupermarketServiceImpl implements SupermarketService {
         response.setSellingPrice(inventory.getSellingPrice());
         response.setQuantityAvailable(inventory.getQuantityAvailable());
         response.setExpiryDate(inventory.getExpiryDate());
-        response.setStatus(inventory.getStatus());
+        response.setStatus(InventoryStatus.fromValue(inventory.getStatus().getValue()));
         if (inventory.getCreatedBy() != null) {
             response.setCreatedById(inventory.getCreatedBy().getId());
             response.setCreatedByName(inventory.getCreatedBy().getFullName());
