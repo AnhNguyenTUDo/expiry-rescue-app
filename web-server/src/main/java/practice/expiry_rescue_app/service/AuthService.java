@@ -15,4 +15,6 @@ public interface AuthService {
     String refreshToken(String token);
 
     void logout(String token);
+
+    Object getCurrentUserDetails(String email);
 }
