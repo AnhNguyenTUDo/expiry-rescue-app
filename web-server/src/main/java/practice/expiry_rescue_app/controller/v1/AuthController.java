@@ -40,4 +40,13 @@ public class AuthController {
         authService.logout(jwt);
         return ResponseEntity.ok(ApiResponse.success("Logout successful", null));
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<Object>> getCurrentUser(
+            org.springframework.security.core.Authentication authentication) {
+        log.info("Get current user request received");
+        String email = authentication.getName();
+        Object userDetails = authService.getCurrentUserDetails(email);
+        return ResponseEntity.ok(ApiResponse.success("User details retrieved successfully", userDetails));
+    }
 }

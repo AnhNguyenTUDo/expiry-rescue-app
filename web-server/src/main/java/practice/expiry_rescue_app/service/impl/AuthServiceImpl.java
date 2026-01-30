@@ -10,7 +10,12 @@ import practice.expiry_rescue_app.model.auth.LoginRequest;
 import practice.expiry_rescue_app.model.auth.LoginResponse;
 import practice.expiry_rescue_app.model.auth.StaffInfoDto;
 import practice.expiry_rescue_app.entity.Staff;
+import practice.expiry_rescue_app.entity.User;
+import practice.expiry_rescue_app.repository.UserRepository;
 import practice.expiry_rescue_app.service.AuthService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -19,6 +24,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthBusiness authBusiness;
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
     @Value("${jwt.expiration}")
     private Long jwtExpiration;
@@ -61,6 +67,25 @@ public class AuthServiceImpl implements AuthService {
         // Since JWT is stateless, we don't need to do anything here
         // In production, you might want to blacklist the token
         log.info("Logout successful");
+    }
+
+    @Override
+    public Object getCurrentUserDetails(String email) {
+        log.debug("Fetching user details for email: {}", email);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+
+        Map<String, Object> userDetails = new HashMap<>();
+        userDetails.put("id", user.getId());
+        userDetails.put("email", user.getEmail());
+        userDetails.put("username", user.getUsername());
+        userDetails.put("fullName", user.getFullName());
+        userDetails.put("profilePictureUrl", user.getProfilePictureUrl());
+        userDetails.put("provider", user.getProvider());
+
+        log.info("User details retrieved successfully for email: {}", email);
+        return userDetails;
     }
 
     private StaffInfoDto mapToStaffInfoDto(Staff staff) {
