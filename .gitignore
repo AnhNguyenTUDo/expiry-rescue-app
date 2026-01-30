@@ -183,3 +183,5 @@ out/
 # web-app/package-lock.json
 # web-app/yarn.lock
 # web-app/pnpm-lock.yaml
+
+env-variables/
