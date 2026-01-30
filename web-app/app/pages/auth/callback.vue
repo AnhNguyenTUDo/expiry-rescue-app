@@ -91,8 +91,8 @@ onMounted(async () => {
   await new Promise(resolve => setTimeout(resolve, 1000))
 
   if (token) {
-    // Success: Store the token
-    authStore.handleOAuthCallback(token)
+    // Success: Store the token and fetch user profile
+    await authStore.handleOAuthCallback(token)
     isProcessing.value = false
     isSuccess.value = true
 
