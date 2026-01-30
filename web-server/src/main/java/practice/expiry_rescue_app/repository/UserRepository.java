@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface UserRepository extends BaseRepository<User> {
 
     Optional<User> findByUsernameAndDeletedAtIsNull(String username);
+    Optional<User> findByProviderAndProviderId(String provider, String providerId);
+    Optional<User> findByEmail(String email);
 }

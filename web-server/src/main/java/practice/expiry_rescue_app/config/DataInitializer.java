@@ -6,7 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import practice.expiry_rescue_app.entity.Staff;
-import practice.expiry_rescue_app.entity.enums.StaffRole;
+import practice.expiry_rescue_app.enums.StaffRole;
 import practice.expiry_rescue_app.repository.StaffRepository;
 
 @Slf4j

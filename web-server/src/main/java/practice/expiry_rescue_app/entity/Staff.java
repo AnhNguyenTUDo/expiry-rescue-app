@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import practice.expiry_rescue_app.entity.enums.StaffRole;
+import practice.expiry_rescue_app.enums.StaffRole;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

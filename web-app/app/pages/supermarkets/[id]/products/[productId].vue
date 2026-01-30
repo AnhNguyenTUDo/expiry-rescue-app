@@ -124,7 +124,7 @@
                 class="w-full py-3 px-6 rounded-lg font-semibold text-lg transition"
                 :class="isInCart
                   ? 'bg-gray-400 text-white cursor-not-allowed'
-                  : 'bg-green-600 text-white hover:bg-green-700'"
+                  : 'bg-green-600 text-white hover:bg-green-700 cursor-pointer'"
               >
                 {{ isInCart ? '✓ Added to Cart' : 'Add to Cart' }}
               </button>
@@ -204,11 +204,13 @@ import { useRoute, useRouter } from "vue-router";
 import ProductInventoryService from "~/services/product-inventory.service";
 import { useSupermarketStore } from "~/stores/supermarket";
 import { useCartStore } from "~/stores/cart";
+import { useAuthStore } from "~/stores/auth";
 
 const route = useRoute();
 const router = useRouter();
 const supermarketStore = useSupermarketStore();
 const cartStore = useCartStore();
+const authStore = useAuthStore();
 
 const supermarketId = route.params.id;
 const productMasterId = route.params.productId;
@@ -448,6 +450,14 @@ const isInCart = computed(() => {
 });
 
 const addToCart = () => {
+  // Check if user is authenticated
+  if (!authStore.isAuthenticated) {
+    // Redirect to login page
+    navigateTo('/login')
+    return
+  }
+  
+  // If authenticated, proceed with adding to cart
   if (currentItem.value) {
     cartStore.addToCart({
       inventoryId: currentItem.value.id,

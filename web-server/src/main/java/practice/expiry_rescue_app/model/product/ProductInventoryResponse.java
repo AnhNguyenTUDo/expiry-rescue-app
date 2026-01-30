@@ -3,7 +3,7 @@ package practice.expiry_rescue_app.model.product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import practice.expiry_rescue_app.entity.enums.InventoryStatus;
+import practice.expiry_rescue_app.enums.InventoryStatus;
 
 import java.math.BigDecimal;
 import java.util.UUID;

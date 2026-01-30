@@ -46,7 +46,7 @@
               {{ cartStore.totalItems > 99 ? '99+' : cartStore.totalItems }}
             </span>
           </NuxtLink>
-          <button class="btn btn-outline-light">Login</button>
+          <button class="btn btn-outline-light cursor-pointer">Login</button>
         </nav>
       </div>
     </header>

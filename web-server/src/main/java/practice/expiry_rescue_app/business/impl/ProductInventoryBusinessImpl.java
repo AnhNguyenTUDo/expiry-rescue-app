@@ -13,7 +13,7 @@ import practice.expiry_rescue_app.entity.ProductInventory;
 import practice.expiry_rescue_app.entity.ProductMaster;
 import practice.expiry_rescue_app.entity.Staff;
 import practice.expiry_rescue_app.entity.Supermarket;
-import practice.expiry_rescue_app.entity.enums.InventoryStatus;
+import practice.expiry_rescue_app.enums.InventoryStatus;
 import practice.expiry_rescue_app.repository.ProductInventoryRepository;
 
 import java.math.BigDecimal;
