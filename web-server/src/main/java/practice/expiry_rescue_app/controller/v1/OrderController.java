@@ -1,6 +1,7 @@
 package practice.expiry_rescue_app.controller.v1;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,12 +22,21 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(
+    public ResponseEntity<?> createOrder(
             @RequestBody CreateOrderRequest request,
             Authentication authentication) {
-        String userEmail = authentication.getName();
-        OrderResponse response = orderService.createOrder(request, userEmail);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        try {
+            String userEmail = authentication.getName();
+            OrderResponse response = orderService.createOrder(request, userEmail);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (OptimisticLockingFailureException | RuntimeException e) {
+            if (e.getCause() instanceof OptimisticLockingFailureException
+                    || e instanceof OptimisticLockingFailureException) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("Stock was updated by another request. Please try again.");
+            }
+            throw e;
+        }
     }
 
     @GetMapping
