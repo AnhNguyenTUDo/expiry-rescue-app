@@ -13,6 +13,7 @@ import java.util.UUID;
 @Repository
 public interface ProductInventoryRepository extends BaseRepository<ProductInventory>, JpaSpecificationExecutor<ProductInventory> {
 
+
     List<ProductInventory> findByStatusAndDeletedAtIsNull(InventoryStatus status);
 
     @Query("SELECT pi FROM ProductInventory pi " +

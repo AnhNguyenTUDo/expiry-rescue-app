@@ -17,6 +17,9 @@ import java.math.BigDecimal;
 @Table(name = "product_inventory")
 public class ProductInventory extends BaseEntity {
 
+    @Version
+    private Long version;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_master_id", nullable = false)
     private ProductMaster productMaster;
