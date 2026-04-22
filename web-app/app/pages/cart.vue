@@ -192,13 +192,7 @@ const handleCheckout = async () => {
     const orderData = {
       items: cartStore.selectedItems.map(item => ({
         inventoryId: item.inventoryId,
-        productMasterId: item.productMasterId,
-        productName: item.productName,
         quantity: item.quantity,
-        unitPrice: item.sellingPrice,
-        supermarketId: item.supermarketId,
-        supermarketName: item.supermarketName,
-        expiryDate: item.expiryDate,
       }))
     }
 

@@ -38,7 +38,7 @@
             </div>
             <div>
               <p class="text-sm text-gray-600">Total Amount</p>
-              <p class="text-2xl font-bold text-green-600">{{ order.totalAmount.toLocaleString() }}₫</p>
+              <p class="text-2xl font-bold text-green-600">{{ (order.totalAmount ?? 0).toLocaleString() }}₫</p>
             </div>
           </div>
         </div>
@@ -77,8 +77,8 @@
                 <p class="text-sm text-gray-500">Expires: {{ formatDate(item.expiryDate) }}</p>
               </div>
               <div class="text-right">
-                <p class="text-gray-600">{{ item.quantity }} × {{ item.unitPrice.toLocaleString() }}₫</p>
-                <p class="text-lg font-bold text-green-600">{{ item.subtotal.toLocaleString() }}₫</p>
+                <p class="text-gray-600">{{ item.quantity }} × {{ (item.price ?? 0).toLocaleString() }}₫</p>
+                <p class="text-lg font-bold text-green-600">{{ (item.subtotal ?? 0).toLocaleString() }}₫</p>
               </div>
             </div>
           </div>
@@ -99,10 +99,8 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useOrderStore } from '~/stores/order'
+import { useAuthStore } from '~/stores/auth'
 
-definePageMeta({
-  middleware: 'auth'
-})
 
 const route = useRoute()
 const router = useRouter()

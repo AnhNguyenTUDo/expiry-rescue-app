@@ -95,7 +95,7 @@
                 </div>
 
                 <!-- Menu Items -->
-                <div class="py-2">
+                <!-- <div class="py-2">
                   <NuxtLink
                     to="/profile"
                     class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 transition-colors duration-200"
@@ -135,7 +135,7 @@
                     </svg>
                     Logout
                   </button>
-                </div>
+                </div> -->
               </div>
             </transition>
           </div>
