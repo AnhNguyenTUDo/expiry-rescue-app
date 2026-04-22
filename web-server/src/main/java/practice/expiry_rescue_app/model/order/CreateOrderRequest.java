@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -17,13 +17,7 @@ public class CreateOrderRequest {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class OrderItemRequest {
-        private Long inventoryId;
-        private Long productMasterId;
-        private String productName;
+        private UUID inventoryId;
         private Integer quantity;
-        private BigDecimal unitPrice;
-        private Long supermarketId;
-        private String supermarketName;
-        private Long expiryDate;
     }
 }

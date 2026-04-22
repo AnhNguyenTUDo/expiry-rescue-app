@@ -34,8 +34,8 @@
 
         <nav class="flex gap-3">
           <NuxtLink to="/" class="btn btn-outline-light">Home</NuxtLink>
-          <button class="btn btn-outline-light">Products</button>
-          <button class="btn btn-outline-light">About</button>
+          <!-- <button class="btn btn-outline-light">Products</button>
+          <button class="btn btn-outline-light">About</button> -->
           <NuxtLink to="/cart" class="btn btn-outline-light relative">
             Cart
             <span v-if="cartStore.totalItems > 0" class="ml-1">({{ cartStore.totalItems }})</span>

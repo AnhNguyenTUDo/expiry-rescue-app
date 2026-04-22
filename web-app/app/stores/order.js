@@ -1,166 +1,184 @@
 import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
 import OrderService from '~/services/order.service'
 
-export const useOrderStore = defineStore('order', {
-    state: () => ({
-        orders: [],
-        currentOrder: null,
-        loading: false,
-        error: null,
-    }),
+export const useOrderStore = defineStore('order', () => {
+    // State
+    const orders = ref([])
+    const currentOrder = ref(null)
+    const loading = ref(false)
+    const error = ref(null)
 
-    getters: {
-        getOrderById: (state) => (id) => {
-            return state.orders.find(order => order.id === id)
-        },
+    // Getters
+    const getOrderById = computed(() => (id) => {
+        return orders.value.find(order => order.id === id)
+    })
 
-        confirmedOrders: (state) => {
-            return state.orders.filter(order => order.status === 'CONFIRMED')
-        },
+    const confirmedOrders = computed(() => {
+        return orders.value.filter(order => order.status === 'CONFIRMED')
+    })
 
-        cancelledOrders: (state) => {
-            return state.orders.filter(order => order.status === 'CANCELLED')
-        },
-    },
+    const cancelledOrders = computed(() => {
+        return orders.value.filter(order => order.status === 'CANCELLED')
+    })
 
-    actions: {
-        async createOrder(orderData) {
-            this.loading = true
-            this.error = null
+    // Actions
+    async function createOrder(orderData) {
+        loading.value = true
+        error.value = null
 
-            try {
-                const response = await OrderService.createOrder(orderData, (error) => {
-                    this.error = error.response?.data?.message || 'Failed to create order'
-                })
+        try {
+            const response = await OrderService.createOrder(orderData, (err) => {
+                error.value = err.response?.data?.message || 'Failed to create order'
+            })
 
-                if (response && response.data) {
-                    this.orders.unshift(response.data)
-                    return response.data
-                }
-            } catch (error) {
-                this.error = error.message
-                throw error
-            } finally {
-                this.loading = false
+            if (response && response.data) {
+                orders.value.unshift(response.data)
+                return response.data
             }
-        },
+        } catch (err) {
+            error.value = err.message
+            throw err
+        } finally {
+            loading.value = false
+        }
+    }
 
-        async fetchUserOrders() {
-            this.loading = true
-            this.error = null
+    async function fetchUserOrders() {
+        loading.value = true
+        error.value = null
 
-            try {
-                const response = await OrderService.getUserOrders((error) => {
-                    this.error = error.response?.data?.message || 'Failed to fetch orders'
-                })
-
-                if (response && response.data) {
-                    this.orders = response.data
-                }
-            } catch (error) {
-                this.error = error.message
-            } finally {
-                this.loading = false
+        try {
+            const response = await OrderService.getUserOrders((err) => {
+                error.value = err.response?.data?.message || 'Failed to fetch orders'
+            })
+            if (response) {
+                orders.value = response
             }
-        },
+        } catch (err) {
+            error.value = err.message
+        } finally {
+            loading.value = false
+        }
+    }
 
-        async searchOrders(status, searchQuery) {
-            this.loading = true
-            this.error = null
+    async function searchOrders(status, searchQuery) {
+        loading.value = true
+        error.value = null
 
-            try {
-                const response = await OrderService.searchOrders(status, searchQuery, (error) => {
-                    this.error = error.response?.data?.message || 'Failed to search orders'
-                })
+        try {
+            const response = await OrderService.searchOrders(status, searchQuery, (err) => {
+                error.value = err.response?.data?.message || 'Failed to search orders'
+            })
 
-                if (response && response.data) {
-                    this.orders = response.data
-                }
-            } catch (error) {
-                this.error = error.message
-            } finally {
-                this.loading = false
+            if (response && response.data) {
+                orders.value = response.data
             }
-        },
+        } catch (err) {
+            error.value = err.message
+        } finally {
+            loading.value = false
+        }
+    }
 
-        async fetchOrderById(orderId) {
-            this.loading = true
-            this.error = null
+    async function fetchOrderById(orderId) {
+        loading.value = true
+        error.value = null
 
-            try {
-                const response = await OrderService.getOrderById(orderId, (error) => {
-                    this.error = error.response?.data?.message || 'Failed to fetch order'
-                })
-
-                if (response && response.data) {
-                    this.currentOrder = response.data
-                    return response.data
-                }
-            } catch (error) {
-                this.error = error.message
-                throw error
-            } finally {
-                this.loading = false
+        try {
+            const response = await OrderService.getOrderById(orderId, (err) => {
+                error.value = err.response?.data?.message || 'Failed to fetch order'
+            })
+            console.log('Response:', response)
+            if (response) {
+                currentOrder.value = response
+                console.log('Current order:', currentOrder.value)
+                return response
             }
-        },
+        } catch (err) {
+            error.value = err.message
+            throw err
+        } finally {
+            loading.value = false
+        }
+    }
 
-        async cancelOrder(orderId) {
-            this.loading = true
-            this.error = null
+    async function cancelOrder(orderId) {
+        loading.value = true
+        error.value = null
 
-            try {
-                const response = await OrderService.cancelOrder(orderId, (error) => {
-                    this.error = error.response?.data?.message || 'Failed to cancel order'
-                })
+        try {
+            const response = await OrderService.cancelOrder(orderId, (err) => {
+                error.value = err.response?.data?.message || 'Failed to cancel order'
+            })
 
-                if (response && response.data) {
-                    // Update order in list
-                    const index = this.orders.findIndex(o => o.id === orderId)
-                    if (index !== -1) {
-                        this.orders[index] = response.data
-                    }
-
-                    // Update current order if it's the same
-                    if (this.currentOrder?.id === orderId) {
-                        this.currentOrder = response.data
-                    }
-
-                    return response.data
+            if (response && response.data) {
+                // Update order in list
+                const index = orders.value.findIndex(o => o.id === orderId)
+                if (index !== -1) {
+                    orders.value[index] = response.data
                 }
-            } catch (error) {
-                this.error = error.message
-                throw error
-            } finally {
-                this.loading = false
-            }
-        },
 
-        async deleteOrder(orderId) {
-            this.loading = true
-            this.error = null
-
-            try {
-                await OrderService.deleteOrder(orderId, (error) => {
-                    this.error = error.response?.data?.message || 'Failed to delete order'
-                })
-
-                // Remove order from list
-                this.orders = this.orders.filter(o => o.id !== orderId)
-
-                // Clear current order if it's the same
-                if (this.currentOrder?.id === orderId) {
-                    this.currentOrder = null
+                // Update current order if it's the same
+                if (currentOrder.value?.id === orderId) {
+                    currentOrder.value = response.data
                 }
-            } catch (error) {
-                this.error = error.message
-                throw error
-            } finally {
-                this.loading = false
-            }
-        },
 
-        clearError() {
-            this.error = null
-        },
-    },
+                return response.data
+            }
+        } catch (err) {
+            error.value = err.message
+            throw err
+        } finally {
+            loading.value = false
+        }
+    }
+
+    async function deleteOrder(orderId) {
+        loading.value = true
+        error.value = null
+
+        try {
+            await OrderService.deleteOrder(orderId, (err) => {
+                error.value = err.response?.data?.message || 'Failed to delete order'
+            })
+
+            // Remove order from list
+            orders.value = orders.value.filter(o => o.id !== orderId)
+
+            // Clear current order if it's the same
+            if (currentOrder.value?.id === orderId) {
+                currentOrder.value = null
+            }
+        } catch (err) {
+            error.value = err.message
+            throw err
+        } finally {
+            loading.value = false
+        }
+    }
+
+    function clearError() {
+        error.value = null
+    }
+
+    return {
+        // State
+        orders,
+        currentOrder,
+        loading,
+        error,
+        // Getters
+        getOrderById,
+        confirmedOrders,
+        cancelledOrders,
+        // Actions
+        createOrder,
+        fetchUserOrders,
+        searchOrders,
+        fetchOrderById,
+        cancelOrder,
+        deleteOrder,
+        clearError,
+    }
 })

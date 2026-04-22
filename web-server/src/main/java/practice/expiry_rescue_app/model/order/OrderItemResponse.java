@@ -14,13 +14,13 @@ import java.util.UUID;
 @AllArgsConstructor
 public class OrderItemResponse {
     private UUID id;
-    private Long productInventoryId;
-    private Long productMasterId;
+    private UUID productInventoryId;
+    private UUID productMasterId;
     private String productName;
     private Integer quantity;
-    private BigDecimal unitPrice;
+    private String unit;
     private BigDecimal subtotal;
-    private Long supermarketId;
+    private UUID supermarketId;
     private String supermarketName;
     private Long expiryDate;
 }

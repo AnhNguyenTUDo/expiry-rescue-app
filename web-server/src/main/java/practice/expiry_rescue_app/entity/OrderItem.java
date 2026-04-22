@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+import java.util.UUID;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -21,10 +23,10 @@ public class OrderItem extends BaseEntity {
     private Order order;
 
     @Column(nullable = false)
-    private Long productInventoryId;
+    private UUID productInventoryId;
 
     @Column(nullable = false)
-    private Long productMasterId;
+    private UUID productMasterId;
 
     @Column(nullable = false)
     private String productName;
@@ -33,13 +35,19 @@ public class OrderItem extends BaseEntity {
     private Integer quantity;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal unitPrice;
+    private String unit;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal originalPrice;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal subtotal;
 
     @Column(nullable = false)
-    private Long supermarketId;
+    private UUID supermarketId;
 
     @Column(nullable = false)
     private String supermarketName;
@@ -47,4 +55,3 @@ public class OrderItem extends BaseEntity {
     @Column(nullable = false)
     private Long expiryDate;
 }
-

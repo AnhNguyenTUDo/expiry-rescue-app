@@ -2,7 +2,7 @@
   <div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-3xl font-bold text-gray-800">My Orders</h1>
-      <NuxtLink to="/supermarkets" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition cursor-pointer">
+      <NuxtLink to="/" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition cursor-pointer">
         + New Order
       </NuxtLink>
     </div>
@@ -90,7 +90,7 @@
       <p v-if="!searchQuery && !statusFilter" class="text-sm text-gray-400 mb-6">
         Browse expiring products at discounted prices!
       </p>
-      <NuxtLink to="/supermarkets" class="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition cursor-pointer">
+      <NuxtLink to="/" class="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition cursor-pointer">
         🛒 Start Shopping
       </NuxtLink>
     </div>
@@ -100,10 +100,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useOrderStore } from '~/stores/order'
+import { useAuthStore } from '~/stores/auth'
 
-definePageMeta({
-  middleware: 'auth'
-})
 
 const orderStore = useOrderStore()
 
