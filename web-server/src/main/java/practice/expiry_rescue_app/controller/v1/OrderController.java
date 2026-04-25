@@ -24,9 +24,18 @@ public class OrderController {
     public ResponseEntity<OrderResponse> createOrder(
             @RequestBody CreateOrderRequest request,
             Authentication authentication) {
-        String userEmail = authentication.getName();
-        OrderResponse response = orderService.createOrder(request, userEmail);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        try {
+            String userEmail = authentication.getName();
+            OrderResponse response = orderService.createOrder(request, userEmail);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (RuntimeException e) {
+            if (e instanceof OptimisticLockingFailureException
+                    || e.getCause() instanceof OptimisticLockingFailureException) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("Stock was updated by another request. Please try again.");
+            }
+            throw e;
+        }
     }
 
     @GetMapping
@@ -35,14 +44,14 @@ public class OrderController {
             @RequestParam(required = false) String search,
             Authentication authentication) {
         String userEmail = authentication.getName();
-        
+
         List<OrderResponse> orders;
         if (status != null || search != null) {
             orders = orderService.searchOrders(userEmail, status, search);
         } else {
             orders = orderService.getUserOrders(userEmail);
         }
-        
+
         return ResponseEntity.ok(orders);
     }
 
