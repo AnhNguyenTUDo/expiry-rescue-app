@@ -89,10 +89,8 @@ export const useOrderStore = defineStore('order', () => {
             const response = await OrderService.getOrderById(orderId, (err) => {
                 error.value = err.response?.data?.message || 'Failed to fetch order'
             })
-            console.log('Response:', response)
             if (response) {
                 currentOrder.value = response
-                console.log('Current order:', currentOrder.value)
                 return response
             }
         } catch (err) {
