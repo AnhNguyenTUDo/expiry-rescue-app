@@ -1,6 +1,7 @@
 package practice.expiry_rescue_app.controller.v1;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(
+    public ResponseEntity<?> createOrder(
             @RequestBody CreateOrderRequest request,
             Authentication authentication) {
         try {

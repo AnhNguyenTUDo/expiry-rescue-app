@@ -1,6 +1,7 @@
 package practice.expiry_rescue_app.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import practice.expiry_rescue_app.entity.Order;
@@ -45,12 +46,23 @@ public class OrderServiceImpl implements OrderService {
                 // Calculate total and create order items
                 BigDecimal totalAmount = BigDecimal.ZERO;
                 for (CreateOrderRequest.OrderItemRequest itemRequest : request.getItems()) {
-                        // Fetch prices from DB — never trust the frontend
+                        // Fetch inventory — @Version on ProductInventory provides optimistic locking:
+                        // if another transaction modifies this row before we commit, JPA will
+                        // throw OptimisticLockingFailureException at save time.
                         ProductInventory inventory = productInventoryRepository
                                         .findById(itemRequest.getInventoryId())
                                         .orElseThrow(() -> new RuntimeException(
                                                         "Product inventory not found: "
                                                                         + itemRequest.getInventoryId()));
+
+                        // Check stock availability
+                        if (inventory.getQuantityAvailable() < itemRequest.getQuantity()) {
+                                throw new RuntimeException(
+                                                "Insufficient stock for product: "
+                                                                + inventory.getProductMaster().getName()
+                                                                + ". Available: " + inventory.getQuantityAvailable()
+                                                                + ", Requested: " + itemRequest.getQuantity());
+                        }
 
                         OrderItem orderItem = new OrderItem();
                         orderItem.setProductInventoryId(inventory.getId());
@@ -69,16 +81,27 @@ public class OrderServiceImpl implements OrderService {
                         orderItem.setSupermarketName(inventory.getSupermarket().getName());
                         orderItem.setExpiryDate(inventory.getExpiryDate());
 
+                        // Deduct ordered quantity from inventory
+                        inventory.setQuantityAvailable(inventory.getQuantityAvailable() - itemRequest.getQuantity());
+                        productInventoryRepository.save(inventory);
+
                         order.addItem(orderItem);
                         totalAmount = totalAmount.add(subtotal);
                 }
 
                 order.setTotalAmount(totalAmount);
 
-                // Save order
-                Order savedOrder = orderRepository.save(order);
-
-                return mapToOrderResponse(savedOrder);
+                try {
+                        // Save order — if any inventory row was concurrently modified,
+                        // OptimisticLockingFailureException is thrown here and the
+                        // @Transactional rollback takes care of unwinding everything.
+                        Order savedOrder = orderRepository.save(order);
+                        return mapToOrderResponse(savedOrder);
+                } catch (OptimisticLockingFailureException e) {
+                        throw new RuntimeException(
+                                "Order could not be placed because stock was updated by another request. "
+                                + "Please try again.", e);
+                }
         }
 
         @Override
