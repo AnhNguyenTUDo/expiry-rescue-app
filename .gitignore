@@ -86,6 +86,7 @@ web-app/pids/
 web-app/*.pid
 web-app/*.seed
 web-app/*.pid.lock
+web-app/claude_prompt_aid.md
 
 # ============================================
 # Java / Spring Boot / Maven (web-server)
@@ -101,6 +102,7 @@ web-server/.mvn/
 web-server/mvnw
 web-server/mvnw.cmd
 web-server/run.bat
+web-server/SETUP.md
 
 # Spring Boot
 web-server/*.jar
