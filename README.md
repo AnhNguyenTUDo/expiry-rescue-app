@@ -41,7 +41,7 @@ expiry-rescue-app/
 
 ---
 
-## 📡 API Overview
+## API Overview
 
 | Resource | Base Path |
 |---|---|
