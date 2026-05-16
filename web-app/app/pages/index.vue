@@ -1,123 +1,91 @@
 <template>
   <div>
-    <!-- Controls -->
-    <div
-      class="bg-white p-6 rounded-xl shadow flex flex-wrap gap-4 items-center"
-    >
-      <div class="flex flex-col md:flex-row gap-2 md:items-center">
-        <label for="category" class="font-semibold">Category:</label>
-        <select
-          id="category"
-          v-model="selectedCategory"
-          class="border border-gray-300 rounded px-3 py-2 focus:ring-green-600 focus:border-green-600"
-        >
-          <option value="all">All Categories</option>
-          <option value="food">🍞 Food Products</option>
-          <option value="spices">🌶️ Spices</option>
-          <option value="beverages">🥤 Beverages</option>
-          <option value="cosmetics">💄 Cosmetics</option>
-          <option value="dairy">🧀 Dairy</option>
-          <option value="bakery">🥐 Bakery</option>
-        </select>
-      </div>
-
-      <div class="flex flex-col md:flex-row gap-2 md:items-center">
-        <label for="district" class="font-semibold">District:</label>
-        <select
-          id="district"
+    <!-- Filters -->
+    <div class="relative mb-6 pb-4">
+      <div class="flex items-center justify-end gap-3 mb-2">
+        <!-- District dropdown -->
+        <DropdownSelect
           v-model="selectedDistrict"
+          :options="districtOptions"
           @change="onDistrictChange"
-          class="border border-gray-300 rounded px-3 py-2 focus:ring-green-600 focus:border-green-600 min-w-[200px]"
-        >
-          <option value="all">All Districts</option>
-          <option v-for="district in districts" :key="district" :value="district">
-            {{ district }}
-          </option>
-        </select>
+        />
+
+        <!-- Open/Closed status filter pills -->
+        <StatusButtonGroup v-model="selectedStatus" />
       </div>
+      <!-- Gradient Border -->
+      <!-- <div class="absolute bottom-0 left-0 w-full h-[5px] bg-gradient-to-r from-green-700 to-green-500 rounded-full"></div> -->
     </div>
 
     <!-- Supermarkets Section - Show All Districts -->
-    <div class="mt-8">
+    <div class="">
       <!-- Show single district when selected -->
-      <div v-if="selectedDistrict !== 'all' && supermarkets.length > 0">
-        <h2 class="text-2xl font-bold mb-4">Supermarkets in {{ selectedDistrict }}</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <NuxtLink
-            v-for="supermarket in supermarkets"
+      <div v-if="selectedDistrict !== 'all' && filteredSupermarkets.length > 0">
+          <h3 class="text-xl font-semibold mb-2 pb-2">
+            {{ selectedDistrict }} ({{ filteredSupermarkets.length }})
+          </h3>        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <SupermarketCard
+            v-for="supermarket in filteredSupermarkets"
             :key="supermarket.id"
-            :to="`/supermarkets/${supermarket.id}`"
-            class="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer block"
-          >
-            <h3 class="text-lg font-semibold text-gray-800">{{ supermarket.name }}</h3>
-            <p class="text-sm text-gray-600 mt-2">
-              <span class="font-medium">Address:</span> {{ supermarket.address }}
-            </p>
-            <p v-if="supermarket.phone" class="text-sm text-gray-600 mt-1">
-              <span class="font-medium">Phone:</span> {{ supermarket.phone }}
-            </p>
-            <p v-if="supermarket.contactPerson" class="text-sm text-gray-600 mt-1">
-              <span class="font-medium">Contact:</span> {{ supermarket.contactPerson }}
-            </p>
-            <div v-if="supermarket.operatingHoursFrom && supermarket.operatingHoursTo" class="text-sm text-gray-600 mt-1">
-              <span class="font-medium">Hours:</span>
-              {{ supermarket.operatingHoursFrom }} - {{ supermarket.operatingHoursTo }}
-            </div>
-            <span
-              :class="[
-                'inline-block mt-2 px-2 py-1 text-xs rounded-full',
-                supermarket.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-              ]"
-            >
-              {{ supermarket.isActive ? 'Active' : 'Inactive' }}
-            </span>
-          </NuxtLink>
+            :supermarket="supermarket"
+          />
         </div>
       </div>
 
-      <!-- Show all districts when "All Districts" is selected -->
+      <!-- Single district: empty state -->
+      <div
+        v-else-if="selectedDistrict !== 'all' && filteredSupermarkets.length === 0 && supermarkets.length > 0"
+        class="flex flex-col items-center justify-center py-16 text-center"
+      >
+        <div class="text-4xl mb-3">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2.5em" height="2.5em" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path fill="#5ce259" d="M18 4H2V2h16zm-4.96 6h-10l.6-3h12.72l.4 2c.74.04 1.45.19 2.13.46L18 5H2l-1 5v2h1v6h8.5c-.33-.8-.5-1.65-.5-2.5v.5H4v-4h6v3.5c0-1.66.64-3.33 1.9-4.6q.54-.525 1.14-.9m10.35 11L22 22.39l-3.12-3.07c-.69.43-1.51.68-2.38.68c-2.5 0-4.5-2-4.5-4.5s2-4.5 4.5-4.5s4.5 2 4.5 4.5c0 .88-.25 1.71-.69 2.4zM19 15.5a2.5 2.5 0 0 0-5 0a2.5 2.5 0 0 0 5 0" />
+          </svg>
+        </div>
+        <p class="text-gray-700 font-medium">
+          No <span class="font-semibold">{{ selectedStatus }}</span> supermarkets in
+          <span class="font-semibold">{{ selectedDistrict }}</span>.
+        </p>
+        <p class="text-sm text-gray-500 mt-1">Try switching to <strong>All</strong> to see all stores.</p>
+      </div>
+
       <div v-else-if="selectedDistrict === 'all' && Object.keys(supermarketsByDistrict).length > 0">
-        <h2 class="text-2xl font-bold mb-6">All Supermarkets by District</h2>
+        <!-- <h2 class="text-2xl font-bold mb-6">All Supermarkets by District</h2> -->
         <div
-          v-for="(supermarkets, district) in supermarketsByDistrict"
+          v-for="(supermarkets, district, index) in supermarketsByDistrict"
           :key="district"
           class="mb-8"
         >
-          <h3 class="text-xl font-semibold mb-4 text-green-700 border-b-2 border-green-200 pb-2">
+          <hr v-if="index > 0" class="w-60 border-t-8 border-dotted border-gray-300 mx-auto mb-7 mt-2" />
+          <h3 class="text-xl font-semibold mb-2 pb-2">
             {{ district }} ({{ supermarkets.length }})
           </h3>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <NuxtLink
+            <SupermarketCard
               v-for="supermarket in supermarkets"
               :key="supermarket.id"
-              :to="`/supermarkets/${supermarket.id}`"
-              class="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer block"
-            >
-              <h4 class="text-lg font-semibold text-gray-800">{{ supermarket.name }}</h4>
-              <p class="text-sm text-gray-600 mt-2">
-                <span class="font-medium">Address:</span> {{ supermarket.address }}
-              </p>
-              <p v-if="supermarket.phone" class="text-sm text-gray-600 mt-1">
-                <span class="font-medium">Phone:</span> {{ supermarket.phone }}
-              </p>
-              <p v-if="supermarket.contactPerson" class="text-sm text-gray-600 mt-1">
-                <span class="font-medium">Contact:</span> {{ supermarket.contactPerson }}
-              </p>
-              <div v-if="supermarket.operatingHoursFrom && supermarket.operatingHoursTo" class="text-sm text-gray-600 mt-1">
-                <span class="font-medium">Hours:</span>
-                {{ supermarket.operatingHoursFrom }} - {{ supermarket.operatingHoursTo }}
-              </div>
-              <span
-                :class="[
-                  'inline-block mt-2 px-2 py-1 text-xs rounded-full',
-                  supermarket.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                ]"
-              >
-                {{ supermarket.isActive ? 'Active' : 'Inactive' }}
-              </span>
-            </NuxtLink>
+              :supermarket="supermarket"
+            />
           </div>
         </div>
+      </div>
+
+      <!-- All districts: empty state (status filter has no matches) -->
+      <div
+        v-else-if="selectedDistrict === 'all' && selectedStatus !== 'all' && supermarketStore.supermarkets.length > 0"
+        class="flex flex-col items-center justify-center py-16 text-center"
+      >
+        <div class="text-4xl mb-3">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2.5em" height="2.5em" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path fill="#5ce259" d="M18 4H2V2h16zm-4.96 6h-10l.6-3h12.72l.4 2c.74.04 1.45.19 2.13.46L18 5H2l-1 5v2h1v6h8.5c-.33-.8-.5-1.65-.5-2.5v.5H4v-4h6v3.5c0-1.66.64-3.33 1.9-4.6q.54-.525 1.14-.9m10.35 11L22 22.39l-3.12-3.07c-.69.43-1.51.68-2.38.68c-2.5 0-4.5-2-4.5-4.5s2-4.5 4.5-4.5s4.5 2 4.5 4.5c0 .88-.25 1.71-.69 2.4zM19 15.5a2.5 2.5 0 0 0-5 0a2.5 2.5 0 0 0 5 0" />
+          </svg>
+        </div>
+        <p class="text-gray-700 font-medium">
+          No <span class="font-semibold">{{ selectedStatus }}</span> supermarkets right now.
+        </p>
+        <p class="text-sm text-gray-500 mt-1">Try switching to <strong>All</strong> to see all stores.</p>
       </div>
     </div>
 
@@ -155,20 +123,23 @@
     </div> -->
 
     <!-- Pagination -->
-    <div class="flex justify-center items-center gap-2 mt-12">
+    <!-- <div class="flex justify-center items-center gap-2 mt-12">
       <button class="btn btn-outline" disabled>← Previous</button>
       <button class="btn bg-green-600 text-white">1</button>
       <button class="btn">2</button>
       <button class="btn">3</button>
       <button class="btn">4</button>
       <button class="btn btn-outline">Next →</button>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import ProductCard from "@/components/ui/ProductCard.vue";
+import SupermarketCard from "@/components/ui/SupermarketCard.vue";
+import DropdownSelect from "@/components/ui/DropdownSelect.vue";
+import StatusButtonGroup from "@/components/ui/StatusButtonGroup.vue";
 import ProductInventoryService from "~/services/product-inventory.service";
 import SupermarketService from "~/services/supermarket.service";
 import { useSupermarketStore } from "~/stores/supermarket";
@@ -184,6 +155,13 @@ const selectedCategory = ref("all");
 const districts = ref([]);
 const selectedDistrict = ref("all");
 const supermarkets = ref([]);
+const selectedStatus = ref("all"); // 'all' | 'open' | 'closed'
+
+// Options for the district dropdown
+const districtOptions = computed(() => [
+  { value: "all", label: "All Districts" },
+  ...districts.value.map((d) => ({ value: d, label: d })),
+]);
 
 // Fetch products from API
 const fetchProducts = async () => {
@@ -267,6 +245,23 @@ const fetchProducts = async () => {
 };
 
 // Helper functions
+
+const isOpen = (from, to) => {
+  if (!from || !to) return false;
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const [fh, fm] = from.split(":").map(Number);
+  const [th, tm] = to.split(":").map(Number);
+  const fromMinutes = fh * 60 + fm;
+  const toMinutes = th * 60 + tm;
+  // Handle overnight ranges (e.g. 22:00 - 02:00)
+  if (fromMinutes <= toMinutes) {
+    return currentMinutes >= fromMinutes && currentMinutes < toMinutes;
+  } else {
+    return currentMinutes >= fromMinutes || currentMinutes < toMinutes;
+  }
+};
+
 const formatDate = (timestamp) => {
   if (!timestamp) return "N/A";
   const date = new Date(timestamp);
@@ -367,17 +362,21 @@ const onDistrictChange = () => {
   }
 };
 
-// Group supermarkets by district
+// Group supermarkets by district, filtered by status
 const supermarketsByDistrict = computed(() => {
   const grouped = {};
 
   for (const supermarket of supermarketStore.supermarkets) {
-    if (supermarket.district) {
-      if (!grouped[supermarket.district]) {
-        grouped[supermarket.district] = [];
-      }
-      grouped[supermarket.district].push(supermarket);
+    if (!supermarket.district) continue;
+
+    // Apply status filter
+    if (selectedStatus.value === 'open' && !isOpen(supermarket.operatingHoursFrom, supermarket.operatingHoursTo)) continue;
+    if (selectedStatus.value === 'closed' && isOpen(supermarket.operatingHoursFrom, supermarket.operatingHoursTo)) continue;
+
+    if (!grouped[supermarket.district]) {
+      grouped[supermarket.district] = [];
     }
+    grouped[supermarket.district].push(supermarket);
   }
 
   // Sort districts alphabetically
@@ -387,6 +386,17 @@ const supermarketsByDistrict = computed(() => {
       acc[key] = grouped[key];
       return acc;
     }, {});
+});
+
+// Supermarkets for the single-district view, filtered by status
+const filteredSupermarkets = computed(() => {
+  if (selectedStatus.value === 'open') {
+    return supermarkets.value.filter((s) => isOpen(s.operatingHoursFrom, s.operatingHoursTo));
+  }
+  if (selectedStatus.value === 'closed') {
+    return supermarkets.value.filter((s) => !isOpen(s.operatingHoursFrom, s.operatingHoursTo));
+  }
+  return supermarkets.value;
 });
 
 // Filter products by category (can be implemented later)

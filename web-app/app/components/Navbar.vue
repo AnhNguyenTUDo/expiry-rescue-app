@@ -23,7 +23,7 @@
             class="text-gray-700 hover:text-emerald-600 font-medium transition-colors duration-200"
             active-class="text-emerald-600"
           >
-            Home
+            Homeaaa
           </NuxtLink>
           <NuxtLink
             to="/products"

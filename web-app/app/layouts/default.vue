@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-100 text-gray-800">
+  <div class="min-h-screen flex flex-col bg-gray-100 text-gray-800">
     <!-- Header -->
     <header
       class="bg-gradient-to-r from-green-700 to-green-500 text-white py-6 shadow"
@@ -7,36 +7,25 @@
       <div class="max-w-7xl mx-auto flex justify-between items-center px-4">
         <div class="flex items-center gap-4">
           <NuxtLink to="/" class="text-2xl font-bold hover:opacity-90 transition">
-            🛒 Expiry Rescue
+            Expiry Rescue
           </NuxtLink>
 
           <!-- Supermarket Dropdown -->
           <div class="relative">
-            <select
+            <SupermarketDropdown
               v-model="selectedSupermarket"
+              :supermarkets="supermarketStore.supermarkets"
+              :current-supermarket-name="supermarketStore.currentSupermarketName"
               @change="navigateToSupermarket"
-              class="bg-white/10 border border-white/30 text-white rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-white/50 cursor-pointer hover:bg-white/20 transition"
-            >
-              <option value="" class="text-gray-800" disabled>
-                {{ supermarketStore.currentSupermarketName || "Select Supermarket" }}
-              </option>
-              <option
-                v-for="supermarket in supermarketStore.supermarkets"
-                :key="supermarket.id"
-                :value="supermarket.id"
-                class="text-gray-800"
-              >
-                {{ supermarket.name }} - {{ supermarket.district }}
-              </option>
-            </select>
+            />
           </div>
         </div>
 
         <nav class="flex gap-3">
-          <NuxtLink to="/" class="btn btn-outline-light">Home</NuxtLink>
-          <!-- <button class="btn btn-outline-light">Products</button>
-          <button class="btn btn-outline-light">About</button> -->
-          <NuxtLink to="/cart" class="btn btn-outline-light relative">
+          <NuxtLink to="/" class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20">Home</NuxtLink>
+          <!-- <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20">Products</button>
+          <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20">About</button> -->
+          <NuxtLink to="/cart" class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20 relative">
             Cart
             <span v-if="cartStore.totalItems > 0" class="ml-1">({{ cartStore.totalItems }})</span>
             <span
@@ -50,7 +39,7 @@
           <div class="relative">
             <button 
               @click="toggleProfileDropdown"
-              class="p-2 rounded-lg border border-white/40 text-white hover:bg-white/20 transition group cursor-pointer"
+              class="px-2 py-1.5 rounded-lg border border-white/40 text-white hover:bg-white/20 transition group cursor-pointer flex items-center justify-center"
               title="Account"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -125,22 +114,22 @@
     </header>
 
     <!-- Page Content -->
-    <div class="max-w-7xl mx-auto mt-8 px-4">
+    <div class="max-w-7xl mx-auto mt-5 px-4 flex-grow w-full">
       <slot />
     </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-10 mt-16">
-      <div class="max-w-7xl mx-auto px-4 flex flex-wrap justify-between gap-6">
+    <footer class="bg-gray-900 text-white py-7 mt-10">
+      <div class="max-w-7xl mx-auto px-4 flex flex-wrap justify-between items-center gap-6">
         <div>
           <h3 class="text-xl font-semibold mb-2">Expiry Rescue</h3>
           <p>Reducing food waste, saving money</p>
         </div>
-        <div class="flex gap-3 flex-wrap">
-          <button class="btn btn-outline-light">Contact Us</button>
-          <button class="btn btn-outline-light">Help Center</button>
-          <button class="btn btn-outline-light">Terms of Service</button>
-          <button class="btn btn-outline-light">Privacy Policy</button>
+        <div class="flex gap-3 flex-wrap items-center">
+          <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20">Contact Us</button>
+          <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20">Help Center</button>
+          <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20">Terms of Service</button>
+          <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20">Privacy Policy</button>
         </div>
       </div>
     </footer>
@@ -153,6 +142,7 @@ import { useRouter, useRoute } from "vue-router";
 import { useSupermarketStore } from "~/stores/supermarket";
 import { useCartStore } from "~/stores/cart";
 import { useAuthStore } from "~/stores/auth";
+import SupermarketDropdown from "~/components/ui/SupermarketDropdown.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -242,16 +232,3 @@ onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside);
 });
 </script>
-
-<style scoped>
-@reference "tailwindcss";
-.btn {
-  @apply px-4 py-2 rounded-lg border transition;
-}
-.btn-outline {
-  @apply border-gray-300 hover:bg-green-600 hover:text-white hover:border-green-600;
-}
-.btn-outline-light {
-  @apply border-white/40 text-white hover:bg-white/20;
-}
-</style>

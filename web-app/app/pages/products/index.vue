@@ -11,12 +11,12 @@
           class="border border-gray-300 rounded px-3 py-2 focus:ring-green-600 focus:border-green-600"
         >
           <option value="all">All Categories</option>
-          <option value="food">🍞 Food Products</option>
-          <option value="spices">🌶️ Spices</option>
-          <option value="beverages">🥤 Beverages</option>
-          <option value="cosmetics">💄 Cosmetics</option>
-          <option value="dairy">🧀 Dairy</option>
-          <option value="bakery">🥐 Bakery</option>
+          <option value="food">Food Products</option>
+          <option value="spices">Spices</option>
+          <option value="beverages">Beverages</option>
+          <option value="cosmetics">Cosmetics</option>
+          <option value="dairy">Dairy</option>
+          <option value="bakery">Bakery</option>
         </select>
       </div>
     </div>
