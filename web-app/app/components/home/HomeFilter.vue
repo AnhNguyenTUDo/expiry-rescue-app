@@ -1,6 +1,9 @@
 <template>
   <div class="relative mb-6 pb-4">
     <div class="flex items-center justify-end gap-3 mb-2 flex-wrap">
+      <!-- Search bar -->
+      <SearchBar v-model="searchQuery" placeholder="Search supermarkets..." />
+
       <!-- City dropdown -->
       <DropdownSelect
         v-model="cityId"
@@ -27,6 +30,7 @@
 import DropdownSelect from "@/components/ui/DropdownSelect.vue";
 import SearchableDropdown from "@/components/ui/SearchableDropdown.vue";
 import StatusButtonGroup from "@/components/ui/StatusButtonGroup.vue";
+import SearchBar from "@/components/ui/SearchBar.vue";
 
 defineProps({
   cityOptions: {
@@ -41,8 +45,9 @@ defineProps({
 
 const emit = defineEmits(["city-change", "district-change"]);
 
-// Two-way bindings for the three filter values
+// Two-way bindings for the filter values
 const cityId = defineModel("cityId");
 const districtId = defineModel("districtId");
 const status = defineModel("status");
+const searchQuery = defineModel("searchQuery");
 </script>

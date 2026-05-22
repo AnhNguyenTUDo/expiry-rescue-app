@@ -4,7 +4,7 @@
     <button
       type="button"
       @click="isOpen = !isOpen"
-      class="inline-flex items-center justify-between gap-2 border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-green-600 focus:border-green-600 cursor-pointer"
+      class="inline-flex items-center justify-between gap-2 border border-gray-300 rounded-[10px] px-3 py-1.5 text-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-green-600 focus:border-green-600 cursor-pointer"
       :style="{ minWidth: minWidth }"
     >
       <span>{{ selectedLabel }}</span>
@@ -30,7 +30,7 @@
     >
       <div
         v-show="isOpen"
-        class="absolute z-20 mt-1 bg-white rounded-lg shadow-lg border border-gray-100 w-full min-w-max overflow-hidden"
+        class="absolute z-20 mt-1 bg-white rounded-[15px] shadow-lg border border-gray-100 w-full min-w-max overflow-hidden"
       >
         <ul class="p-2 text-sm text-gray-700 max-h-60 overflow-y-auto">
           <li v-for="option in options" :key="option.value">

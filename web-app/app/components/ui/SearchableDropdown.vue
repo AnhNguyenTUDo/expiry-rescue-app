@@ -6,7 +6,7 @@
       :aria-disabled="isDisabled"
       :data-tooltip-target="tooltip && isDisabled ? tooltipId : undefined"
       @click="toggle"
-      class="inline-flex items-center justify-between gap-2 border rounded-lg px-3 py-1.5 text-sm transition-colors duration-150"
+      class="inline-flex items-center justify-between gap-2 border rounded-[10px] px-3 py-1.5 text-sm transition-colors duration-150"
       :class="isDisabled 
         ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
         : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-green-600 focus:border-green-600 cursor-pointer'"
@@ -41,7 +41,7 @@
     >
       <div
         v-show="isOpen"
-        class="absolute z-20 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg w-full"
+        class="absolute z-20 mt-1 bg-white border border-gray-200 rounded-[15px] shadow-lg w-full"
       >
         <!-- Search input -->
         <div v-if="showSearch" class="bg-white border-b border-gray-200 p-2 rounded-t-lg">
