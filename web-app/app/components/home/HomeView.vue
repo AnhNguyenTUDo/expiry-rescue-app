@@ -141,7 +141,6 @@ const loadSupermarkets = async () => {
     error.value = err.response?.data?.message || "Failed to load supermarkets";
   });
   if (response && response.data) supermarketStore.setSupermarkets(response.data);
-  console.log(response.data)
   loading.value = false;
 };
 
