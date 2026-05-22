@@ -18,10 +18,10 @@
       </div>
 
       <nav class="flex gap-3">
-        <NuxtLink to="/" class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20">Home</NuxtLink>
+        <NuxtLink to="/" class="px-4 py-1.5 flex items-center rounded-[10px] border transition border-white/40 text-white hover:bg-white/20">Home</NuxtLink>
         <!-- <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20">Products</button>
         <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20">About</button> -->
-        <NuxtLink to="/cart" class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20 relative">
+        <NuxtLink to="/cart" class="px-4 py-1.5 flex items-center rounded-[10px] border transition border-white/40 text-white hover:bg-white/20 relative">
           Cart
           <span v-if="cartTotal > 0" class="ml-1">({{ cartTotal }})</span>
           <span
