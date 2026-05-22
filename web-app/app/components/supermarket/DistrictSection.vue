@@ -22,7 +22,7 @@
     </div>
     <div v-if="hasMore" class="mt-6 text-center">
       <button @click="showMore" class="
-        px-6 py-2 rounded-xl border-2 border-emerald-500 text-emerald-600 font-medium
+        px-6 py-2 rounded-xl border-2 border-gray-600 text-gray-600 font-medium
         transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-md cursor-pointer
         active:scale-95">
         Show more
