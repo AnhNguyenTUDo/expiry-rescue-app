@@ -2,11 +2,11 @@
   <div class="relative" ref="dropdownRef">
     <button 
       @click="isOpen = !isOpen"
-      class="px-2 py-1.5 rounded-lg border border-white/40 text-white hover:bg-white/20 transition group cursor-pointer flex items-center justify-center"
+      class="px-2 py-1.5 rounded-[10px] border border-white/40 text-white hover:bg-white/20 transition group cursor-pointer flex items-center justify-center"
       title="Account"
     >
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
       </svg>
     </button>
 
