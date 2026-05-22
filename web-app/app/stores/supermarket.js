@@ -14,7 +14,8 @@ export const useSupermarketStore = defineStore('supermarket', () => {
 
   const currentSupermarketName = computed(() => {
     if (!currentSupermarket.value) return null
-    return `${currentSupermarket.value.name} - ${currentSupermarket.value.district}`
+    const { name, districtName } = currentSupermarket.value
+    return districtName ? `${name} - ${districtName}` : name
   })
 
   // Actions

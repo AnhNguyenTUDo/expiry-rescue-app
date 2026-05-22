@@ -10,10 +10,10 @@ import practice.expiry_rescue_app.model.supermarket.CreateSupermarketRequest;
 import practice.expiry_rescue_app.model.supermarket.SupermarketResponse;
 import practice.expiry_rescue_app.model.supermarket.SupermarketWithProductsResponse;
 import practice.expiry_rescue_app.model.supermarket.UpdateSupermarketRequest;
+import practice.expiry_rescue_app.entity.District;
 import practice.expiry_rescue_app.entity.ProductInventory;
 import practice.expiry_rescue_app.entity.Supermarket;
 import practice.expiry_rescue_app.repository.ProductInventoryRepository;
-import practice.expiry_rescue_app.repository.SupermarketRepository;
 import practice.expiry_rescue_app.service.SupermarketService;
 
 import java.util.List;
@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 public class SupermarketServiceImpl implements SupermarketService {
 
     private final SupermarketBusiness supermarketBusiness;
-    private final SupermarketRepository supermarketRepository;
     private final ProductInventoryRepository productInventoryRepository;
 
     @Override
@@ -36,6 +35,7 @@ public class SupermarketServiceImpl implements SupermarketService {
         Supermarket supermarket = supermarketBusiness.createSupermarket(
                 request.getName(),
                 request.getAddress(),
+                request.getDistrictId(),
                 request.getPhone(),
                 request.getContactPerson(),
                 request.getOperatingHoursFrom(),
@@ -53,6 +53,7 @@ public class SupermarketServiceImpl implements SupermarketService {
                 id,
                 request.getName(),
                 request.getAddress(),
+                request.getDistrictId(),
                 request.getPhone(),
                 request.getContactPerson(),
                 request.getOperatingHoursFrom(),
@@ -74,32 +75,30 @@ public class SupermarketServiceImpl implements SupermarketService {
     public SupermarketWithProductsResponse getSupermarketWithProducts(UUID id) {
         log.debug("Service: Getting supermarket with products by ID: {}", id);
 
-        // Get supermarket details
         Supermarket supermarket = supermarketBusiness.getActiveSupermarketById(id);
 
-        // Get products for this supermarket
         List<ProductInventory> inventories = productInventoryRepository.findBySupermarketIdAndDeletedAtIsNull(id);
         List<ProductInventoryResponse> products = inventories.stream()
                 .map(this::mapToProductInventoryResponse)
                 .collect(Collectors.toList());
 
-        // Map to combined response
         return mapToSupermarketWithProductsResponse(supermarket, products);
     }
 
     @Override
     public List<SupermarketResponse> getAllSupermarkets() {
         log.debug("Service: Getting all supermarkets");
-        List<Supermarket> supermarkets = supermarketBusiness.getAllSupermarkets();
-        return supermarkets.stream()
+        return supermarketBusiness.getAllSupermarkets().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<SupermarketResponse> getAllActiveSupermarkets() {
-        log.debug("Service: Getting all active supermarkets");
-        List<Supermarket> supermarkets = supermarketBusiness.getAllActiveSupermarkets();
+    public List<SupermarketResponse> getAllActiveSupermarkets(UUID cityId, UUID districtId) {
+        log.debug("Service: Getting active supermarkets filtered by cityId={}, districtId={}", cityId, districtId);
+        List<Supermarket> supermarkets = (cityId == null && districtId == null)
+                ? supermarketBusiness.getAllActiveSupermarkets()
+                : supermarketBusiness.getAllActiveSupermarketsFiltered(cityId, districtId);
         return supermarkets.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -117,18 +116,12 @@ public class SupermarketServiceImpl implements SupermarketService {
         supermarketBusiness.restoreSupermarket(id);
     }
 
-    @Override
-    public List<String> getDistinctDistricts() {
-        log.debug("Service: Getting distinct districts");
-        return supermarketRepository.findDistinctDistricts();
-    }
-
     private SupermarketResponse mapToResponse(Supermarket supermarket) {
         SupermarketResponse response = new SupermarketResponse();
         response.setId(supermarket.getId());
         response.setName(supermarket.getName());
         response.setAddress(supermarket.getAddress());
-        response.setDistrict(supermarket.getDistrict());
+        applyDistrict(response, supermarket.getDistrict());
         response.setPhone(supermarket.getPhone());
         response.setContactPerson(supermarket.getContactPerson());
         response.setOperatingHoursFrom(supermarket.getOperatingHoursFrom());
@@ -139,6 +132,16 @@ public class SupermarketServiceImpl implements SupermarketService {
         return response;
     }
 
+    private void applyDistrict(SupermarketResponse response, District district) {
+        if (district == null) return;
+        response.setDistrictId(district.getId());
+        response.setDistrictName(district.getName());
+        if (district.getCity() != null) {
+            response.setCityId(district.getCity().getId());
+            response.setCityName(district.getCity().getName());
+        }
+    }
+
     private SupermarketWithProductsResponse mapToSupermarketWithProductsResponse(
             Supermarket supermarket,
             List<ProductInventoryResponse> products) {
@@ -146,7 +149,15 @@ public class SupermarketServiceImpl implements SupermarketService {
         response.setId(supermarket.getId());
         response.setName(supermarket.getName());
         response.setAddress(supermarket.getAddress());
-        response.setDistrict(supermarket.getDistrict());
+        District district = supermarket.getDistrict();
+        if (district != null) {
+            response.setDistrictId(district.getId());
+            response.setDistrictName(district.getName());
+            if (district.getCity() != null) {
+                response.setCityId(district.getCity().getId());
+                response.setCityName(district.getCity().getName());
+            }
+        }
         response.setPhone(supermarket.getPhone());
         response.setContactPerson(supermarket.getContactPerson());
         response.setOperatingHoursFrom(supermarket.getOperatingHoursFrom());

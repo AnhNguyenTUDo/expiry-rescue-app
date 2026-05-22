@@ -9,8 +9,6 @@ class SupermarketService {
 
   /**
    * Get all supermarkets
-   * @param {Function} errorCallBack - Optional error callback
-   * @returns {Promise} - Returns all supermarkets from the API
    */
   getAllSupermarkets(errorCallBack) {
     const url = Constants.endpoints.supermarket.GET_ALL_SUPERMARKETS;
@@ -18,30 +16,23 @@ class SupermarketService {
   }
 
   /**
-   * Get all active supermarkets
-   * @param {Function} errorCallBack - Optional error callback
-   * @returns {Promise} - Returns active supermarkets from the API
+   * Get active supermarkets, optionally filtered by cityId and/or districtId.
+   * @param {Object} [filters]
+   * @param {string} [filters.cityId]
+   * @param {string} [filters.districtId]
+   * @param {Function} [errorCallBack]
    */
-  getActiveSupermarkets(errorCallBack) {
+  getActiveSupermarkets(filters = {}, errorCallBack) {
     const url = Constants.endpoints.supermarket.GET_ACTIVE_SUPERMARKETS;
-    return requestAxios(this.axios.get(url), errorCallBack);
-  }
-
-  /**
-   * Get distinct districts
-   * @param {Function} errorCallBack - Optional error callback
-   * @returns {Promise} - Returns list of distinct districts
-   */
-  getDistinctDistricts(errorCallBack) {
-    const url = Constants.endpoints.supermarket.GET_DISTRICTS;
-    return requestAxios(this.axios.get(url), errorCallBack);
+    const params = {};
+    if (filters.cityId) params.cityId = filters.cityId;
+    if (filters.districtId) params.districtId = filters.districtId;
+    return requestAxios(this.axios.get(url, { params }), errorCallBack);
   }
 
   /**
    * Get supermarket by ID
    * @param {string} id - Supermarket ID (UUID)
-   * @param {Function} errorCallBack - Optional error callback
-   * @returns {Promise} - Returns supermarket details
    */
   getSupermarketById(id, errorCallBack) {
     const url = Constants.endpoints.supermarket.GET_SUPERMARKET_BY_ID(id);
@@ -51,8 +42,6 @@ class SupermarketService {
   /**
    * Get supermarket with products by ID
    * @param {string} id - Supermarket ID (UUID)
-   * @param {Function} errorCallBack - Optional error callback
-   * @returns {Promise} - Returns supermarket details with products
    */
   getSupermarketWithProducts(id, errorCallBack) {
     const url = Constants.endpoints.supermarket.GET_SUPERMARKET_WITH_PRODUCTS(id);

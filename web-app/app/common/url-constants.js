@@ -8,9 +8,12 @@ export default {
     supermarket: {
       GET_ALL_SUPERMARKETS: '/supermarkets',
       GET_ACTIVE_SUPERMARKETS: '/supermarkets/active',
-      GET_DISTRICTS: '/supermarkets/districts',
       GET_SUPERMARKET_BY_ID: (id) => `/supermarkets/${id}`,
       GET_SUPERMARKET_WITH_PRODUCTS: (id) => `/supermarkets/${id}/with-products`,
+    },
+    city: {
+      GET_ALL_CITIES: '/cities',
+      GET_DISTRICTS_BY_CITY: (cityId) => `/cities/${cityId}/districts`,
     },
     product_category: {
       GET_ALL_CATEGORIES: '/product-categories',

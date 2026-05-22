@@ -44,7 +44,7 @@
                   {{ supermarket.name }}
                 </p>
                 <p class="text-xs text-gray-500 truncate mt-0.5">
-                  {{ supermarket.district }}
+                  {{ supermarket.districtName }}<span v-if="supermarket.cityName">, {{ supermarket.cityName }}</span>
                 </p>
               </div>
             </button>

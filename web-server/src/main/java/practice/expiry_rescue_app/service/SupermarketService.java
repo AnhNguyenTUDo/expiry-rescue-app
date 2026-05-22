@@ -20,11 +20,9 @@ public interface SupermarketService {
 
     List<SupermarketResponse> getAllSupermarkets();
 
-    List<SupermarketResponse> getAllActiveSupermarkets();
+    List<SupermarketResponse> getAllActiveSupermarkets(UUID cityId, UUID districtId);
 
     void deleteSupermarket(UUID id);
 
     void restoreSupermarket(UUID id);
-
-    List<String> getDistinctDistricts();
 }

@@ -16,7 +16,10 @@ public class SupermarketWithProductsResponse {
     private UUID id;
     private String name;
     private String address;
-    private String district;
+    private UUID districtId;
+    private String districtName;
+    private UUID cityId;
+    private String cityName;
     private String phone;
     private String contactPerson;
     private LocalTime operatingHoursFrom;

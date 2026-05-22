@@ -188,3 +188,9 @@ out/
 # web-app/pnpm-lock.yaml
 
 env-variables/
+
+#Claude code config
+.claude/
+
+# Database backup
+db-backup/

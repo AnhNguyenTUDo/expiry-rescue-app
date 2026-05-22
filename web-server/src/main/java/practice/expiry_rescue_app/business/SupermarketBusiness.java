@@ -11,15 +11,17 @@ import java.util.UUID;
  */
 public interface SupermarketBusiness {
 
-    Supermarket createSupermarket(String name, String address, String phone, String contactPerson,
+    Supermarket createSupermarket(String name, String address, UUID districtId, String phone, String contactPerson,
                                   LocalTime operatingHoursFrom, LocalTime operatingHoursTo);
 
-    Supermarket updateSupermarket(UUID id, String name, String address, String phone, String contactPerson,
+    Supermarket updateSupermarket(UUID id, String name, String address, UUID districtId, String phone, String contactPerson,
                                   LocalTime operatingHoursFrom, LocalTime operatingHoursTo, Boolean isActive);
 
     Supermarket getActiveSupermarketById(UUID id);
 
     List<Supermarket> getAllActiveSupermarkets();
+
+    List<Supermarket> getAllActiveSupermarketsFiltered(UUID cityId, UUID districtId);
 
     List<Supermarket> getAllSupermarkets();
 

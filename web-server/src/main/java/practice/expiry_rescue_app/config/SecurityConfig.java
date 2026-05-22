@@ -62,9 +62,10 @@ public class SecurityConfig {
                                                 .requestMatchers(org.springframework.http.HttpMethod.GET,
                                                                 "/api/v1/supermarkets",
                                                                 "/api/v1/supermarkets/active",
-                                                                "/api/v1/supermarkets/districts",
                                                                 "/api/v1/supermarkets/{id}",
-                                                                "/api/v1/supermarkets/{id}/with-products")
+                                                                "/api/v1/supermarkets/{id}/with-products",
+                                                                "/api/v1/cities",
+                                                                "/api/v1/cities/{cityId}/districts")
                                                 .permitAll()
 
                                                 // Public product endpoints - explicitly allow GET requests for browsing
