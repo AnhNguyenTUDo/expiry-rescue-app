@@ -3,7 +3,7 @@
     <button
       type="button"
       @click="isOpen = !isOpen"
-      class="bg-white/10 border border-white/30 text-white rounded-lg px-4 py-1.5 pr-10 focus:outline-none focus:ring-1 focus:ring-white/50 focus:border-white/50 cursor-pointer hover:bg-white/20 flex items-center justify-between min-w-[200px]"
+      class="bg-white/10 border border-white/30 text-white rounded-[10px] px-4 py-1.5 pr-10 focus:outline-none focus:ring-1 focus:ring-white/50 focus:border-white/50 cursor-pointer hover:bg-white/20 flex items-center justify-between min-w-full w-full"
     >
       <span class="truncate">
         {{ selectedLabel }}

@@ -1,5 +1,12 @@
 <template>
   <div>
+    <!-- City selection modal (first visit) -->
+    <CitySelectionModal
+      :show="showCityModal"
+      :cities="cities"
+      @confirm="onLocationConfirmed"
+    />
+
     <!-- Filters -->
     <HomeFilter
       v-model:cityId="selectedCityId"
@@ -39,11 +46,16 @@
 import { ref, onMounted, computed } from "vue";
 import HomeFilter from "@/components/home/HomeFilter.vue";
 import SupermarketSection from "@/components/supermarket/SupermarketSection.vue";
+import CitySelectionModal from "@/components/home/CitySelectionModal.vue";
 import SupermarketService from "~/services/supermarket.service";
 import CityService from "~/services/city.service";
 import { useSupermarketStore } from "~/stores/supermarket";
 
+const LOCATION_KEY = "expiry_rescue_location";
+
 const supermarketStore = useSupermarketStore();
+
+const showCityModal = ref(false);
 
 // Filter state
 const cities = ref([]);
@@ -129,6 +141,7 @@ const loadSupermarkets = async () => {
     error.value = err.response?.data?.message || "Failed to load supermarkets";
   });
   if (response && response.data) supermarketStore.setSupermarkets(response.data);
+  console.log(response.data)
   loading.value = false;
 };
 
@@ -238,8 +251,26 @@ const districtSections = computed(() => {
   return sections;
 });
 
+const onLocationConfirmed = async ({ cityId, cityName, districtId, districtName }) => {
+  localStorage.setItem(LOCATION_KEY, JSON.stringify({ cityId, cityName, districtId, districtName }));
+  showCityModal.value = false;
+  selectedCityId.value = cityId;
+  selectedDistrictId.value = districtId;
+  await loadDistricts(cityId);
+  await loadSupermarkets();
+};
+
 onMounted(async () => {
   await loadCities();
-  await loadSupermarkets();
+  const saved = localStorage.getItem(LOCATION_KEY);
+  if (saved) {
+    const { cityId, districtId } = JSON.parse(saved);
+    selectedCityId.value = cityId;
+    selectedDistrictId.value = districtId;
+    await loadDistricts(cityId);
+    await loadSupermarkets();
+  } else {
+    showCityModal.value = true;
+  }
 });
 </script>
