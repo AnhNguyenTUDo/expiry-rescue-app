@@ -5,6 +5,7 @@
       v-model:cityId="selectedCityId"
       v-model:districtId="selectedDistrictId"
       v-model:status="selectedStatus"
+      v-model:searchQuery="searchQuery"
       :city-options="cityOptions"
       :district-options="districtOptions"
       @city-change="onCityChange"
@@ -14,10 +15,6 @@
     <!-- Supermarkets Section -->
     <SupermarketSection
       :district-sections="districtSections"
-      :selected-district-id="selectedDistrictId"
-      :selected-status="selectedStatus"
-      :current-district-label="currentDistrictLabel"
-      :has-loaded-data="supermarketStore.supermarkets.length > 0"
     />
 
     <!-- Loading State -->
@@ -54,6 +51,7 @@ const districts = ref([]);
 const selectedCityId = ref("all");
 const selectedDistrictId = ref("all");
 const selectedStatus = ref("all"); // 'all' | 'open' | 'closed'
+const searchQuery = ref("");
 
 const loading = ref(false);
 const error = ref(null);
@@ -145,10 +143,13 @@ const onDistrictChange = async () => {
   await loadSupermarkets();
 };
 
-// Grouping for views
-const visibleSupermarkets = computed(() =>
-  supermarketStore.supermarkets.filter(passesStatusFilter)
-);
+// All filters combined — used for store lists within each district
+const visibleSupermarkets = computed(() => {
+  const q = searchQuery.value.trim().toLowerCase();
+  return supermarketStore.supermarkets.filter(
+    (s) => passesStatusFilter(s) && (!q || s.name.toLowerCase().includes(q))
+  );
+});
 
 // Flat normalized list of sections for the unified render loop.
 // Each item is one of:
@@ -159,18 +160,13 @@ const districtSections = computed(() => {
 
   // Case 1: a specific district is selected
   if (selectedDistrictId.value !== "all") {
-    const stores = visibleSupermarkets.value.filter(
-      (s) => s.districtId === selectedDistrictId.value
-    );
-    if (stores.length > 0) {
-      sections.push({
-        type: "district",
-        key: currentDistrictLabel.value,
-        districtName: currentDistrictLabel.value,
-        stores,
-        showDivider: false,
-      });
-    }
+    sections.push({
+      type: "district",
+      key: currentDistrictLabel.value,
+      districtName: currentDistrictLabel.value,
+      stores: visibleSupermarkets.value.filter((s) => s.districtId === selectedDistrictId.value),
+      showDivider: false,
+    });
     return sections;
   }
 
@@ -180,35 +176,43 @@ const districtSections = computed(() => {
     if (cityName) {
       sections.push({ type: "city-heading", key: `city:${cityName}`, label: cityName, isFirst: true });
     }
+    // Use raw supermarkets for district keys so districts persist through all filters
+    const districtKeys = [...new Set(supermarketStore.supermarkets.map((s) => s.districtName || "Unknown"))].sort();
     const grouped = {};
     for (const s of visibleSupermarkets.value) {
       const key = s.districtName || "Unknown";
       if (!grouped[key]) grouped[key] = [];
       grouped[key].push(s);
     }
-    const districtNames = Object.keys(grouped).sort();
-    districtNames.forEach((districtName, idx) => {
+    districtKeys.forEach((districtName, idx) => {
       sections.push({
         type: "district",
         key: districtName,
         districtName,
-        stores: grouped[districtName],
+        stores: grouped[districtName] ?? [],
         showDivider: idx > 0,
       });
     });
     return sections;
   }
 
-  // Case 3: all cities — group by city then district
-  const grouped = {};
+  // Case 3: all cities — use raw supermarkets for structure, visibleSupermarkets for store lists
+  const allGrouped = {};
+  for (const s of supermarketStore.supermarkets) {
+    const city = s.cityName || "Unknown";
+    const district = s.districtName || "Unknown";
+    if (!allGrouped[city]) allGrouped[city] = new Set();
+    allGrouped[city].add(district);
+  }
+  const visibleGrouped = {};
   for (const s of visibleSupermarkets.value) {
     const city = s.cityName || "Unknown";
     const district = s.districtName || "Unknown";
-    if (!grouped[city]) grouped[city] = {};
-    if (!grouped[city][district]) grouped[city][district] = [];
-    grouped[city][district].push(s);
+    if (!visibleGrouped[city]) visibleGrouped[city] = {};
+    if (!visibleGrouped[city][district]) visibleGrouped[city][district] = [];
+    visibleGrouped[city][district].push(s);
   }
-  const cityNames = Object.keys(grouped).sort();
+  const cityNames = Object.keys(allGrouped).sort();
   cityNames.forEach((cityName, cityIdx) => {
     sections.push({
       type: "city-heading",
@@ -216,13 +220,13 @@ const districtSections = computed(() => {
       label: cityName,
       isFirst: cityIdx === 0,
     });
-    const districtNames = Object.keys(grouped[cityName]).sort();
+    const districtNames = [...allGrouped[cityName]].sort();
     districtNames.forEach((districtName, dIdx) => {
       sections.push({
         type: "district",
         key: `${cityName}:${districtName}`,
         districtName,
-        stores: grouped[cityName][districtName],
+        stores: visibleGrouped[cityName]?.[districtName] ?? [],
         showDivider: dIdx > 0,
       });
     });
