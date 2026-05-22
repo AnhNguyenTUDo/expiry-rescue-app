@@ -174,8 +174,12 @@ const districtSections = computed(() => {
     return sections;
   }
 
-  // Case 2: a city is selected — group by district
+  // Case 2: a city is selected — show city heading then group by district
   if (selectedCityId.value !== "all") {
+    const cityName = cities.value.find((c) => c.id === selectedCityId.value)?.name || "";
+    if (cityName) {
+      sections.push({ type: "city-heading", key: `city:${cityName}`, label: cityName, isFirst: true });
+    }
     const grouped = {};
     for (const s of visibleSupermarkets.value) {
       const key = s.districtName || "Unknown";
