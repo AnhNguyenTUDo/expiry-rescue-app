@@ -51,7 +51,7 @@
             id="dropdown-search-input"
             v-model="query"
             type="text"
-            class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded focus:ring-green-500 focus:border-green-500 block w-full px-2.5 py-2 placeholder-gray-400"
+            class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded focus:ring-green-600 focus:border-green-600 block w-full px-2.5 py-2 placeholder-gray-400"
             placeholder="Search..."
           />
         </div>
