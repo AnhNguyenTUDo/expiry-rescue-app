@@ -11,9 +11,6 @@
         :supermarket="supermarket"
       />
     </div>
-    <!-- px-6 py-2 rounded-full border-2 border-emerald-500 text-emerald-600 font-medium
-    transition-all duration-200 hover:bg-emerald-500 hover:text-white hover:shadow-md
-    active:scale-95 -->
     <div v-if="hasMore" class="mt-6 text-center">
       <button @click="showMore" class="
         px-6 py-2 rounded-xl border-2 border-emerald-500 text-emerald-600 font-medium
