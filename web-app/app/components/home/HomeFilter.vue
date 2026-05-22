@@ -8,10 +8,12 @@
         @change="emit('city-change')"
       />
 
-      <!-- District dropdown (depends on city) -->
-      <DropdownSelect
+      <!-- District dropdown (searchable) -->
+      <SearchableDropdown
         v-model="districtId"
         :options="districtOptions"
+        :disabled="cityId === 'all'"
+        tooltip="Select a city first"
         @change="emit('district-change')"
       />
 
@@ -23,6 +25,7 @@
 
 <script setup>
 import DropdownSelect from "@/components/ui/DropdownSelect.vue";
+import SearchableDropdown from "@/components/ui/SearchableDropdown.vue";
 import StatusButtonGroup from "@/components/ui/StatusButtonGroup.vue";
 
 defineProps({
