@@ -14,6 +14,7 @@
     </div>
 
     <AppFooter />
+    <ScrollToTopButton />
   </div>
 </template>
 
@@ -25,6 +26,7 @@ import { useCartStore } from "~/stores/cart";
 import { useAuthStore } from "~/stores/auth";
 import AppHeader from "~/components/layout/AppHeader.vue";
 import AppFooter from "~/components/layout/AppFooter.vue";
+import ScrollToTopButton from "~/components/ui/ScrollToTopButton.vue";
 
 const router = useRouter();
 const route = useRoute();
