@@ -22,8 +22,8 @@
           <p class="text-gray-600">
             <span class="font-medium">Address:</span> {{ supermarket.address }}
           </p>
-          <p v-if="supermarket.district" class="text-gray-600">
-            <span class="font-medium">District:</span> {{ supermarket.district }}
+          <p v-if="supermarket.districtName" class="text-gray-600">
+            <span class="font-medium">District:</span> {{ supermarket.districtName }}<span v-if="supermarket.cityName">, {{ supermarket.cityName }}</span>
           </p>
           <p v-if="supermarket.phone" class="text-gray-600">
             <span class="font-medium">Phone:</span> {{ supermarket.phone }}

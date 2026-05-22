@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -14,6 +15,8 @@ public class UpdateSupermarketRequest {
     private String name;
 
     private String address;
+
+    private UUID districtId;
 
     private String phone;
 

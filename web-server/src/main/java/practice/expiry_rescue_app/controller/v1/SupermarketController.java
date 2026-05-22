@@ -40,9 +40,11 @@ public class SupermarketController {
     }
 
     @GetMapping("/active")
-    public ResponseEntity<ApiResponse<List<SupermarketResponse>>> getAllActiveSupermarkets() {
-        log.info("Get all active supermarkets request received");
-        List<SupermarketResponse> response = supermarketService.getAllActiveSupermarkets();
+    public ResponseEntity<ApiResponse<List<SupermarketResponse>>> getAllActiveSupermarkets(
+            @RequestParam(required = false) UUID cityId,
+            @RequestParam(required = false) UUID districtId) {
+        log.info("Get active supermarkets request received: cityId={}, districtId={}", cityId, districtId);
+        List<SupermarketResponse> response = supermarketService.getAllActiveSupermarkets(cityId, districtId);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
@@ -74,12 +76,5 @@ public class SupermarketController {
         log.info("Delete supermarket request received for ID: {}", id);
         supermarketService.deleteSupermarket(id);
         return ResponseEntity.ok(ApiResponse.success("Supermarket deleted successfully", null));
-    }
-
-    @GetMapping("/districts")
-    public ResponseEntity<ApiResponse<List<String>>> getDistinctDistricts() {
-        log.info("Get distinct districts request received");
-        List<String> districts = supermarketService.getDistinctDistricts();
-        return ResponseEntity.ok(ApiResponse.success(districts));
     }
 }

@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import practice.expiry_rescue_app.business.CityBusiness;
 import practice.expiry_rescue_app.business.SupermarketBusiness;
-import practice.expiry_rescue_app.exception.ResourceNotFoundException;
+import practice.expiry_rescue_app.entity.District;
 import practice.expiry_rescue_app.entity.Supermarket;
+import practice.expiry_rescue_app.exception.ResourceNotFoundException;
 import practice.expiry_rescue_app.repository.SupermarketRepository;
 
 import java.time.LocalTime;
@@ -20,16 +22,20 @@ import java.util.UUID;
 public class SupermarketBusinessImpl implements SupermarketBusiness {
 
     private final SupermarketRepository supermarketRepository;
+    private final CityBusiness cityBusiness;
 
     @Override
     @Transactional
-    public Supermarket createSupermarket(String name, String address, String phone, String contactPerson,
+    public Supermarket createSupermarket(String name, String address, UUID districtId, String phone, String contactPerson,
                                          LocalTime operatingHoursFrom, LocalTime operatingHoursTo) {
         log.debug("Creating supermarket: {}", name);
+
+        District district = cityBusiness.getActiveDistrictById(districtId);
 
         Supermarket supermarket = new Supermarket();
         supermarket.setName(name);
         supermarket.setAddress(address);
+        supermarket.setDistrict(district);
         supermarket.setPhone(phone);
         supermarket.setContactPerson(contactPerson);
         supermarket.setOperatingHoursFrom(operatingHoursFrom);
@@ -44,7 +50,7 @@ public class SupermarketBusinessImpl implements SupermarketBusiness {
 
     @Override
     @Transactional
-    public Supermarket updateSupermarket(UUID id, String name, String address, String phone, String contactPerson,
+    public Supermarket updateSupermarket(UUID id, String name, String address, UUID districtId, String phone, String contactPerson,
                                          LocalTime operatingHoursFrom, LocalTime operatingHoursTo, Boolean isActive) {
         log.debug("Updating supermarket with ID: {}", id);
 
@@ -52,6 +58,7 @@ public class SupermarketBusinessImpl implements SupermarketBusiness {
 
         if (name != null) supermarket.setName(name);
         if (address != null) supermarket.setAddress(address);
+        if (districtId != null) supermarket.setDistrict(cityBusiness.getActiveDistrictById(districtId));
         if (phone != null) supermarket.setPhone(phone);
         if (contactPerson != null) supermarket.setContactPerson(contactPerson);
         if (operatingHoursFrom != null) supermarket.setOperatingHoursFrom(operatingHoursFrom);
@@ -75,6 +82,12 @@ public class SupermarketBusinessImpl implements SupermarketBusiness {
     @Transactional(readOnly = true)
     public List<Supermarket> getAllActiveSupermarkets() {
         return supermarketRepository.findByIsActiveTrueAndDeletedAtIsNull();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Supermarket> getAllActiveSupermarketsFiltered(UUID cityId, UUID districtId) {
+        return supermarketRepository.findActiveByCityAndDistrict(cityId, districtId);
     }
 
     @Override

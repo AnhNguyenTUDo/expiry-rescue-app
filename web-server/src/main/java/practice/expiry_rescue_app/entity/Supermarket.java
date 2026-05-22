@@ -22,7 +22,9 @@ public class Supermarket extends BaseEntity {
     @Column(nullable = false)
     private String address;
 
-    private String district;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "district_id", nullable = false)
+    private District district;
 
     private String phone;
 
