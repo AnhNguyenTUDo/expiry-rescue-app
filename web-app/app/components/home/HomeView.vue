@@ -160,6 +160,10 @@ const districtSections = computed(() => {
 
   // Case 1: a specific district is selected
   if (selectedDistrictId.value !== "all") {
+    const cityName = cities.value.find((c) => c.id === selectedCityId.value)?.name || "";
+    if (cityName) {
+      sections.push({ type: "city-heading", key: `city:${cityName}`, label: cityName, isFirst: true });
+    }
     sections.push({
       type: "district",
       key: currentDistrictLabel.value,
