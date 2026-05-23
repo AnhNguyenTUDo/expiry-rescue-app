@@ -43,13 +43,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import HomeFilter from "@/components/home/HomeFilter.vue";
 import SupermarketSection from "@/components/supermarket/SupermarketSection.vue";
 import CitySelectionModal from "@/components/home/CitySelectionModal.vue";
 import SupermarketService from "~/services/supermarket.service";
 import CityService from "~/services/city.service";
 import { useSupermarketStore } from "~/stores/supermarket";
+
+const route = useRoute();
+const router = useRouter();
 
 const LOCATION_KEY = "expiry_rescue_location";
 
@@ -250,6 +254,39 @@ const districtSections = computed(() => {
   return sections;
 });
 
+// Sync filters → URL (silent replace, no new history entry)
+const syncUrl = () => {
+  const query = {};
+  if (selectedCityId.value !== "all") query.city = selectedCityId.value;
+  if (selectedDistrictId.value !== "all") query.district = selectedDistrictId.value;
+  if (selectedStatus.value !== "all") query.status = selectedStatus.value;
+  if (searchQuery.value.trim()) query.search = searchQuery.value.trim();
+  router.replace({ query });
+};
+
+watch([selectedCityId, selectedDistrictId, selectedStatus, searchQuery], syncUrl);
+
+// Apply URL params to filter state and load data
+const applyUrlParams = async (query) => {
+  const cityId = query.city || "all";
+  const districtId = query.district || "all";
+  const status = query.status || "all";
+  const search = query.search || "";
+
+  selectedCityId.value = cityId;
+  selectedDistrictId.value = districtId;
+  selectedStatus.value = status;
+  searchQuery.value = search;
+
+  if (cityId !== "all") await loadDistricts(cityId);
+  await loadSupermarkets();
+};
+
+// Reload when user edits the URL directly in the browser
+watch(() => route.query, (query) => {
+  applyUrlParams(query);
+}, { deep: true });
+
 const onLocationConfirmed = async ({ cityId, cityName, districtId, districtName }) => {
   localStorage.setItem(LOCATION_KEY, JSON.stringify({ cityId, cityName, districtId, districtName }));
   showCityModal.value = false;
@@ -261,6 +298,14 @@ const onLocationConfirmed = async ({ cityId, cityName, districtId, districtName 
 
 onMounted(async () => {
   await loadCities();
+
+  // URL params take priority over localStorage
+  const hasUrlParams = route.query.city || route.query.district || route.query.status || route.query.search;
+  if (hasUrlParams) {
+    await applyUrlParams(route.query);
+    return;
+  }
+
   const saved = localStorage.getItem(LOCATION_KEY);
   if (saved) {
     const { cityId, districtId } = JSON.parse(saved);
