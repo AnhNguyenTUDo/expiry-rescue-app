@@ -1,34 +1,34 @@
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
 
-export const useSupermarketStore = defineStore('supermarket', () => {
+export const useSupermarketStore = defineStore("supermarket", () => {
   // State
-  const supermarkets = ref([])
-  const selectedSupermarketId = ref('')
+  const supermarkets = ref([]);
+  const selectedSupermarketId = ref("");
 
   // Getters
   const currentSupermarket = computed(() => {
-    if (!selectedSupermarketId.value) return null
-    return supermarkets.value.find(s => s.id === selectedSupermarketId.value)
-  })
+    if (!selectedSupermarketId.value) return null;
+    return supermarkets.value.find((s) => s.id === selectedSupermarketId.value);
+  });
 
   const currentSupermarketName = computed(() => {
-    if (!currentSupermarket.value) return null
-    const { name, districtName } = currentSupermarket.value
-    return districtName ? `${name} - ${districtName}` : name
-  })
+    if (!currentSupermarket.value) return null;
+    const { name, districtName } = currentSupermarket.value;
+    return districtName ? `${name} - ${districtName}` : name;
+  });
 
   // Actions
   function setSupermarkets(data) {
-    supermarkets.value = data
+    supermarkets.value = data;
   }
 
   function setSelectedSupermarketId(id) {
-    selectedSupermarketId.value = id
+    selectedSupermarketId.value = id;
   }
 
   function clearSelectedSupermarket() {
-    selectedSupermarketId.value = ''
+    selectedSupermarketId.value = "";
   }
 
   return {
@@ -42,5 +42,5 @@ export const useSupermarketStore = defineStore('supermarket', () => {
     setSupermarkets,
     setSelectedSupermarketId,
     clearSelectedSupermarket,
-  }
-})
+  };
+});

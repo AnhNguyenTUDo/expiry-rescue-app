@@ -1,9 +1,7 @@
 <template>
   <div>
     <!-- Controls -->
-    <div
-      class="bg-white p-6 rounded-xl shadow flex flex-wrap gap-4 items-center"
-    >
+    <div class="bg-white p-6 rounded-xl shadow flex flex-wrap gap-4 items-center">
       <div class="flex flex-col md:flex-row gap-2 md:items-center">
         <label for="category" class="font-semibold">Category:</label>
         <select
@@ -32,9 +30,7 @@
       class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-8"
     >
       <p><strong>Error:</strong> {{ error }}</p>
-      <button @click="fetchProducts" class="mt-2 text-sm underline">
-        Retry
-      </button>
+      <button @click="fetchProducts" class="mt-2 text-sm underline">Retry</button>
     </div>
 
     <!-- Products Grid -->
@@ -42,11 +38,7 @@
       v-else-if="filteredProducts.length > 0"
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8"
     >
-      <ProductCard
-        v-for="(p, i) in filteredProducts"
-        :key="p.id || i"
-        :product="p"
-      />
+      <ProductCard v-for="(p, i) in filteredProducts" :key="p.id || i" :product="p" />
     </div>
 
     <!-- Empty State -->
@@ -83,75 +75,72 @@ const fetchProducts = async () => {
   error.value = null;
 
   try {
-  const response = await ProductInventoryService.getAllProductInventory(
-    (err) => {
+    const response = await ProductInventoryService.getAllProductInventory((err) => {
       console.error("Error fetching products:", err);
       error.value = err.response?.data?.message || "Failed to load products";
-    }
-  );
+    });
 
-  if (response && response.data) {
-    // Group products by product_master_id
-    const productMap = new Map();
+    if (response && response.data) {
+      // Group products by product_master_id
+      const productMap = new Map();
 
-    for (const item of response.data) {
-      const key = item.productMasterId;
+      for (const item of response.data) {
+        const key = item.productMasterId;
 
-      if (productMap.has(key)) {
-        // Product master already exists, combine quantities
-        const existingProduct = productMap.get(key);
-        existingProduct.quantityAvailable += item.quantityAvailable;
+        if (productMap.has(key)) {
+          // Product master already exists, combine quantities
+          const existingProduct = productMap.get(key);
+          existingProduct.quantityAvailable += item.quantityAvailable;
 
-        // Use the earliest expiry date
-        if (item.expiryDate < existingProduct.expiryTimestamp) {
-          existingProduct.expiryTimestamp = item.expiryDate;
-          existingProduct.sellUntil = formatDate(item.expiryDate);
-          existingProduct.expire = formatDate(item.expiryDate);
-          existingProduct.sellDays = calculateDaysUntil(item.expiryDate);
-          existingProduct.expireDays = calculateDaysUntil(item.expiryDate);
+          // Use the earliest expiry date
+          if (item.expiryDate < existingProduct.expiryTimestamp) {
+            existingProduct.expiryTimestamp = item.expiryDate;
+            existingProduct.sellUntil = formatDate(item.expiryDate);
+            existingProduct.expire = formatDate(item.expiryDate);
+            existingProduct.sellDays = calculateDaysUntil(item.expiryDate);
+            existingProduct.expireDays = calculateDaysUntil(item.expiryDate);
+          }
+
+          // Update availability
+          existingProduct.availability = calculateAvailability(
+            existingProduct.expiryTimestamp,
+            existingProduct.quantityAvailable,
+            "AVAILABLE"
+          );
+        } else {
+          // First occurrence of this product master
+          productMap.set(key, {
+            id: item.id,
+            emoji: "🛒",
+            category: item.categoryName || item.productName,
+            name: item.productName,
+            location: item.supermarketName,
+            sellUntil: formatDate(item.expiryDate),
+            expire: formatDate(item.expiryDate),
+            sellDays: calculateDaysUntil(item.expiryDate),
+            expireDays: calculateDaysUntil(item.expiryDate),
+            oldPrice: `${item.originalPrice.toLocaleString()}₫`,
+            newPrice: `${item.sellingPrice.toLocaleString()}₫`,
+            discount: calculateDiscount(item.originalPrice, item.sellingPrice),
+            availability: calculateAvailability(
+              item.expiryDate,
+              item.quantityAvailable,
+              item.status
+            ),
+            quantityAvailable: item.quantityAvailable,
+            productMasterId: item.productMasterId,
+            supermarketId: item.supermarketId,
+            expiryTimestamp: item.expiryDate,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt,
+          });
         }
-
-        // Update availability
-        existingProduct.availability = calculateAvailability(
-          existingProduct.expiryTimestamp,
-          existingProduct.quantityAvailable,
-          "AVAILABLE"
-        );
-      } else {
-        // First occurrence of this product master
-        productMap.set(key, {
-          id: item.id,
-          emoji: "🛒",
-          category: item.categoryName || item.productName,
-          name: item.productName,
-          location: item.supermarketName,
-          sellUntil: formatDate(item.expiryDate),
-          expire: formatDate(item.expiryDate),
-          sellDays: calculateDaysUntil(item.expiryDate),
-          expireDays: calculateDaysUntil(item.expiryDate),
-          oldPrice: `${item.originalPrice.toLocaleString()}₫`,
-          newPrice: `${item.sellingPrice.toLocaleString()}₫`,
-          discount: calculateDiscount(item.originalPrice, item.sellingPrice),
-          availability: calculateAvailability(
-            item.expiryDate,
-            item.quantityAvailable,
-            item.status
-          ),
-          quantityAvailable: item.quantityAvailable,
-          productMasterId: item.productMasterId,
-          supermarketId: item.supermarketId,
-          expiryTimestamp: item.expiryDate,
-          createdAt: item.createdAt,
-          updatedAt: item.updatedAt,
-        });
       }
-    }
 
-    // Convert map to array
-    products.value = Array.from(productMap.values());
-  }
-  }
-  catch (err) {
+      // Convert map to array
+      products.value = Array.from(productMap.values());
+    }
+  } catch (err) {
     console.error("Error:", err);
     error.value = "Failed to load products";
   } finally {
@@ -184,9 +173,7 @@ const calculateDaysUntil = (timestamp) => {
 
 const calculateDiscount = (originalPrice, sellingPrice) => {
   if (!originalPrice || !sellingPrice) return "";
-  const discount = Math.round(
-    ((originalPrice - sellingPrice) / originalPrice) * 100
-  );
+  const discount = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100);
   return `-${discount}%`;
 };
 

@@ -6,10 +6,26 @@
         <p>Reducing food waste, saving money</p>
       </div>
       <div class="flex gap-3 flex-wrap items-center">
-        <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20">Contact Us</button>
-        <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20">Help Center</button>
-        <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20">Terms of Service</button>
-        <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20">Privacy Policy</button>
+        <button
+          class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20"
+        >
+          Contact Us
+        </button>
+        <button
+          class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20"
+        >
+          Help Center
+        </button>
+        <button
+          class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20"
+        >
+          Terms of Service
+        </button>
+        <button
+          class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20"
+        >
+          Privacy Policy
+        </button>
       </div>
     </div>
   </footer>

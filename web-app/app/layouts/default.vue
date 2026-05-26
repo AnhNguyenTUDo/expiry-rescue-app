@@ -42,7 +42,7 @@ const selectedSupermarket = ref("");
 // Update selected supermarket based on route
 const updateSelectedSupermarket = () => {
   // Check if we're on a supermarket page
-  if (route.path.startsWith('/supermarkets/')) {
+  if (route.path.startsWith("/supermarkets/")) {
     const supermarketId = route.params.id;
     if (supermarketId) {
       selectedSupermarket.value = supermarketId;
@@ -50,11 +50,10 @@ const updateSelectedSupermarket = () => {
     }
   }
   // Check if we're on a product page with supermarketId query param
-  else if (route.path.startsWith('/products/') && route.query.supermarketId) {
+  else if (route.path.startsWith("/products/") && route.query.supermarketId) {
     selectedSupermarket.value = route.query.supermarketId;
     supermarketStore.setSelectedSupermarketId(route.query.supermarketId);
-  }
-  else {
+  } else {
     selectedSupermarket.value = "";
     supermarketStore.clearSelectedSupermarket();
   }
@@ -73,7 +72,7 @@ watch(
   () => {
     updateSelectedSupermarket();
   },
-  { flush: 'post' }
+  { flush: "post" }
 );
 
 watch(
@@ -81,7 +80,7 @@ watch(
   () => {
     updateSelectedSupermarket();
   },
-  { flush: 'post' }
+  { flush: "post" }
 );
 
 // Update on mount

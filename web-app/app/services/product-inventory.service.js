@@ -37,7 +37,8 @@ class ProductInventoryService {
    * @returns {Promise} - Returns inventories for the product master
    */
   getInventoryByProductMaster(productMasterId, errorCallBack) {
-    const url = Constants.endpoints.product_inventory.GET_INVENTORY_BY_PRODUCT_MASTER(productMasterId);
+    const url =
+      Constants.endpoints.product_inventory.GET_INVENTORY_BY_PRODUCT_MASTER(productMasterId);
     return requestAxios(this.axios.get(url), errorCallBack);
   }
 

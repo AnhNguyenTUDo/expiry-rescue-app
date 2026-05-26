@@ -8,7 +8,10 @@
     </div>
 
     <!-- Error State -->
-    <div v-else-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    <div
+      v-else-if="error"
+      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+    >
       <p><strong>Error:</strong> {{ error }}</p>
     </div>
 
@@ -25,7 +28,10 @@
       </div>
 
       <!-- Inventory Grid -->
-      <div v-if="inventories.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div
+        v-if="inventories.length > 0"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+      >
         <div
           v-for="item in inventories"
           :key="item.id"
@@ -36,7 +42,9 @@
             <span
               :class="[
                 'px-2 py-1 text-xs rounded-full',
-                item.status === 'AVAILABLE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                item.status === 'AVAILABLE'
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-red-100 text-red-800',
               ]"
             >
               {{ item.status }}
@@ -82,8 +90,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useProductInventory } from '~/composables/useProductInventory';
+import { ref, onMounted } from "vue";
+import { useProductInventory } from "~/composables/useProductInventory";
 
 // State
 const inventories = ref([]);
@@ -106,13 +114,13 @@ const fetchInventories = async () => {
     // Extract data from API response
     if (response.success && response.data) {
       inventories.value = response.data;
-      console.log('Inventories loaded:', inventories.value);
+      console.log("Inventories loaded:", inventories.value);
     } else {
       inventories.value = [];
     }
   } catch (err) {
-    error.value = err.response?.data?.message || err.message || 'Failed to load inventories';
-    console.error('Error fetching inventories:', err);
+    error.value = err.response?.data?.message || err.message || "Failed to load inventories";
+    console.error("Error fetching inventories:", err);
   } finally {
     loading.value = false;
   }
@@ -124,12 +132,12 @@ const fetchInventories = async () => {
  * @returns {string} - Formatted date string
  */
 const formatDate = (timestamp) => {
-  if (!timestamp) return 'N/A';
+  if (!timestamp) return "N/A";
   const date = new Date(timestamp);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
   });
 };
 

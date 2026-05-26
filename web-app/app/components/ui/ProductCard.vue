@@ -18,9 +18,10 @@
         <span v-else-if="product.availability === 'out of stock'">✕</span>
         {{ product.availability }}
       </div>
-      <span class="py-1.5 text-xs px-3 py-1 font-semibold text-gray-700 rounded-full border border-gray-400">{{
-        product.category
-      }}</span>
+      <span
+        class="py-1.5 text-xs px-3 py-1 font-semibold text-gray-700 rounded-full border border-gray-400"
+        >{{ product.category }}</span
+      >
     </div>
 
     <!-- Product Emoji (centered) -->
@@ -31,44 +32,35 @@
     <h3 class="text-lg font-semibold">{{ product.name }}</h3>
     <p class="text-gray-500 text-sm mb-3 mt-1">{{ product.location }}</p>
 
-    <div
-      class="text-sm bg-green-50 border border-green-200 rounded-lg p-3 space-y-2"
-    >
+    <div class="text-sm bg-green-50 border border-green-200 rounded-lg p-3 space-y-2">
       <div class="flex justify-between items-center">
         <span class="text-gray-500 font-semibold">Sell until:</span>
         <div class="flex items-center gap-2">
           <p class="text-green-700 font-semibold">{{ product.sellUntil }}</p>
-          <span
-            class="bg-green-700 text-white text-xs px-2 py-0.5 rounded-sm font-semibold"
-            >{{ product.sellDays }}</span
-          >
+          <span class="bg-green-700 text-white text-xs px-2 py-0.5 rounded-sm font-semibold">{{
+            product.sellDays
+          }}</span>
         </div>
       </div>
       <div class="flex justify-between items-center">
         <span class="text-gray-500 font-semibold">Expires:</span>
         <div class="flex items-center gap-2">
           <p class="text-green-700 font-semibold">{{ product.expire }}</p>
-          <span
-            class="bg-green-700 text-white text-xs px-2 py-0.5 rounded-sm font-semibold"
-            >{{ product.expireDays }}</span
-          >
+          <span class="bg-green-700 text-white text-xs px-2 py-0.5 rounded-sm font-semibold">{{
+            product.expireDays
+          }}</span>
         </div>
       </div>
     </div>
 
     <div class="flex justify-between items-center mt-4">
       <div class="flex flex-col">
-        <span class="line-through text-gray-400 text-sm">{{
-          product.oldPrice
-        }}</span>
-        <span class="text-green-700 font-bold text-2xl">{{
-          product.newPrice
-        }}</span>
+        <span class="line-through text-gray-400 text-sm">{{ product.oldPrice }}</span>
+        <span class="text-green-700 font-bold text-2xl">{{ product.newPrice }}</span>
       </div>
-      <span
-        class="bg-[#dc3545] text-white text-sm font-semibold px-3 py-1 rounded-sm"
-        >{{ product.discount }}</span
-      >
+      <span class="bg-[#dc3545] text-white text-sm font-semibold px-3 py-1 rounded-sm">{{
+        product.discount
+      }}</span>
     </div>
   </div>
 </template>

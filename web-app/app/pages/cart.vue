@@ -3,7 +3,10 @@
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Shopping Cart</h1>
 
     <!-- Empty Cart State -->
-    <div v-if="cartStore.cartItems.length === 0" class="bg-white rounded-xl shadow p-12 text-center">
+    <div
+      v-if="cartStore.cartItems.length === 0"
+      class="bg-white rounded-xl shadow p-12 text-center"
+    >
       <div class="text-6xl mb-4">🛒</div>
       <h2 class="text-2xl font-semibold text-gray-700 mb-2">Your cart is empty</h2>
       <p class="text-gray-500 mb-6">Add products to your cart to get started!</p>
@@ -137,7 +140,8 @@
               Total Items: <span class="font-semibold">{{ cartStore.totalSelectedItems }}</span>
             </div>
             <div class="text-sm text-gray-600">
-              Selected: <span class="font-semibold">{{ cartStore.selectedItems.length }} product(s)</span>
+              Selected:
+              <span class="font-semibold">{{ cartStore.selectedItems.length }} product(s)</span>
             </div>
           </div>
           <div class="text-right">
@@ -159,9 +163,11 @@
             @click="handleCheckout"
             :disabled="cartStore.selectedItems.length === 0"
             class="flex-1 py-3 px-6 rounded-lg font-semibold text-lg transition"
-            :class="cartStore.selectedItems.length === 0
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-green-600 text-white hover:bg-green-700 cursor-pointer'"
+            :class="
+              cartStore.selectedItems.length === 0
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : 'bg-green-600 text-white hover:bg-green-700 cursor-pointer'
+            "
           >
             Checkout ({{ cartStore.selectedItems.length }})
           </button>
@@ -172,77 +178,75 @@
 </template>
 
 <script setup>
-import { useCartStore } from '~/stores/cart'
-import { useOrderStore } from '~/stores/order'
-import { useRouter } from 'vue-router'
+import { useCartStore } from "~/stores/cart";
+import { useOrderStore } from "~/stores/order";
+import { useRouter } from "vue-router";
 
-const cartStore = useCartStore()
-const orderStore = useOrderStore()
-const router = useRouter()
+const cartStore = useCartStore();
+const orderStore = useOrderStore();
+const router = useRouter();
 
 // Checkout handler
 const handleCheckout = async () => {
   if (cartStore.selectedItems.length === 0) {
-    alert('Please select items to checkout')
-    return
+    alert("Please select items to checkout");
+    return;
   }
 
   try {
     // Prepare order data
     const orderData = {
-      items: cartStore.selectedItems.map(item => ({
+      items: cartStore.selectedItems.map((item) => ({
         inventoryId: item.inventoryId,
         quantity: item.quantity,
-      }))
-    }
+      })),
+    };
 
     // Create order
-    const order = await orderStore.createOrder(orderData)
+    const order = await orderStore.createOrder(orderData);
 
     if (order) {
       // Remove checked out items from cart
-      cartStore.selectedItems.forEach(item => {
-        cartStore.removeFromCart(item.inventoryId)
-      })
+      cartStore.selectedItems.forEach((item) => {
+        cartStore.removeFromCart(item.inventoryId);
+      });
 
       // Redirect to order detail page
-      alert(`Order #${order.orderNumber} created successfully!`)
-      router.push(`/orders/${order.id}`)
+      alert(`Order #${order.orderNumber} created successfully!`);
+      router.push(`/orders/${order.id}`);
     }
   } catch (error) {
-    console.error('Checkout failed:', error)
-    alert('Failed to create order. Please try again.')
+    console.error("Checkout failed:", error);
+    alert("Failed to create order. Please try again.");
   }
-}
+};
 
 // Helper functions
 const formatDate = (timestamp) => {
-  if (!timestamp) return 'N/A';
+  if (!timestamp) return "N/A";
   const date = new Date(timestamp);
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
   });
 };
 
 const calculateDaysUntil = (timestamp) => {
-  if (!timestamp) return 'N/A';
+  if (!timestamp) return "N/A";
   const now = Date.now();
   const diff = timestamp - now;
   const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
 
-  if (days < 0) return 'Expired';
-  if (days === 0) return 'Today';
-  if (days === 1) return '1 day';
+  if (days < 0) return "Expired";
+  if (days === 0) return "Today";
+  if (days === 1) return "1 day";
   return `${days} days`;
 };
 
 const calculateDiscount = (originalPrice, sellingPrice) => {
-  if (!originalPrice || !sellingPrice) return '';
-  const discount = Math.round(
-    ((originalPrice - sellingPrice) / originalPrice) * 100
-  );
+  if (!originalPrice || !sellingPrice) return "";
+  const discount = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100);
   return `-${discount}%`;
 };
 </script>

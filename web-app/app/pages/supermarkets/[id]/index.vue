@@ -6,10 +6,7 @@
     </div>
 
     <!-- Error State -->
-    <div
-      v-else-if="error"
-      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
-    >
+    <div v-else-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
       <p><strong>Error:</strong> {{ error }}</p>
     </div>
 
@@ -27,7 +24,8 @@
               <span class="font-medium">Address:</span> {{ supermarket.address }}
             </p>
             <p v-if="supermarket.districtName" class="text-gray-600">
-              <span class="font-medium">District:</span> {{ supermarket.districtName }}<span v-if="supermarket.cityName">, {{ supermarket.cityName }}</span>
+              <span class="font-medium">District:</span> {{ supermarket.districtName
+              }}<span v-if="supermarket.cityName">, {{ supermarket.cityName }}</span>
             </p>
             <p v-if="supermarket.phone" class="text-gray-600">
               <span class="font-medium">Phone:</span> {{ supermarket.phone }}
@@ -35,7 +33,10 @@
             <p v-if="supermarket.contactPerson" class="text-gray-600">
               <span class="font-medium">Contact Person:</span> {{ supermarket.contactPerson }}
             </p>
-            <p v-if="supermarket.operatingHoursFrom && supermarket.operatingHoursTo" class="text-gray-600">
+            <p
+              v-if="supermarket.operatingHoursFrom && supermarket.operatingHoursTo"
+              class="text-gray-600"
+            >
               <span class="font-medium">Operating Hours:</span>
               {{ supermarket.operatingHoursFrom }} - {{ supermarket.operatingHoursTo }}
             </p>
@@ -53,11 +54,7 @@
             class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-600 focus:border-green-600 min-w-[250px]"
           >
             <option value="all">All Categories</option>
-            <option
-              v-for="category in allCategories"
-              :key="category.id"
-              :value="category.id"
-            >
+            <option v-for="category in allCategories" :key="category.id" :value="category.id">
               {{ category.name }}
             </option>
           </select>
@@ -68,11 +65,7 @@
       <div>
         <h2 class="text-2xl font-bold mb-6">Products by Category</h2>
 
-        <div
-          v-for="category in filteredCategoriesWithProducts"
-          :key="category.id"
-          class="mb-8"
-        >
+        <div v-for="category in filteredCategoriesWithProducts" :key="category.id" class="mb-8">
           <!-- Category Header -->
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-xl font-semibold text-green-700">
@@ -109,10 +102,7 @@
           </div>
 
           <!-- Show Less Button -->
-          <div
-            v-if="expandedCategories[category.id]"
-            class="text-center mt-4"
-          >
+          <div v-if="expandedCategories[category.id]" class="text-center mt-4">
             <button
               @click="toggleCategory(category.id)"
               class="btn bg-gray-500 text-white hover:bg-gray-600"
@@ -161,13 +151,10 @@ const updateHeaderShadow = () => {
 // Fetch supermarket details with products
 const fetchSupermarketWithProducts = async () => {
   try {
-    const response = await SupermarketService.getSupermarketWithProducts(
-      supermarketId,
-      (err) => {
-        console.error("Error fetching supermarket:", err);
-        error.value = err.response?.data?.message || "Failed to load supermarket";
-      }
-    );
+    const response = await SupermarketService.getSupermarketWithProducts(supermarketId, (err) => {
+      console.error("Error fetching supermarket:", err);
+      error.value = err.response?.data?.message || "Failed to load supermarket";
+    });
 
     if (response && response.data) {
       supermarket.value = response.data;
@@ -289,9 +276,7 @@ const calculateDaysUntil = (timestamp) => {
 
 const calculateDiscount = (originalPrice, sellingPrice) => {
   if (!originalPrice || !sellingPrice) return "";
-  const discount = Math.round(
-    ((originalPrice - sellingPrice) / originalPrice) * 100
-  );
+  const discount = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100);
   return `-${discount}%`;
 };
 
@@ -330,16 +315,16 @@ const getCategoryEmoji = (categoryName) => {
 
   const lowerName = categoryName.toLowerCase();
   const emojiMap = {
-    "dairy": "🧀",
-    "bakery": "🥐",
-    "beverages": "🥤",
-    "spices": "🌶️",
-    "cosmetics": "💄",
-    "meat": "🍖",
-    "seafood": "🦐",
-    "produce": "🥬",
-    "fruits": "🍎",
-    "vegetables": "🥕",
+    dairy: "🧀",
+    bakery: "🥐",
+    beverages: "🥤",
+    spices: "🌶️",
+    cosmetics: "💄",
+    meat: "🍖",
+    seafood: "🦐",
+    produce: "🥬",
+    fruits: "🍎",
+    vegetables: "🥕",
   };
 
   // Check if category name contains any of the keywords
@@ -358,9 +343,7 @@ const filteredCategoriesWithProducts = computed(() => {
 
   // Filter by selected category if not "all"
   if (selectedCategoryFilter.value !== "all") {
-    categoriesToShow = categoriesToShow.filter(
-      (cat) => cat.id === selectedCategoryFilter.value
-    );
+    categoriesToShow = categoriesToShow.filter((cat) => cat.id === selectedCategoryFilter.value);
   }
 
   // Map categories to include their products
@@ -389,10 +372,7 @@ onMounted(async () => {
   window.addEventListener("scroll", updateHeaderShadow, { passive: true });
   window.addEventListener("resize", updateHeaderShadow);
 
-  await Promise.all([
-    fetchSupermarketWithProducts(),
-    fetchCategories(),
-  ]);
+  await Promise.all([fetchSupermarketWithProducts(), fetchCategories()]);
   // Recompute after details are rendered so initial state is correct
   await nextTick();
   updateHeaderShadow();
