@@ -1,4 +1,4 @@
-import apiClient from "~/utils/api";
+import apiClient from '~/utils/api'
 
 /**
  * Product Inventory API Service
@@ -11,13 +11,13 @@ export const useProductInventory = () => {
    */
   const getAllInventories = async () => {
     try {
-      const response = await apiClient.get("/products/inventory");
-      return response.data;
+      const response = await apiClient.get('/products/inventory')
+      return response.data
     } catch (error) {
-      console.error("Error fetching all inventories:", error);
-      throw error;
+      console.error('Error fetching all inventories:', error)
+      throw error
     }
-  };
+  }
 
   /**
    * Get product inventory by ID
@@ -26,13 +26,13 @@ export const useProductInventory = () => {
    */
   const getInventoryById = async (id) => {
     try {
-      const response = await apiClient.get(`/products/inventory/${id}`);
-      return response.data;
+      const response = await apiClient.get(`/products/inventory/${id}`)
+      return response.data
     } catch (error) {
-      console.error(`Error fetching inventory ${id}:`, error);
-      throw error;
+      console.error(`Error fetching inventory ${id}:`, error)
+      throw error
     }
-  };
+  }
 
   /**
    * Get inventories by supermarket
@@ -41,13 +41,13 @@ export const useProductInventory = () => {
    */
   const getInventoriesBySupermarket = async (supermarketId) => {
     try {
-      const response = await apiClient.get(`/products/inventory/supermarket/${supermarketId}`);
-      return response.data;
+      const response = await apiClient.get(`/products/inventory/supermarket/${supermarketId}`)
+      return response.data
     } catch (error) {
-      console.error(`Error fetching inventories for supermarket ${supermarketId}:`, error);
-      throw error;
+      console.error(`Error fetching inventories for supermarket ${supermarketId}:`, error)
+      throw error
     }
-  };
+  }
 
   /**
    * Get inventories by status
@@ -56,13 +56,13 @@ export const useProductInventory = () => {
    */
   const getInventoriesByStatus = async (status) => {
     try {
-      const response = await apiClient.get(`/products/inventory/status/${status}`);
-      return response.data;
+      const response = await apiClient.get(`/products/inventory/status/${status}`)
+      return response.data
     } catch (error) {
-      console.error(`Error fetching inventories with status ${status}:`, error);
-      throw error;
+      console.error(`Error fetching inventories with status ${status}:`, error)
+      throw error
     }
-  };
+  }
 
   /**
    * Get expiring inventories
@@ -71,15 +71,15 @@ export const useProductInventory = () => {
    */
   const getExpiringInventories = async (daysBeforeExpiry = 7) => {
     try {
-      const response = await apiClient.get("/products/inventory/expiring", {
+      const response = await apiClient.get('/products/inventory/expiring', {
         params: { daysBeforeExpiry },
-      });
-      return response.data;
+      })
+      return response.data
     } catch (error) {
-      console.error(`Error fetching expiring inventories:`, error);
-      throw error;
+      console.error(`Error fetching expiring inventories:`, error)
+      throw error
     }
-  };
+  }
 
   /**
    * Create new product inventory
@@ -94,13 +94,13 @@ export const useProductInventory = () => {
    */
   const createInventory = async (inventoryData) => {
     try {
-      const response = await apiClient.post("/products/inventory", inventoryData);
-      return response.data;
+      const response = await apiClient.post('/products/inventory', inventoryData)
+      return response.data
     } catch (error) {
-      console.error("Error creating inventory:", error);
-      throw error;
+      console.error('Error creating inventory:', error)
+      throw error
     }
-  };
+  }
 
   /**
    * Update product inventory
@@ -115,13 +115,13 @@ export const useProductInventory = () => {
    */
   const updateInventory = async (id, updateData) => {
     try {
-      const response = await apiClient.put(`/products/inventory/${id}`, updateData);
-      return response.data;
+      const response = await apiClient.put(`/products/inventory/${id}`, updateData)
+      return response.data
     } catch (error) {
-      console.error(`Error updating inventory ${id}:`, error);
-      throw error;
+      console.error(`Error updating inventory ${id}:`, error)
+      throw error
     }
-  };
+  }
 
   /**
    * Mark inventory as not available
@@ -130,13 +130,13 @@ export const useProductInventory = () => {
    */
   const markAsNotAvailable = async (id) => {
     try {
-      const response = await apiClient.put(`/products/inventory/${id}/mark-unavailable`);
-      return response.data;
+      const response = await apiClient.put(`/products/inventory/${id}/mark-unavailable`)
+      return response.data
     } catch (error) {
-      console.error(`Error marking inventory ${id} as not available:`, error);
-      throw error;
+      console.error(`Error marking inventory ${id} as not available:`, error)
+      throw error
     }
-  };
+  }
 
   /**
    * Delete product inventory (soft delete)
@@ -145,13 +145,13 @@ export const useProductInventory = () => {
    */
   const deleteInventory = async (id) => {
     try {
-      const response = await apiClient.delete(`/products/inventory/${id}`);
-      return response.data;
+      const response = await apiClient.delete(`/products/inventory/${id}`)
+      return response.data
     } catch (error) {
-      console.error(`Error deleting inventory ${id}:`, error);
-      throw error;
+      console.error(`Error deleting inventory ${id}:`, error)
+      throw error
     }
-  };
+  }
 
   return {
     getAllInventories,
@@ -163,5 +163,5 @@ export const useProductInventory = () => {
     updateInventory,
     markAsNotAvailable,
     deleteInventory,
-  };
-};
+  }
+}

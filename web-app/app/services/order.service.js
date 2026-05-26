@@ -1,10 +1,10 @@
-import { useAxios } from "../composables/useAxios";
-import { requestAxios } from "../common/utils";
-import urlConstants from "~/common/url-constants";
+import { useAxios } from '../composables/useAxios'
+import { requestAxios } from '../common/utils'
+import urlConstants from '~/common/url-constants'
 
 class OrderService {
   constructor() {
-    this.axios = useAxios();
+    this.axios = useAxios()
   }
 
   /**
@@ -14,31 +14,28 @@ class OrderService {
     return requestAxios(
       this.axios.post(urlConstants.endpoints.order.CREATE_ORDER, orderData),
       errorCallback
-    );
+    )
   }
 
   /**
    * Get all user orders
    */
   getUserOrders(errorCallback) {
-    return requestAxios(
-      this.axios.get(urlConstants.endpoints.order.GET_USER_ORDERS),
-      errorCallback
-    );
+    return requestAxios(this.axios.get(urlConstants.endpoints.order.GET_USER_ORDERS), errorCallback)
   }
 
   /**
    * Search orders with filters
    */
   searchOrders(status, searchQuery, errorCallback) {
-    const params = {};
-    if (status) params.status = status;
-    if (searchQuery) params.search = searchQuery;
+    const params = {}
+    if (status) params.status = status
+    if (searchQuery) params.search = searchQuery
 
     return requestAxios(
       this.axios.get(urlConstants.endpoints.order.GET_USER_ORDERS, { params }),
       errorCallback
-    );
+    )
   }
 
   /**
@@ -48,7 +45,7 @@ class OrderService {
     return requestAxios(
       this.axios.get(urlConstants.endpoints.order.GET_ORDER_BY_ID(orderId)),
       errorCallback
-    );
+    )
   }
 
   /**
@@ -58,7 +55,7 @@ class OrderService {
     return requestAxios(
       this.axios.put(urlConstants.endpoints.order.CANCEL_ORDER(orderId)),
       errorCallback
-    );
+    )
   }
 
   /**
@@ -68,8 +65,8 @@ class OrderService {
     return requestAxios(
       this.axios.delete(urlConstants.endpoints.order.DELETE_ORDER(orderId)),
       errorCallback
-    );
+    )
   }
 }
 
-export default new OrderService();
+export default new OrderService()

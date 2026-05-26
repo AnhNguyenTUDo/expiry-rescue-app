@@ -1,18 +1,18 @@
-import { useAxios } from "../composables/useAxios";
-import { requestAxios } from "../common/utils";
-import Constants from "../common/url-constants";
+import { useAxios } from '../composables/useAxios'
+import { requestAxios } from '../common/utils'
+import Constants from '../common/url-constants'
 
 class SupermarketService {
   constructor() {
-    this.axios = useAxios();
+    this.axios = useAxios()
   }
 
   /**
    * Get all supermarkets
    */
   getAllSupermarkets(errorCallBack) {
-    const url = Constants.endpoints.supermarket.GET_ALL_SUPERMARKETS;
-    return requestAxios(this.axios.get(url), errorCallBack);
+    const url = Constants.endpoints.supermarket.GET_ALL_SUPERMARKETS
+    return requestAxios(this.axios.get(url), errorCallBack)
   }
 
   /**
@@ -23,11 +23,11 @@ class SupermarketService {
    * @param {Function} [errorCallBack]
    */
   getActiveSupermarkets(filters = {}, errorCallBack) {
-    const url = Constants.endpoints.supermarket.GET_ACTIVE_SUPERMARKETS;
-    const params = {};
-    if (filters.cityId) params.cityId = filters.cityId;
-    if (filters.districtId) params.districtId = filters.districtId;
-    return requestAxios(this.axios.get(url, { params }), errorCallBack);
+    const url = Constants.endpoints.supermarket.GET_ACTIVE_SUPERMARKETS
+    const params = {}
+    if (filters.cityId) params.cityId = filters.cityId
+    if (filters.districtId) params.districtId = filters.districtId
+    return requestAxios(this.axios.get(url, { params }), errorCallBack)
   }
 
   /**
@@ -35,8 +35,8 @@ class SupermarketService {
    * @param {string} id - Supermarket ID (UUID)
    */
   getSupermarketById(id, errorCallBack) {
-    const url = Constants.endpoints.supermarket.GET_SUPERMARKET_BY_ID(id);
-    return requestAxios(this.axios.get(url), errorCallBack);
+    const url = Constants.endpoints.supermarket.GET_SUPERMARKET_BY_ID(id)
+    return requestAxios(this.axios.get(url), errorCallBack)
   }
 
   /**
@@ -44,9 +44,9 @@ class SupermarketService {
    * @param {string} id - Supermarket ID (UUID)
    */
   getSupermarketWithProducts(id, errorCallBack) {
-    const url = Constants.endpoints.supermarket.GET_SUPERMARKET_WITH_PRODUCTS(id);
-    return requestAxios(this.axios.get(url), errorCallBack);
+    const url = Constants.endpoints.supermarket.GET_SUPERMARKET_WITH_PRODUCTS(id)
+    return requestAxios(this.axios.get(url), errorCallBack)
   }
 }
 
-export default new SupermarketService();
+export default new SupermarketService()

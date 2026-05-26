@@ -94,8 +94,8 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick, onMounted, onUnmounted } from "vue";
-import Tooltip from "@/components/ui/Tooltip.vue";
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
+import Tooltip from '@/components/ui/Tooltip.vue'
 
 const props = defineProps({
   modelValue: {
@@ -108,7 +108,7 @@ const props = defineProps({
   },
   minWidth: {
     type: String,
-    default: "160px",
+    default: '160px',
   },
   disabled: {
     type: Boolean,
@@ -116,71 +116,71 @@ const props = defineProps({
   },
   tooltip: {
     type: String,
-    default: "",
+    default: '',
   },
-});
+})
 
-const emit = defineEmits(["update:modelValue", "change"]);
+const emit = defineEmits(['update:modelValue', 'change'])
 
-const isOpen = ref(false);
-const query = ref("");
-const dropdownRef = ref(null);
-const searchInputRef = ref(null);
+const isOpen = ref(false)
+const query = ref('')
+const dropdownRef = ref(null)
+const searchInputRef = ref(null)
 
 // Generate unique tooltip element ID
-const tooltipId = `tooltip-${Math.random().toString(36).substring(2, 9)}`;
+const tooltipId = `tooltip-${Math.random().toString(36).substring(2, 9)}`
 
 // Disabled either explicitly via prop or implicitly if only one (or zero) options exist
-const isDisabled = computed(() => props.disabled || props.options.length <= 1);
+const isDisabled = computed(() => props.disabled || props.options.length <= 1)
 
 // Only show search input if there are more than 5 options
-const showSearch = computed(() => props.options.length > 5);
+const showSearch = computed(() => props.options.length > 5)
 
 const selectedLabel = computed(
   () => props.options.find((o) => o.value === props.modelValue)?.label ?? props.modelValue
-);
+)
 
 const filteredOptions = computed(() => {
-  const q = query.value.trim().toLowerCase();
-  if (!q) return props.options;
-  return props.options.filter((o) => o.label.toLowerCase().includes(q));
-});
+  const q = query.value.trim().toLowerCase()
+  if (!q) return props.options
+  return props.options.filter((o) => o.label.toLowerCase().includes(q))
+})
 
 const toggle = () => {
-  if (isDisabled.value) return;
-  isOpen.value = !isOpen.value;
+  if (isDisabled.value) return
+  isOpen.value = !isOpen.value
   if (isOpen.value) {
-    query.value = "";
+    query.value = ''
     if (showSearch.value) {
-      nextTick(() => searchInputRef.value?.focus());
+      nextTick(() => searchInputRef.value?.focus())
     }
   }
-};
+}
 
 const select = (value) => {
-  emit("update:modelValue", value);
-  emit("change", value);
-  isOpen.value = false;
-  query.value = "";
-};
+  emit('update:modelValue', value)
+  emit('change', value)
+  isOpen.value = false
+  query.value = ''
+}
 
 // Reset query when closed
 watch(isOpen, (val) => {
-  if (!val) query.value = "";
-});
+  if (!val) query.value = ''
+})
 
 // Close on click outside
 const handleClickOutside = (event) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
-    isOpen.value = false;
+    isOpen.value = false
   }
-};
+}
 
 onMounted(() => {
-  document.addEventListener("mousedown", handleClickOutside);
-});
+  document.addEventListener('mousedown', handleClickOutside)
+})
 
 onUnmounted(() => {
-  document.removeEventListener("mousedown", handleClickOutside);
-});
+  document.removeEventListener('mousedown', handleClickOutside)
+})
 </script>

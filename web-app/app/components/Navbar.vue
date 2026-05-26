@@ -261,51 +261,51 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
-import { useAuthStore } from "~/stores/auth";
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useAuthStore } from '~/stores/auth'
 
-const authStore = useAuthStore();
+const authStore = useAuthStore()
 
-const isDropdownOpen = ref(false);
-const isMobileMenuOpen = ref(false);
+const isDropdownOpen = ref(false)
+const isMobileMenuOpen = ref(false)
 
 const getUserInitial = computed(() => {
   if (authStore.user?.fullName) {
-    return authStore.user.fullName.charAt(0).toUpperCase();
+    return authStore.user.fullName.charAt(0).toUpperCase()
   }
   if (authStore.user?.email) {
-    return authStore.user.email.charAt(0).toUpperCase();
+    return authStore.user.email.charAt(0).toUpperCase()
   }
-  return "U";
-});
+  return 'U'
+})
 
 const toggleDropdown = () => {
-  isDropdownOpen.value = !isDropdownOpen.value;
-};
+  isDropdownOpen.value = !isDropdownOpen.value
+}
 
 const toggleMobileMenu = () => {
-  isMobileMenuOpen.value = !isMobileMenuOpen.value;
-};
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
 
 const handleLogout = () => {
-  authStore.logout();
-  isDropdownOpen.value = false;
-  navigateTo("/login");
-};
+  authStore.logout()
+  isDropdownOpen.value = false
+  navigateTo('/login')
+}
 
 // Close dropdown when clicking outside
 const handleClickOutside = (event) => {
-  const dropdown = event.target.closest("button");
+  const dropdown = event.target.closest('button')
   if (!dropdown && isDropdownOpen.value) {
-    isDropdownOpen.value = false;
+    isDropdownOpen.value = false
   }
-};
+}
 
 onMounted(() => {
-  document.addEventListener("click", handleClickOutside);
-});
+  document.addEventListener('click', handleClickOutside)
+})
 
 onUnmounted(() => {
-  document.removeEventListener("click", handleClickOutside);
-});
+  document.removeEventListener('click', handleClickOutside)
+})
 </script>

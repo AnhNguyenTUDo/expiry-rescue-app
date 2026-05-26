@@ -36,13 +36,13 @@
 defineProps({
   modelValue: {
     type: String,
-    default: "",
+    default: '',
   },
   placeholder: {
     type: String,
-    default: "Search",
+    default: 'Search',
   },
-});
+})
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(['update:modelValue'])
 </script>

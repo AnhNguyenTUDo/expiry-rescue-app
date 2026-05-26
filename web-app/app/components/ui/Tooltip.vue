@@ -12,8 +12,8 @@
 </template>
 
 <script setup>
-import { nextTick, onMounted, watch } from "vue";
-import { initTooltips } from "flowbite";
+import { nextTick, onMounted, watch } from 'vue'
+import { initTooltips } from 'flowbite'
 const props = defineProps({
   id: {
     type: String,
@@ -21,28 +21,28 @@ const props = defineProps({
   },
   content: {
     type: String,
-    default: "",
+    default: '',
   },
   active: {
     type: Boolean,
     default: true,
   },
-});
+})
 
 onMounted(() => {
   if (props.content && props.active) {
-    initTooltips();
+    initTooltips()
   }
-});
+})
 
 // Watch active state to initialize the tooltip when it dynamically becomes active
 watch(
   () => props.active,
   async (isActive) => {
     if (isActive && props.content) {
-      await nextTick();
-      initTooltips();
+      await nextTick()
+      initTooltips()
     }
   }
-);
+)
 </script>

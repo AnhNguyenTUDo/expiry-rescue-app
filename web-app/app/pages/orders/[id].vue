@@ -104,74 +104,74 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useOrderStore } from "~/stores/order";
-import { useAuthStore } from "~/stores/auth";
+import { ref, onMounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useOrderStore } from '~/stores/order'
+import { useAuthStore } from '~/stores/auth'
 
-const route = useRoute();
-const router = useRouter();
-const orderStore = useOrderStore();
+const route = useRoute()
+const router = useRouter()
+const orderStore = useOrderStore()
 
-const orderId = route.params.id;
+const orderId = route.params.id
 
-const order = computed(() => orderStore.currentOrder);
+const order = computed(() => orderStore.currentOrder)
 
 onMounted(async () => {
   try {
-    await orderStore.fetchOrderById(orderId);
+    await orderStore.fetchOrderById(orderId)
   } catch (error) {
-    console.error("Failed to load order:", error);
+    console.error('Failed to load order:', error)
   }
-});
+})
 
 const handleCancelOrder = async () => {
-  if (!confirm("Are you sure you want to cancel this order?")) return;
+  if (!confirm('Are you sure you want to cancel this order?')) return
 
   try {
-    await orderStore.cancelOrder(orderId);
-    alert("Order cancelled successfully");
+    await orderStore.cancelOrder(orderId)
+    alert('Order cancelled successfully')
   } catch (error) {
-    alert("Failed to cancel order");
+    alert('Failed to cancel order')
   }
-};
+}
 
 const handleDeleteOrder = async () => {
-  if (!confirm("Are you sure you want to delete this order? This action cannot be undone.")) return;
+  if (!confirm('Are you sure you want to delete this order? This action cannot be undone.')) return
 
   try {
-    await orderStore.deleteOrder(orderId);
-    alert("Order deleted successfully");
-    router.push("/orders");
+    await orderStore.deleteOrder(orderId)
+    alert('Order deleted successfully')
+    router.push('/orders')
   } catch (error) {
-    alert("Failed to delete order");
+    alert('Failed to delete order')
   }
-};
+}
 
 const getStatusClass = (status) => {
   const classes = {
-    CONFIRMED: "bg-green-100 text-green-800",
-    CANCELLED: "bg-red-100 text-red-800",
-  };
-  return classes[status] || "bg-gray-100 text-gray-800";
-};
+    CONFIRMED: 'bg-green-100 text-green-800',
+    CANCELLED: 'bg-red-100 text-red-800',
+  }
+  return classes[status] || 'bg-gray-100 text-gray-800'
+}
 
 const getStatusLabel = (status) => {
   const labels = {
-    CONFIRMED: "✅ Confirmed",
-    CANCELLED: "❌ Cancelled",
-  };
-  return labels[status] || status;
-};
+    CONFIRMED: '✅ Confirmed',
+    CANCELLED: '❌ Cancelled',
+  }
+  return labels[status] || status
+}
 
 const formatDate = (timestamp) => {
-  if (!timestamp) return "N/A";
-  return new Date(timestamp).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
+  if (!timestamp) return 'N/A'
+  return new Date(timestamp).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
 </script>

@@ -159,79 +159,79 @@ PREVIOUS IMPLEMENTATION — expand/collapse per city (no search bar)
 -->
 
 <script setup>
-import { ref, computed, watch } from "vue";
-import CityService from "@/services/city.service";
-import SearchBar from "@/components/ui/SearchBar.vue";
+import { ref, computed, watch } from 'vue'
+import CityService from '@/services/city.service'
+import SearchBar from '@/components/ui/SearchBar.vue'
 
 const props = defineProps({
   show: { type: Boolean, required: true },
   cities: { type: Array, required: true },
-});
+})
 
-const emit = defineEmits(["confirm"]);
+const emit = defineEmits(['confirm'])
 
-const loading = ref(false);
-const citiesWithDistricts = ref([]);
-const searchQuery = ref("");
-const selection = ref(null); // { cityId, cityName, districtId, districtName }
-const expanded = ref(null);
+const loading = ref(false)
+const citiesWithDistricts = ref([])
+const searchQuery = ref('')
+const selection = ref(null) // { cityId, cityName, districtId, districtName }
+const expanded = ref(null)
 
 const toggle = (cityId) => {
-  expanded.value = expanded.value === cityId ? null : cityId;
-};
+  expanded.value = expanded.value === cityId ? null : cityId
+}
 
 const isExpanded = (cityId) => {
-  return searchQuery.value.trim() ? true : expanded.value === cityId;
-};
+  return searchQuery.value.trim() ? true : expanded.value === cityId
+}
 
 watch(searchQuery, (q) => {
-  if (!q.trim()) expanded.value = null;
-});
+  if (!q.trim()) expanded.value = null
+})
 
 const loadAll = async () => {
-  if (!props.cities.length) return;
-  loading.value = true;
+  if (!props.cities.length) return
+  loading.value = true
   const results = await Promise.all(
     props.cities.map(async (city) => {
       const response = await CityService.getDistrictsByCity(city.id, (err) => {
-        console.error("Error fetching districts for", city.name, err);
-      });
-      return { ...city, districts: response?.data ?? [] };
+        console.error('Error fetching districts for', city.name, err)
+      })
+      return { ...city, districts: response?.data ?? [] }
     })
-  );
-  citiesWithDistricts.value = results;
-  loading.value = false;
-};
+  )
+  citiesWithDistricts.value = results
+  loading.value = false
+}
 
 watch(
   () => props.show,
   (visible) => {
-    if (visible && !citiesWithDistricts.value.length) loadAll();
+    if (visible && !citiesWithDistricts.value.length) loadAll()
   }
-);
+)
 
 const filteredCities = computed(() => {
-  const q = searchQuery.value.trim().toLowerCase();
-  if (!q) return citiesWithDistricts.value.map((c) => ({ ...c, filteredDistricts: c.districts }));
+  const q = searchQuery.value.trim().toLowerCase()
+  if (!q) return citiesWithDistricts.value.map((c) => ({ ...c, filteredDistricts: c.districts }))
   return citiesWithDistricts.value
     .map((city) => {
-      const cityMatches = city.name.toLowerCase().includes(q);
-      const filteredDistricts = city.districts.filter((d) => d.name.toLowerCase().includes(q));
-      if (!cityMatches && filteredDistricts.length === 0) return null;
-      return { ...city, filteredDistricts: cityMatches ? city.districts : filteredDistricts };
+      const cityMatches = city.name.toLowerCase().includes(q)
+      const filteredDistricts = city.districts.filter((d) => d.name.toLowerCase().includes(q))
+      if (!cityMatches && filteredDistricts.length === 0) return null
+      return { ...city, filteredDistricts: cityMatches ? city.districts : filteredDistricts }
     })
-    .filter(Boolean);
-});
+    .filter(Boolean)
+})
 
 const select = (city, districtId, districtName) => {
-  selection.value = { cityId: city.id, cityName: city.name, districtId, districtName };
-};
+  selection.value = { cityId: city.id, cityName: city.name, districtId, districtName }
+}
 
 const isSelected = (cityId, districtId) =>
-  selection.value?.cityId === cityId && selection.value?.districtId === districtId;
+  selection.value?.cityId === cityId && selection.value?.districtId === districtId
 
 const confirm = () => {
-  if (!selection.value) return;
-  emit("confirm", selection.value);
-};
+  if (!selection.value) return
+  emit('confirm', selection.value)
+}
 </script>

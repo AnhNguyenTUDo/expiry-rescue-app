@@ -59,59 +59,59 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
-import ProductCard from "@/components/ui/ProductCard.vue";
-import ProductInventoryService from "~/services/product-inventory.service";
+import { ref, onMounted, computed } from 'vue'
+import ProductCard from '@/components/ui/ProductCard.vue'
+import ProductInventoryService from '~/services/product-inventory.service'
 
 // State
-const products = ref([]);
-const loading = ref(false);
-const error = ref(null);
-const selectedCategory = ref("all");
+const products = ref([])
+const loading = ref(false)
+const error = ref(null)
+const selectedCategory = ref('all')
 
 // Fetch products from API
 const fetchProducts = async () => {
-  loading.value = true;
-  error.value = null;
+  loading.value = true
+  error.value = null
 
   try {
     const response = await ProductInventoryService.getAllProductInventory((err) => {
-      console.error("Error fetching products:", err);
-      error.value = err.response?.data?.message || "Failed to load products";
-    });
+      console.error('Error fetching products:', err)
+      error.value = err.response?.data?.message || 'Failed to load products'
+    })
 
     if (response && response.data) {
       // Group products by product_master_id
-      const productMap = new Map();
+      const productMap = new Map()
 
       for (const item of response.data) {
-        const key = item.productMasterId;
+        const key = item.productMasterId
 
         if (productMap.has(key)) {
           // Product master already exists, combine quantities
-          const existingProduct = productMap.get(key);
-          existingProduct.quantityAvailable += item.quantityAvailable;
+          const existingProduct = productMap.get(key)
+          existingProduct.quantityAvailable += item.quantityAvailable
 
           // Use the earliest expiry date
           if (item.expiryDate < existingProduct.expiryTimestamp) {
-            existingProduct.expiryTimestamp = item.expiryDate;
-            existingProduct.sellUntil = formatDate(item.expiryDate);
-            existingProduct.expire = formatDate(item.expiryDate);
-            existingProduct.sellDays = calculateDaysUntil(item.expiryDate);
-            existingProduct.expireDays = calculateDaysUntil(item.expiryDate);
+            existingProduct.expiryTimestamp = item.expiryDate
+            existingProduct.sellUntil = formatDate(item.expiryDate)
+            existingProduct.expire = formatDate(item.expiryDate)
+            existingProduct.sellDays = calculateDaysUntil(item.expiryDate)
+            existingProduct.expireDays = calculateDaysUntil(item.expiryDate)
           }
 
           // Update availability
           existingProduct.availability = calculateAvailability(
             existingProduct.expiryTimestamp,
             existingProduct.quantityAvailable,
-            "AVAILABLE"
-          );
+            'AVAILABLE'
+          )
         } else {
           // First occurrence of this product master
           productMap.set(key, {
             id: item.id,
-            emoji: "🛒",
+            emoji: '🛒',
             category: item.categoryName || item.productName,
             name: item.productName,
             location: item.supermarketName,
@@ -133,93 +133,93 @@ const fetchProducts = async () => {
             expiryTimestamp: item.expiryDate,
             createdAt: item.createdAt,
             updatedAt: item.updatedAt,
-          });
+          })
         }
       }
 
       // Convert map to array
-      products.value = Array.from(productMap.values());
+      products.value = Array.from(productMap.values())
     }
   } catch (err) {
-    console.error("Error:", err);
-    error.value = "Failed to load products";
+    console.error('Error:', err)
+    error.value = 'Failed to load products'
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 // Helper functions
 const formatDate = (timestamp) => {
-  if (!timestamp) return "N/A";
-  const date = new Date(timestamp);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-};
+  if (!timestamp) return 'N/A'
+  const date = new Date(timestamp)
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
 
 const calculateDaysUntil = (timestamp) => {
-  if (!timestamp) return "N/A";
-  const now = new Date().getTime();
-  const diff = timestamp - now;
-  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  if (!timestamp) return 'N/A'
+  const now = new Date().getTime()
+  const diff = timestamp - now
+  const days = Math.ceil(diff / (1000 * 60 * 60 * 24))
 
-  if (days < 0) return "Expired";
-  if (days === 0) return "Today";
-  if (days === 1) return "1 day";
-  return `${days} days`;
-};
+  if (days < 0) return 'Expired'
+  if (days === 0) return 'Today'
+  if (days === 1) return '1 day'
+  return `${days} days`
+}
 
 const calculateDiscount = (originalPrice, sellingPrice) => {
-  if (!originalPrice || !sellingPrice) return "";
-  const discount = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100);
-  return `-${discount}%`;
-};
+  if (!originalPrice || !sellingPrice) return ''
+  const discount = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100)
+  return `-${discount}%`
+}
 
 // Calculate availability based on expiry date and quantity
 const calculateAvailability = (expiryDate, quantityAvailable, status) => {
   // If status is not AVAILABLE, mark as out of stock
-  if (status !== "AVAILABLE") {
-    return "out of stock";
+  if (status !== 'AVAILABLE') {
+    return 'out of stock'
   }
 
   // Check if product has expired
-  const now = new Date().getTime();
+  const now = new Date().getTime()
   if (expiryDate <= now) {
-    return "out of stock";
+    return 'out of stock'
   }
 
   // Check if product is expiring soon (within 3 days)
-  const daysUntilExpiry = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+  const daysUntilExpiry = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24))
   if (daysUntilExpiry <= 3) {
-    return "limited";
+    return 'limited'
   }
 
   // Check quantity
   if (quantityAvailable === 0) {
-    return "out of stock";
+    return 'out of stock'
   } else if (quantityAvailable <= 10) {
-    return "limited";
+    return 'limited'
   }
 
-  return "available";
-};
+  return 'available'
+}
 
 // Filter products by category (can be implemented later)
 const filteredProducts = computed(() => {
-  if (selectedCategory.value === "all") {
-    return products.value;
+  if (selectedCategory.value === 'all') {
+    return products.value
   }
   return products.value.filter((p) =>
     p.category.toLowerCase().includes(selectedCategory.value.toLowerCase())
-  );
-});
+  )
+})
 
 // Load products on mount
 onMounted(() => {
-  fetchProducts();
-});
+  fetchProducts()
+})
 </script>
 
 <style scoped>

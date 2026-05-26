@@ -166,23 +166,23 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import ProductInventoryService from "~/services/product-inventory.service";
-import { useSupermarketStore } from "~/stores/supermarket";
+import { ref, onMounted, computed, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import ProductInventoryService from '~/services/product-inventory.service'
+import { useSupermarketStore } from '~/stores/supermarket'
 
-const route = useRoute();
-const router = useRouter();
-const supermarketStore = useSupermarketStore();
+const route = useRoute()
+const router = useRouter()
+const supermarketStore = useSupermarketStore()
 
-const productMasterId = route.params.id;
-const supermarketIdFromQuery = route.query.supermarketId;
+const productMasterId = route.params.id
+const supermarketIdFromQuery = route.query.supermarketId
 
 // State
-const allInventoryItems = ref([]);
-const selectedInventoryItemId = ref(null);
-const loading = ref(true);
-const error = ref(null);
+const allInventoryItems = ref([])
+const selectedInventoryItemId = ref(null)
+const loading = ref(true)
+const error = ref(null)
 
 // Fetch all inventory items for this product master
 const fetchProductInventory = async () => {
@@ -190,113 +190,113 @@ const fetchProductInventory = async () => {
     const response = await ProductInventoryService.getInventoryByProductMaster(
       productMasterId,
       (err) => {
-        console.error("Error fetching product inventory:", err);
-        error.value = err.response?.data?.message || "Failed to load product details";
+        console.error('Error fetching product inventory:', err)
+        error.value = err.response?.data?.message || 'Failed to load product details'
       }
-    );
+    )
 
     if (response && response.data) {
       // Items are already filtered by productMasterId from the backend
-      allInventoryItems.value = response.data;
+      allInventoryItems.value = response.data
 
       if (allInventoryItems.value.length === 0) {
-        error.value = "Product not found";
+        error.value = 'Product not found'
       } else {
         // Set the initial selected item
         if (supermarketIdFromQuery) {
           // Find first item from the specified supermarket
           const itemFromSupermarket = allInventoryItems.value.find(
             (item) => item.supermarketId === supermarketIdFromQuery
-          );
-          selectedInventoryItemId.value = itemFromSupermarket?.id || allInventoryItems.value[0].id;
+          )
+          selectedInventoryItemId.value = itemFromSupermarket?.id || allInventoryItems.value[0].id
         } else {
-          selectedInventoryItemId.value = allInventoryItems.value[0].id;
+          selectedInventoryItemId.value = allInventoryItems.value[0].id
         }
       }
     }
   } catch (err) {
-    console.error("Error:", err);
-    error.value = "Failed to load product details";
+    console.error('Error:', err)
+    error.value = 'Failed to load product details'
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 // Computed properties
 const currentItem = computed(() => {
-  return allInventoryItems.value.find((item) => item.id === selectedInventoryItemId.value);
-});
+  return allInventoryItems.value.find((item) => item.id === selectedInventoryItemId.value)
+})
 
 const productName = computed(() => {
-  return currentItem.value?.productName || "Unknown Product";
-});
+  return currentItem.value?.productName || 'Unknown Product'
+})
 
 const productDescription = computed(() => {
-  return currentItem.value?.productDescription || "";
-});
+  return currentItem.value?.productDescription || ''
+})
 
 const categoryName = computed(() => {
-  return currentItem.value?.categoryName || "Unknown Category";
-});
+  return currentItem.value?.categoryName || 'Unknown Category'
+})
 
 const supermarketName = computed(() => {
-  return currentItem.value?.supermarketName || "Unknown Supermarket";
-});
+  return currentItem.value?.supermarketName || 'Unknown Supermarket'
+})
 
 const productEmoji = computed(() => {
-  const category = categoryName.value.toLowerCase();
+  const category = categoryName.value.toLowerCase()
   const emojiMap = {
-    dairy: "🧀",
-    bakery: "🥐",
-    beverages: "🥤",
-    spices: "🌶️",
-    cosmetics: "💄",
-    meat: "🍖",
-    seafood: "🦐",
-    produce: "🥬",
-    fruits: "🍎",
-    vegetables: "🥕",
-  };
+    dairy: '🧀',
+    bakery: '🥐',
+    beverages: '🥤',
+    spices: '🌶️',
+    cosmetics: '💄',
+    meat: '🍖',
+    seafood: '🦐',
+    produce: '🥬',
+    fruits: '🍎',
+    vegetables: '🥕',
+  }
 
   for (const [keyword, emoji] of Object.entries(emojiMap)) {
     if (category.includes(keyword)) {
-      return emoji;
+      return emoji
     }
   }
 
-  return "🛒";
-});
+  return '🛒'
+})
 
 // Get all inventory items from the same supermarket
 const allSupermarketItems = computed(() => {
-  if (!currentItem.value) return [];
+  if (!currentItem.value) return []
   return allInventoryItems.value.filter(
     (item) => item.supermarketId === currentItem.value.supermarketId
-  );
-});
+  )
+})
 
 // Get other inventory items (excluding current one)
 const otherInventoryItems = computed(() => {
-  return allSupermarketItems.value.filter((item) => item.id !== selectedInventoryItemId.value);
-});
+  return allSupermarketItems.value.filter((item) => item.id !== selectedInventoryItemId.value)
+})
 
 // Get grouped items by supermarket (excluding current supermarket)
 const otherLocations = computed(() => {
-  if (!currentItem.value) return [];
+  if (!currentItem.value) return []
 
-  const locationMap = new Map();
+  const locationMap = new Map()
 
   for (const item of allInventoryItems.value) {
     // Skip items from current supermarket
-    if (item.supermarketId === currentItem.value.supermarketId) continue;
+    if (item.supermarketId === currentItem.value.supermarketId) continue
 
-    const key = item.supermarketId;
+    const key = item.supermarketId
 
     if (locationMap.has(key)) {
-      const location = locationMap.get(key);
-      location.totalQuantity += item.quantityAvailable;
-      location.bestPrice = Math.min(location.bestPrice, item.sellingPrice);
-      location.earliestExpiry = Math.min(location.earliestExpiry, item.expiryDate);
+      const location = locationMap.get(key)
+      location.totalQuantity += item.quantityAvailable
+      location.bestPrice = Math.min(location.bestPrice, item.sellingPrice)
+      location.earliestExpiry = Math.min(location.earliestExpiry, item.expiryDate)
     } else {
       locationMap.set(key, {
         supermarketId: item.supermarketId,
@@ -304,106 +304,106 @@ const otherLocations = computed(() => {
         totalQuantity: item.quantityAvailable,
         bestPrice: item.sellingPrice,
         earliestExpiry: item.expiryDate,
-      });
+      })
     }
   }
 
-  return Array.from(locationMap.values());
-});
+  return Array.from(locationMap.values())
+})
 
 // Helper functions
 const formatDate = (timestamp) => {
-  if (!timestamp) return "N/A";
-  const date = new Date(timestamp);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-};
+  if (!timestamp) return 'N/A'
+  const date = new Date(timestamp)
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
 
 const calculateDaysUntil = (timestamp) => {
-  if (!timestamp) return "N/A";
-  const now = Date.now();
-  const diff = timestamp - now;
-  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  if (!timestamp) return 'N/A'
+  const now = Date.now()
+  const diff = timestamp - now
+  const days = Math.ceil(diff / (1000 * 60 * 60 * 24))
 
-  if (days < 0) return "Expired";
-  if (days === 0) return "Today";
-  if (days === 1) return "1 day";
-  return `${days} days`;
-};
+  if (days < 0) return 'Expired'
+  if (days === 0) return 'Today'
+  if (days === 1) return '1 day'
+  return `${days} days`
+}
 
 const calculateDiscount = (originalPrice, sellingPrice) => {
-  if (!originalPrice || !sellingPrice) return "";
-  const discount = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100);
-  return `-${discount}%`;
-};
+  if (!originalPrice || !sellingPrice) return ''
+  const discount = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100)
+  return `-${discount}%`
+}
 
 const calculateAvailability = (expiryDate, quantityAvailable, status) => {
-  if (status !== "AVAILABLE") {
-    return "out of stock";
+  if (status !== 'AVAILABLE') {
+    return 'out of stock'
   }
 
-  const now = Date.now();
+  const now = Date.now()
   if (expiryDate <= now) {
-    return "out of stock";
+    return 'out of stock'
   }
 
-  const daysUntilExpiry = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+  const daysUntilExpiry = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24))
   if (daysUntilExpiry <= 3) {
-    return "limited";
+    return 'limited'
   }
 
   if (quantityAvailable === 0) {
-    return "out of stock";
+    return 'out of stock'
   } else if (quantityAvailable <= 10) {
-    return "limited";
+    return 'limited'
   }
 
-  return "available";
-};
+  return 'available'
+}
 
 const getAvailability = (item) => {
-  return calculateAvailability(item.expiryDate, item.quantityAvailable, item.status);
-};
+  return calculateAvailability(item.expiryDate, item.quantityAvailable, item.status)
+}
 
 // Event handlers
 const onInventoryItemChange = () => {
   // Update URL query param when switching batches
   router.replace({
     query: { supermarketId: currentItem.value.supermarketId },
-  });
-};
+  })
+}
 
 // Navigation
 const navigateToSupermarket = (supermarketId) => {
-  router.push(`/supermarkets/${supermarketId}`);
-};
+  router.push(`/supermarkets/${supermarketId}`)
+}
 
 const navigateToProductAtSupermarket = (supermarketId) => {
-  router.push(`/products/${productMasterId}?supermarketId=${supermarketId}`);
-};
+  router.push(`/products/${productMasterId}?supermarketId=${supermarketId}`)
+}
 
 const goBack = () => {
-  router.back();
-};
+  router.back()
+}
 
 // Watch for changes to currentItem and update store
 watch(
   () => currentItem.value,
   (newItem) => {
     if (newItem && newItem.supermarketId) {
-      supermarketStore.setSelectedSupermarketId(newItem.supermarketId);
+      supermarketStore.setSelectedSupermarketId(newItem.supermarketId)
     }
   },
   { immediate: true }
-);
+)
 
 // Load data on mount
 onMounted(() => {
-  fetchProductInventory();
-});
+  fetchProductInventory()
+})
 </script>
 
 <style scoped>

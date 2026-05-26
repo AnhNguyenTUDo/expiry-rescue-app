@@ -117,89 +117,89 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed, nextTick } from "vue";
-import { useRoute } from "vue-router";
-import SupermarketService from "~/services/supermarket.service";
-import ProductCategoryService from "~/services/product-category.service";
-import ProductCard from "@/components/ui/ProductCard.vue";
+import { ref, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
+import { useRoute } from 'vue-router'
+import SupermarketService from '~/services/supermarket.service'
+import ProductCategoryService from '~/services/product-category.service'
+import ProductCard from '@/components/ui/ProductCard.vue'
 
-const route = useRoute();
-const supermarketId = route.params.id;
+const route = useRoute()
+const supermarketId = route.params.id
 
 // State
-const supermarket = ref(null);
-const products = ref([]);
-const allCategories = ref([]);
-const selectedCategoryFilter = ref("all");
-const loading = ref(true);
-const error = ref(null);
-const expandedCategories = ref({});
-const detailsRef = ref(null);
+const supermarket = ref(null)
+const products = ref([])
+const allCategories = ref([])
+const selectedCategoryFilter = ref('all')
+const loading = ref(true)
+const error = ref(null)
+const expandedCategories = ref({})
+const detailsRef = ref(null)
 
 // Header shadow control: the details section owns the shadow at the top of
 // the page; once it scrolls past the header, the header takes the shadow over.
-const headerShadow = useHeaderShadow();
+const headerShadow = useHeaderShadow()
 
 const updateHeaderShadow = () => {
-  if (!detailsRef.value) return;
-  const header = document.querySelector("header");
-  const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
-  const detailsBottom = detailsRef.value.getBoundingClientRect().bottom;
-  headerShadow.value = detailsBottom <= headerBottom;
-};
+  if (!detailsRef.value) return
+  const header = document.querySelector('header')
+  const headerBottom = header ? header.getBoundingClientRect().bottom : 0
+  const detailsBottom = detailsRef.value.getBoundingClientRect().bottom
+  headerShadow.value = detailsBottom <= headerBottom
+}
 
 // Fetch supermarket details with products
 const fetchSupermarketWithProducts = async () => {
   try {
     const response = await SupermarketService.getSupermarketWithProducts(supermarketId, (err) => {
-      console.error("Error fetching supermarket:", err);
-      error.value = err.response?.data?.message || "Failed to load supermarket";
-    });
+      console.error('Error fetching supermarket:', err)
+      error.value = err.response?.data?.message || 'Failed to load supermarket'
+    })
 
     if (response && response.data) {
-      supermarket.value = response.data;
+      supermarket.value = response.data
 
       // Process products from the combined response
       // Group products by product_master_id
-      const productMap = new Map();
+      const productMap = new Map()
 
       for (const item of response.data.products) {
-        const key = item.productMasterId;
+        const key = item.productMasterId
 
         if (productMap.has(key)) {
           // Product master already exists, combine quantities
-          const existingProduct = productMap.get(key);
-          existingProduct.quantityAvailable += item.quantityAvailable;
-          existingProduct.inventoryItems.push(item);
+          const existingProduct = productMap.get(key)
+          existingProduct.quantityAvailable += item.quantityAvailable
+          existingProduct.inventoryItems.push(item)
 
           // Use the earliest expiry date
           if (item.expiryDate < existingProduct.earliestExpiryDate) {
-            existingProduct.earliestExpiryDate = item.expiryDate;
-            existingProduct.sellUntil = formatDate(item.expiryDate);
-            existingProduct.expire = formatDate(item.expiryDate);
-            existingProduct.sellDays = calculateDaysUntil(item.expiryDate);
-            existingProduct.expireDays = calculateDaysUntil(item.expiryDate);
+            existingProduct.earliestExpiryDate = item.expiryDate
+            existingProduct.sellUntil = formatDate(item.expiryDate)
+            existingProduct.expire = formatDate(item.expiryDate)
+            existingProduct.sellDays = calculateDaysUntil(item.expiryDate)
+            existingProduct.expireDays = calculateDaysUntil(item.expiryDate)
           }
 
           // Recalculate availability based on combined data
-          const totalQuantity = existingProduct.quantityAvailable;
-          const earliestExpiry = existingProduct.earliestExpiryDate;
+          const totalQuantity = existingProduct.quantityAvailable
+          const earliestExpiry = existingProduct.earliestExpiryDate
           const hasAvailableStatus = existingProduct.inventoryItems.some(
-            (inv) => inv.status === "AVAILABLE"
-          );
+            (inv) => inv.status === 'AVAILABLE'
+          )
 
           existingProduct.availability = calculateAvailability(
             earliestExpiry,
             totalQuantity,
-            hasAvailableStatus ? "AVAILABLE" : "NOT_AVAILABLE"
-          );
+            hasAvailableStatus ? 'AVAILABLE' : 'NOT_AVAILABLE'
+          )
         } else {
           // First occurrence of this product master
           const availability = calculateAvailability(
             item.expiryDate,
             item.quantityAvailable,
             item.status
-          );
+          )
 
           productMap.set(key, {
             id: item.id,
@@ -221,168 +221,168 @@ const fetchSupermarketWithProducts = async () => {
             quantityAvailable: item.quantityAvailable,
             earliestExpiryDate: item.expiryDate,
             inventoryItems: [item], // Store all inventory items for this product
-          });
+          })
         }
       }
 
       // Convert map to array
-      products.value = Array.from(productMap.values());
+      products.value = Array.from(productMap.values())
     }
   } catch (err) {
-    console.error("Error:", err);
-    error.value = "Failed to load supermarket details";
+    console.error('Error:', err)
+    error.value = 'Failed to load supermarket details'
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 // Fetch all categories
 const fetchCategories = async () => {
   try {
     const response = await ProductCategoryService.getAllCategories((err) => {
-      console.error("Error fetching categories:", err);
-    });
+      console.error('Error fetching categories:', err)
+    })
 
     if (response && response.data) {
-      allCategories.value = response.data;
+      allCategories.value = response.data
     }
   } catch (err) {
-    console.error("Error fetching categories:", err);
+    console.error('Error fetching categories:', err)
   }
-};
+}
 
 // Helper functions
 const formatDate = (timestamp) => {
-  if (!timestamp) return "N/A";
-  const date = new Date(timestamp);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-};
+  if (!timestamp) return 'N/A'
+  const date = new Date(timestamp)
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
 
 const calculateDaysUntil = (timestamp) => {
-  if (!timestamp) return "N/A";
-  const now = new Date().getTime();
-  const diff = timestamp - now;
-  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  if (!timestamp) return 'N/A'
+  const now = new Date().getTime()
+  const diff = timestamp - now
+  const days = Math.ceil(diff / (1000 * 60 * 60 * 24))
 
-  if (days < 0) return "Expired";
-  if (days === 0) return "Today";
-  if (days === 1) return "1 day";
-  return `${days} days`;
-};
+  if (days < 0) return 'Expired'
+  if (days === 0) return 'Today'
+  if (days === 1) return '1 day'
+  return `${days} days`
+}
 
 const calculateDiscount = (originalPrice, sellingPrice) => {
-  if (!originalPrice || !sellingPrice) return "";
-  const discount = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100);
-  return `-${discount}%`;
-};
+  if (!originalPrice || !sellingPrice) return ''
+  const discount = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100)
+  return `-${discount}%`
+}
 
 // Calculate availability based on expiry date and quantity
 const calculateAvailability = (expiryDate, quantityAvailable, status) => {
   // If status is not AVAILABLE, mark as out of stock
-  if (status !== "AVAILABLE") {
-    return "out of stock";
+  if (status !== 'AVAILABLE') {
+    return 'out of stock'
   }
 
   // Check if product has expired
-  const now = new Date().getTime();
+  const now = new Date().getTime()
   if (expiryDate <= now) {
-    return "out of stock";
+    return 'out of stock'
   }
 
   // Check if product is expiring soon (within 3 days)
-  const daysUntilExpiry = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+  const daysUntilExpiry = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24))
   if (daysUntilExpiry <= 3) {
-    return "limited";
+    return 'limited'
   }
 
   // Check quantity
   if (quantityAvailable === 0) {
-    return "out of stock";
+    return 'out of stock'
   } else if (quantityAvailable <= 10) {
-    return "limited";
+    return 'limited'
   }
 
-  return "available";
-};
+  return 'available'
+}
 
 // Get emoji for category
 const getCategoryEmoji = (categoryName) => {
-  if (!categoryName) return "🛒";
+  if (!categoryName) return '🛒'
 
-  const lowerName = categoryName.toLowerCase();
+  const lowerName = categoryName.toLowerCase()
   const emojiMap = {
-    dairy: "🧀",
-    bakery: "🥐",
-    beverages: "🥤",
-    spices: "🌶️",
-    cosmetics: "💄",
-    meat: "🍖",
-    seafood: "🦐",
-    produce: "🥬",
-    fruits: "🍎",
-    vegetables: "🥕",
-  };
+    dairy: '🧀',
+    bakery: '🥐',
+    beverages: '🥤',
+    spices: '🌶️',
+    cosmetics: '💄',
+    meat: '🍖',
+    seafood: '🦐',
+    produce: '🥬',
+    fruits: '🍎',
+    vegetables: '🥕',
+  }
 
   // Check if category name contains any of the keywords
   for (const [keyword, emoji] of Object.entries(emojiMap)) {
     if (lowerName.includes(keyword)) {
-      return emoji;
+      return emoji
     }
   }
 
-  return "🛒";
-};
+  return '🛒'
+}
 
 // Get filtered categories with their products
 const filteredCategoriesWithProducts = computed(() => {
-  let categoriesToShow = allCategories.value;
+  let categoriesToShow = allCategories.value
 
   // Filter by selected category if not "all"
-  if (selectedCategoryFilter.value !== "all") {
-    categoriesToShow = categoriesToShow.filter((cat) => cat.id === selectedCategoryFilter.value);
+  if (selectedCategoryFilter.value !== 'all') {
+    categoriesToShow = categoriesToShow.filter((cat) => cat.id === selectedCategoryFilter.value)
   }
 
   // Map categories to include their products
   return categoriesToShow.map((category) => ({
     ...category,
     products: products.value.filter((p) => p.categoryId === category.id),
-  }));
-});
+  }))
+})
 
 // Get visible products (4 initially, all when expanded)
 const getVisibleProducts = (categoryId, products) => {
   if (expandedCategories.value[categoryId]) {
-    return products;
+    return products
   }
-  return products.slice(0, 4);
-};
+  return products.slice(0, 4)
+}
 
 // Toggle category expansion
 const toggleCategory = (categoryId) => {
-  expandedCategories.value[categoryId] = !expandedCategories.value[categoryId];
-};
+  expandedCategories.value[categoryId] = !expandedCategories.value[categoryId]
+}
 
 // Load data on mount
 onMounted(async () => {
-  headerShadow.value = false;
-  window.addEventListener("scroll", updateHeaderShadow, { passive: true });
-  window.addEventListener("resize", updateHeaderShadow);
+  headerShadow.value = false
+  window.addEventListener('scroll', updateHeaderShadow, { passive: true })
+  window.addEventListener('resize', updateHeaderShadow)
 
-  await Promise.all([fetchSupermarketWithProducts(), fetchCategories()]);
+  await Promise.all([fetchSupermarketWithProducts(), fetchCategories()])
   // Recompute after details are rendered so initial state is correct
-  await nextTick();
-  updateHeaderShadow();
-});
+  await nextTick()
+  updateHeaderShadow()
+})
 
 onBeforeUnmount(() => {
-  window.removeEventListener("scroll", updateHeaderShadow);
-  window.removeEventListener("resize", updateHeaderShadow);
-  headerShadow.value = true;
-});
+  window.removeEventListener('scroll', updateHeaderShadow)
+  window.removeEventListener('resize', updateHeaderShadow)
+  headerShadow.value = true
+})
 </script>
 
 <style scoped>

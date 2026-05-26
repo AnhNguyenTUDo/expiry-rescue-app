@@ -45,11 +45,11 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-import DropdownSelect from "@/components/ui/DropdownSelect.vue";
-import SearchableDropdown from "@/components/ui/SearchableDropdown.vue";
-import StatusButtonGroup from "@/components/ui/StatusButtonGroup.vue";
-import SearchBar from "@/components/ui/SearchBar.vue";
+import { computed } from 'vue'
+import DropdownSelect from '@/components/ui/DropdownSelect.vue'
+import SearchableDropdown from '@/components/ui/SearchableDropdown.vue'
+import StatusButtonGroup from '@/components/ui/StatusButtonGroup.vue'
+import SearchBar from '@/components/ui/SearchBar.vue'
 
 defineProps({
   cityOptions: {
@@ -60,28 +60,28 @@ defineProps({
     type: Array,
     required: true,
   },
-});
+})
 
-const emit = defineEmits(["city-change", "district-change"]);
+const emit = defineEmits(['city-change', 'district-change'])
 
-const cityId = defineModel("cityId");
-const districtId = defineModel("districtId");
-const status = defineModel("status");
-const searchQuery = defineModel("searchQuery");
+const cityId = defineModel('cityId')
+const districtId = defineModel('districtId')
+const status = defineModel('status')
+const searchQuery = defineModel('searchQuery')
 
 const isFiltered = computed(
   () =>
-    cityId.value !== "all" ||
-    districtId.value !== "all" ||
-    status.value !== "all" ||
-    searchQuery.value.trim() !== ""
-);
+    cityId.value !== 'all' ||
+    districtId.value !== 'all' ||
+    status.value !== 'all' ||
+    searchQuery.value.trim() !== ''
+)
 
 const reset = () => {
-  cityId.value = "all";
-  districtId.value = "all";
-  status.value = "all";
-  searchQuery.value = "";
-  emit("city-change");
-};
+  cityId.value = 'all'
+  districtId.value = 'all'
+  status.value = 'all'
+  searchQuery.value = ''
+  emit('city-change')
+}
 </script>

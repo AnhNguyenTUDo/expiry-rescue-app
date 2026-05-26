@@ -22,21 +22,21 @@
 
 <script setup>
 const options = [
-  { value: "all", label: "All" },
-  { value: "open", label: "Open" },
-  { value: "closed", label: "Closed" },
-];
+  { value: 'all', label: 'All' },
+  { value: 'open', label: 'Open' },
+  { value: 'closed', label: 'Closed' },
+]
 
 defineProps({
   modelValue: {
     type: String,
     required: true,
   },
-});
+})
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(['update:modelValue'])
 
 const select = (value) => {
-  emit("update:modelValue", value);
-};
+  emit('update:modelValue', value)
+}
 </script>

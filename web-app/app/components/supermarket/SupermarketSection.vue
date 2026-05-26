@@ -23,12 +23,12 @@
 </template>
 
 <script setup>
-import DistrictSection from "@/components/supermarket/DistrictSection.vue";
+import DistrictSection from '@/components/supermarket/DistrictSection.vue'
 
 defineProps({
   districtSections: {
     type: Array,
     required: true,
   },
-});
+})
 </script>

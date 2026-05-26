@@ -1,27 +1,27 @@
-import axios from "axios";
+import axios from 'axios'
 
-let baseAxiosInstance = null;
+let baseAxiosInstance = null
 
 export const useAxios = () => {
   if (!baseAxiosInstance) {
-    const runtimeConfig = useRuntimeConfig();
+    const runtimeConfig = useRuntimeConfig()
 
     baseAxiosInstance = axios.create({
       baseURL: runtimeConfig.public.apiBase,
-      headers: { "Content-Type": "application/json" },
-    });
+      headers: { 'Content-Type': 'application/json' },
+    })
 
     baseAxiosInstance.interceptors.request.use(
       function (config) {
-        return config;
+        return config
       },
       function (error) {
-        return Promise.reject(error);
+        return Promise.reject(error)
       }
-    );
+    )
   }
 
-  return baseAxiosInstance;
-};
+  return baseAxiosInstance
+}
 
-export default baseAxiosInstance;
+export default baseAxiosInstance

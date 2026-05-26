@@ -1,6 +1,6 @@
-import { useAxios } from "../composables/useAxios";
-import { requestAxios } from "../common/utils";
-import Constants from "../common/url-constants";
+import { useAxios } from '../composables/useAxios'
+import { requestAxios } from '../common/utils'
+import Constants from '../common/url-constants'
 
 class ProductInventoryService {
   // /**
@@ -12,11 +12,11 @@ class ProductInventoryService {
     // TODO: test this
     // this.instanceId = Math.random();
     // console.log("call api - Instance ID:", this.instanceId);
-    this.axios = useAxios(); // Initialize once
+    this.axios = useAxios() // Initialize once
   }
   getAllProductInventory(errorCallBack) {
-    const url = Constants.endpoints.product_inventory.GET_ALL_PRODUCT_INVENTORY;
-    return requestAxios(this.axios.get(url), errorCallBack);
+    const url = Constants.endpoints.product_inventory.GET_ALL_PRODUCT_INVENTORY
+    return requestAxios(this.axios.get(url), errorCallBack)
   }
 
   /**
@@ -26,8 +26,8 @@ class ProductInventoryService {
    * @returns {Promise} - Returns inventories for the supermarket
    */
   getInventoryBySupermarket(supermarketId, errorCallBack) {
-    const url = Constants.endpoints.product_inventory.GET_INVENTORY_BY_SUPERMARKET(supermarketId);
-    return requestAxios(this.axios.get(url), errorCallBack);
+    const url = Constants.endpoints.product_inventory.GET_INVENTORY_BY_SUPERMARKET(supermarketId)
+    return requestAxios(this.axios.get(url), errorCallBack)
   }
 
   /**
@@ -38,8 +38,8 @@ class ProductInventoryService {
    */
   getInventoryByProductMaster(productMasterId, errorCallBack) {
     const url =
-      Constants.endpoints.product_inventory.GET_INVENTORY_BY_PRODUCT_MASTER(productMasterId);
-    return requestAxios(this.axios.get(url), errorCallBack);
+      Constants.endpoints.product_inventory.GET_INVENTORY_BY_PRODUCT_MASTER(productMasterId)
+    return requestAxios(this.axios.get(url), errorCallBack)
   }
 
   // /**
@@ -76,4 +76,4 @@ class ProductInventoryService {
   // }
 }
 
-export default new ProductInventoryService();
+export default new ProductInventoryService()

@@ -38,7 +38,7 @@
             v-if="cartTotal > 0"
             class="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
           >
-            {{ cartTotal > 99 ? "99+" : cartTotal }}
+            {{ cartTotal > 99 ? '99+' : cartTotal }}
           </span>
         </NuxtLink>
         <!-- Profile Dropdown -->
@@ -49,8 +49,8 @@
 </template>
 
 <script setup>
-import SupermarketDropdown from "~/components/ui/SupermarketDropdown.vue";
-import ProfileDropdown from "~/components/ui/ProfileDropdown.vue";
+import SupermarketDropdown from '~/components/ui/SupermarketDropdown.vue'
+import ProfileDropdown from '~/components/ui/ProfileDropdown.vue'
 
 defineProps({
   supermarkets: {
@@ -59,19 +59,19 @@ defineProps({
   },
   currentSupermarketName: {
     type: String,
-    default: "",
+    default: '',
   },
   cartTotal: {
     type: Number,
     default: 0,
   },
-});
+})
 
-const emit = defineEmits(["supermarket-change"]);
+const emit = defineEmits(['supermarket-change'])
 
 // Two-way binding for the dropdown selection
-const selectedSupermarket = defineModel("selectedSupermarket");
+const selectedSupermarket = defineModel('selectedSupermarket')
 
 // Controlled by pages that want to transfer the shadow (e.g. supermarket details)
-const headerShadow = useHeaderShadow();
+const headerShadow = useHeaderShadow()
 </script>
