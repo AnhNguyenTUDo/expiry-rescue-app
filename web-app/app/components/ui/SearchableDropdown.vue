@@ -7,23 +7,31 @@
       :data-tooltip-target="tooltip && isDisabled ? tooltipId : undefined"
       @click="toggle"
       class="inline-flex items-center justify-between gap-2 border rounded-[10px] px-3 py-1.5 text-sm transition-colors duration-150"
-      :class="isDisabled 
-        ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
-        : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-green-600 focus:border-green-600 cursor-pointer'"
+      :class="
+        isDisabled
+          ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
+          : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-green-600 focus:border-green-600 cursor-pointer'
+      "
       :style="{ minWidth: minWidth }"
     >
       <span>{{ selectedLabel }}</span>
       <svg
         class="w-3 h-3 transition-transform duration-200"
-        :class="[
-          isOpen ? 'rotate-180' : '',
-          isDisabled ? 'text-gray-300' : 'text-gray-500'
-        ]"
+        :class="[isOpen ? 'rotate-180' : '', isDisabled ? 'text-gray-300' : 'text-gray-500']"
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
-        width="24" height="24" fill="none" viewBox="0 0 24 24"
+        width="24"
+        height="24"
+        fill="none"
+        viewBox="0 0 24 24"
       >
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="m19 9-7 7-7-7"
+        />
       </svg>
     </button>
 
@@ -58,14 +66,21 @@
 
         <!-- Options list -->
         <ul class="max-h-48 p-2 text-sm text-gray-700 font-medium overflow-y-auto" role="listbox">
-          <li v-if="filteredOptions.length === 0" class="w-full flex items-center p-2 text-gray-400">
+          <li
+            v-if="filteredOptions.length === 0"
+            class="w-full flex items-center p-2 text-gray-400"
+          >
             No results found
           </li>
           <li
             v-for="option in filteredOptions"
             :key="option.value"
             class="w-full flex items-center p-2 hover:bg-gray-100 hover:text-gray-900 rounded cursor-pointer"
-            :class="modelValue === option.value ? 'font-semibold text-green-700 bg-green-50 hover:bg-green-100' : ''"
+            :class="
+              modelValue === option.value
+                ? 'font-semibold text-green-700 bg-green-50 hover:bg-green-100'
+                : ''
+            "
             role="option"
             :aria-selected="modelValue === option.value"
             @click="select(option.value)"

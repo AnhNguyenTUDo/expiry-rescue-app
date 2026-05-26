@@ -1,4 +1,4 @@
-import apiClient from '~/utils/api';
+import apiClient from "~/utils/api";
 
 /**
  * Product Inventory API Service
@@ -11,10 +11,10 @@ export const useProductInventory = () => {
    */
   const getAllInventories = async () => {
     try {
-      const response = await apiClient.get('/products/inventory');
+      const response = await apiClient.get("/products/inventory");
       return response.data;
     } catch (error) {
-      console.error('Error fetching all inventories:', error);
+      console.error("Error fetching all inventories:", error);
       throw error;
     }
   };
@@ -71,8 +71,8 @@ export const useProductInventory = () => {
    */
   const getExpiringInventories = async (daysBeforeExpiry = 7) => {
     try {
-      const response = await apiClient.get('/products/inventory/expiring', {
-        params: { daysBeforeExpiry }
+      const response = await apiClient.get("/products/inventory/expiring", {
+        params: { daysBeforeExpiry },
       });
       return response.data;
     } catch (error) {
@@ -94,10 +94,10 @@ export const useProductInventory = () => {
    */
   const createInventory = async (inventoryData) => {
     try {
-      const response = await apiClient.post('/products/inventory', inventoryData);
+      const response = await apiClient.post("/products/inventory", inventoryData);
       return response.data;
     } catch (error) {
-      console.error('Error creating inventory:', error);
+      console.error("Error creating inventory:", error);
       throw error;
     }
   };

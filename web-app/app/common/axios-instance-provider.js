@@ -46,7 +46,7 @@ import axios from "axios";
 let baseAxiosInstance = null;
 
 export const useAxios = () => {
-  console.log("AAAAAAAAAAAAAAAAAAA")
+  console.log("AAAAAAAAAAAAAAAAAAA");
   if (!baseAxiosInstance) {
     const runtimeConfig = useRuntimeConfig();
 

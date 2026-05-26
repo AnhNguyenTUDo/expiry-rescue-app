@@ -5,10 +5,7 @@
   >
     <div class="max-w-7xl mx-auto flex justify-between items-center px-4">
       <div class="flex items-center gap-4">
-        <NuxtLink
-          to="/"
-          class="text-2xl font-bold text-green-700 hover:opacity-90 transition"
-        >
+        <NuxtLink to="/" class="text-2xl font-bold text-green-700 hover:opacity-90 transition">
           Expiry Rescue
         </NuxtLink>
 

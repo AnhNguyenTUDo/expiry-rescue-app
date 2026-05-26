@@ -5,12 +5,27 @@
         <!-- Logo and Brand -->
         <div class="flex items-center gap-3">
           <NuxtLink to="/" class="flex items-center gap-2 group">
-            <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/30 transition-transform duration-300 group-hover:scale-105">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/30 transition-transform duration-300 group-hover:scale-105"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                />
               </svg>
             </div>
-            <span class="text-xl font-bold bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">
+            <span
+              class="text-xl font-bold bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent"
+            >
               Expiry Rescue
             </span>
           </NuxtLink>
@@ -44,8 +59,19 @@
             class="relative text-gray-700 hover:text-emerald-600 transition-colors duration-200"
             active-class="text-emerald-600"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+              />
             </svg>
           </NuxtLink>
         </div>
@@ -70,8 +96,20 @@
               >
                 {{ getUserInitial }}
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" :class="{ 'rotate-180': isDropdownOpen }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-gray-600"
+                :class="{ 'rotate-180': isDropdownOpen }"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
 
@@ -89,8 +127,12 @@
                 class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden"
               >
                 <!-- User Info -->
-                <div class="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-cyan-50">
-                  <p class="text-sm font-semibold text-gray-900">{{ authStore.user?.fullName || authStore.user?.email }}</p>
+                <div
+                  class="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-cyan-50"
+                >
+                  <p class="text-sm font-semibold text-gray-900">
+                    {{ authStore.user?.fullName || authStore.user?.email }}
+                  </p>
                   <p class="text-xs text-gray-600 truncate">{{ authStore.user?.email }}</p>
                 </div>
 
@@ -154,8 +196,19 @@
             @click="toggleMobileMenu"
             class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-gray-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
           </button>
         </div>
@@ -173,16 +226,32 @@
     >
       <div v-if="isMobileMenuOpen" class="md:hidden border-t border-gray-200 bg-white">
         <div class="px-4 py-3 space-y-2">
-          <NuxtLink to="/" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors duration-200" @click="toggleMobileMenu">
+          <NuxtLink
+            to="/"
+            class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors duration-200"
+            @click="toggleMobileMenu"
+          >
             Home
           </NuxtLink>
-          <NuxtLink to="/products" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors duration-200" @click="toggleMobileMenu">
+          <NuxtLink
+            to="/products"
+            class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors duration-200"
+            @click="toggleMobileMenu"
+          >
             Products
           </NuxtLink>
-          <NuxtLink to="/supermarkets" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors duration-200" @click="toggleMobileMenu">
+          <NuxtLink
+            to="/supermarkets"
+            class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors duration-200"
+            @click="toggleMobileMenu"
+          >
             Supermarkets
           </NuxtLink>
-          <NuxtLink to="/cart" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors duration-200" @click="toggleMobileMenu">
+          <NuxtLink
+            to="/cart"
+            class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors duration-200"
+            @click="toggleMobileMenu"
+          >
             Cart
           </NuxtLink>
         </div>
@@ -192,51 +261,51 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useAuthStore } from '~/stores/auth'
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import { useAuthStore } from "~/stores/auth";
 
-const authStore = useAuthStore()
+const authStore = useAuthStore();
 
-const isDropdownOpen = ref(false)
-const isMobileMenuOpen = ref(false)
+const isDropdownOpen = ref(false);
+const isMobileMenuOpen = ref(false);
 
 const getUserInitial = computed(() => {
   if (authStore.user?.fullName) {
-    return authStore.user.fullName.charAt(0).toUpperCase()
+    return authStore.user.fullName.charAt(0).toUpperCase();
   }
   if (authStore.user?.email) {
-    return authStore.user.email.charAt(0).toUpperCase()
+    return authStore.user.email.charAt(0).toUpperCase();
   }
-  return 'U'
-})
+  return "U";
+});
 
 const toggleDropdown = () => {
-  isDropdownOpen.value = !isDropdownOpen.value
-}
+  isDropdownOpen.value = !isDropdownOpen.value;
+};
 
 const toggleMobileMenu = () => {
-  isMobileMenuOpen.value = !isMobileMenuOpen.value
-}
+  isMobileMenuOpen.value = !isMobileMenuOpen.value;
+};
 
 const handleLogout = () => {
-  authStore.logout()
-  isDropdownOpen.value = false
-  navigateTo('/login')
-}
+  authStore.logout();
+  isDropdownOpen.value = false;
+  navigateTo("/login");
+};
 
 // Close dropdown when clicking outside
 const handleClickOutside = (event) => {
-  const dropdown = event.target.closest('button')
+  const dropdown = event.target.closest("button");
   if (!dropdown && isDropdownOpen.value) {
-    isDropdownOpen.value = false
+    isDropdownOpen.value = false;
   }
-}
+};
 
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-})
+  document.addEventListener("click", handleClickOutside);
+});
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
+  document.removeEventListener("click", handleClickOutside);
+});
 </script>

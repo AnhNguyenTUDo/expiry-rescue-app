@@ -15,7 +15,13 @@
         fill="none"
         viewBox="0 0 10 6"
       >
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="m1 1 4 4 4-4"
+        />
       </svg>
     </button>
 
@@ -38,7 +44,11 @@
               type="button"
               @click="select(option.value)"
               class="w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 hover:text-gray-900 cursor-pointer flex items-center gap-2 transition-colors"
-              :class="modelValue === option.value ? 'font-semibold text-green-700 bg-green-50 hover:bg-green-100' : ''"
+              :class="
+                modelValue === option.value
+                  ? 'font-semibold text-green-700 bg-green-50 hover:bg-green-100'
+                  : ''
+              "
             >
               {{ option.label }}
             </button>

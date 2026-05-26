@@ -15,7 +15,13 @@
         fill="none"
         viewBox="0 0 10 6"
       >
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="m1 1 4 4 4-4"
+        />
       </svg>
     </button>
 
@@ -40,11 +46,15 @@
               :class="modelValue === supermarket.id ? 'bg-green-50 hover:bg-green-100' : ''"
             >
               <div class="flex-1 min-w-0">
-                <p class="font-medium text-gray-900 truncate" :class="modelValue === supermarket.id ? 'text-green-700' : ''">
+                <p
+                  class="font-medium text-gray-900 truncate"
+                  :class="modelValue === supermarket.id ? 'text-green-700' : ''"
+                >
                   {{ supermarket.name }}
                 </p>
                 <p class="text-xs text-gray-500 truncate mt-0.5">
-                  {{ supermarket.districtName }}<span v-if="supermarket.cityName">, {{ supermarket.cityName }}</span>
+                  {{ supermarket.districtName
+                  }}<span v-if="supermarket.cityName">, {{ supermarket.cityName }}</span>
                 </p>
               </div>
             </button>
@@ -70,7 +80,7 @@ const props = defineProps({
   currentSupermarketName: {
     type: String,
     default: "",
-  }
+  },
 });
 
 const emit = defineEmits(["update:modelValue", "change"]);

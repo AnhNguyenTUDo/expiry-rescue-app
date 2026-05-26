@@ -2,7 +2,10 @@
   <div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-3xl font-bold text-gray-800">My Orders</h1>
-      <NuxtLink to="/" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition cursor-pointer">
+      <NuxtLink
+        to="/"
+        class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition cursor-pointer"
+      >
         + New Order
       </NuxtLink>
     </div>
@@ -18,10 +21,10 @@
           class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"
           @input="handleSearch"
         />
-        
+
         <!-- Status Filter -->
-        <select 
-          v-model="statusFilter" 
+        <select
+          v-model="statusFilter"
           class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 cursor-pointer"
           @change="handleSearch"
         >
@@ -29,7 +32,7 @@
           <option value="CONFIRMED">✅ Confirmed</option>
           <option value="CANCELLED">❌ Cancelled</option>
         </select>
-        
+
         <!-- Clear Filters -->
         <button
           v-if="searchQuery || statusFilter"
@@ -47,7 +50,10 @@
     </div>
 
     <!-- Error State -->
-    <div v-else-if="orderStore.error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    <div
+      v-else-if="orderStore.error"
+      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+    >
       <p><strong>Error:</strong> {{ orderStore.error }}</p>
     </div>
 
@@ -71,11 +77,11 @@
             {{ getStatusLabel(order.status) }}
           </span>
         </div>
-        
+
         <div class="flex justify-between items-center text-sm text-gray-600 mb-2">
-          <span>{{ order.itemCount }} {{ order.itemCount === 1 ? 'item' : 'items' }}</span>
+          <span>{{ order.itemCount }} {{ order.itemCount === 1 ? "item" : "items" }}</span>
         </div>
-        
+
         <div class="text-xl font-bold text-green-600">
           {{ order.totalAmount.toLocaleString() }}₫
         </div>
@@ -85,12 +91,19 @@
     <!-- Empty State -->
     <div v-else class="text-center py-12 bg-white rounded-lg shadow">
       <p class="text-gray-500 text-lg mb-4">
-        {{ searchQuery || statusFilter ? 'No orders found matching your filters' : 'You haven\'t placed any orders yet' }}
+        {{
+          searchQuery || statusFilter
+            ? "No orders found matching your filters"
+            : "You haven't placed any orders yet"
+        }}
       </p>
       <p v-if="!searchQuery && !statusFilter" class="text-sm text-gray-400 mb-6">
         Browse expiring products at discounted prices!
       </p>
-      <NuxtLink to="/" class="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition cursor-pointer">
+      <NuxtLink
+        to="/"
+        class="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition cursor-pointer"
+      >
         🛒 Start Shopping
       </NuxtLink>
     </div>
@@ -98,65 +111,61 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useOrderStore } from '~/stores/order'
-import { useAuthStore } from '~/stores/auth'
+import { ref, onMounted } from "vue";
+import { useOrderStore } from "~/stores/order";
+import { useAuthStore } from "~/stores/auth";
 
+const orderStore = useOrderStore();
 
-const orderStore = useOrderStore()
-
-const searchQuery = ref('')
-const statusFilter = ref('')
+const searchQuery = ref("");
+const statusFilter = ref("");
 
 // Fetch orders on mount
 onMounted(async () => {
-  await orderStore.fetchUserOrders()
-})
+  await orderStore.fetchUserOrders();
+});
 
 // Handle search with debounce
-let searchTimeout
+let searchTimeout;
 const handleSearch = () => {
-  clearTimeout(searchTimeout)
+  clearTimeout(searchTimeout);
   searchTimeout = setTimeout(async () => {
-    await orderStore.searchOrders(
-      statusFilter.value || null,
-      searchQuery.value || null
-    )
-  }, 300)
-}
+    await orderStore.searchOrders(statusFilter.value || null, searchQuery.value || null);
+  }, 300);
+};
 
 // Clear all filters
 const clearFilters = async () => {
-  searchQuery.value = ''
-  statusFilter.value = ''
-  await orderStore.fetchUserOrders()
-}
+  searchQuery.value = "";
+  statusFilter.value = "";
+  await orderStore.fetchUserOrders();
+};
 
 // Helper functions
 const getStatusClass = (status) => {
   const classes = {
-    CONFIRMED: 'bg-green-100 text-green-800',
-    CANCELLED: 'bg-red-100 text-red-800'
-  }
-  return classes[status] || 'bg-gray-100 text-gray-800'
-}
+    CONFIRMED: "bg-green-100 text-green-800",
+    CANCELLED: "bg-red-100 text-red-800",
+  };
+  return classes[status] || "bg-gray-100 text-gray-800";
+};
 
 const getStatusLabel = (status) => {
   const labels = {
-    CONFIRMED: '✅ Confirmed',
-    CANCELLED: '❌ Cancelled'
-  }
-  return labels[status] || status
-}
+    CONFIRMED: "✅ Confirmed",
+    CANCELLED: "❌ Cancelled",
+  };
+  return labels[status] || status;
+};
 
 const formatDate = (timestamp) => {
-  if (!timestamp) return 'N/A'
-  return new Date(timestamp).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-}
+  if (!timestamp) return "N/A";
+  return new Date(timestamp).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
 </script>

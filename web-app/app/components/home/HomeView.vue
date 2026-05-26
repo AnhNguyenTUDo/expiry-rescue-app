@@ -1,11 +1,7 @@
 <template>
   <div>
     <!-- City selection modal (first visit) -->
-    <CitySelectionModal
-      :show="showCityModal"
-      :cities="cities"
-      @confirm="onLocationConfirmed"
-    />
+    <CitySelectionModal :show="showCityModal" :cities="cities" @confirm="onLocationConfirmed" />
 
     <!-- Filters -->
     <HomeFilter
@@ -20,9 +16,7 @@
     />
 
     <!-- Supermarkets Section -->
-    <SupermarketSection
-      :district-sections="districtSections"
-    />
+    <SupermarketSection :district-sections="districtSections" />
 
     <!-- Loading State -->
     <div v-if="loading" class="text-center py-12">
@@ -35,9 +29,7 @@
       class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-8"
     >
       <p><strong>Error:</strong> {{ error }}</p>
-      <button @click="loadSupermarkets" class="mt-2 text-sm underline">
-        Retry
-      </button>
+      <button @click="loadSupermarkets" class="mt-2 text-sm underline">Retry</button>
     </div>
   </div>
 </template>
@@ -178,7 +170,12 @@ const districtSections = computed(() => {
   if (selectedDistrictId.value !== "all") {
     const cityName = cities.value.find((c) => c.id === selectedCityId.value)?.name || "";
     if (cityName) {
-      sections.push({ type: "city-heading", key: `city:${cityName}`, label: cityName, isFirst: true });
+      sections.push({
+        type: "city-heading",
+        key: `city:${cityName}`,
+        label: cityName,
+        isFirst: true,
+      });
     }
     sections.push({
       type: "district",
@@ -194,10 +191,17 @@ const districtSections = computed(() => {
   if (selectedCityId.value !== "all") {
     const cityName = cities.value.find((c) => c.id === selectedCityId.value)?.name || "";
     if (cityName) {
-      sections.push({ type: "city-heading", key: `city:${cityName}`, label: cityName, isFirst: true });
+      sections.push({
+        type: "city-heading",
+        key: `city:${cityName}`,
+        label: cityName,
+        isFirst: true,
+      });
     }
     // Use raw supermarkets for district keys so districts persist through all filters
-    const districtKeys = [...new Set(supermarketStore.supermarkets.map((s) => s.districtName || "Unknown"))].sort();
+    const districtKeys = [
+      ...new Set(supermarketStore.supermarkets.map((s) => s.districtName || "Unknown")),
+    ].sort();
     const grouped = {};
     for (const s of visibleSupermarkets.value) {
       const key = s.districtName || "Unknown";
@@ -283,12 +287,19 @@ const applyUrlParams = async (query) => {
 };
 
 // Reload when user edits the URL directly in the browser
-watch(() => route.query, (query) => {
-  applyUrlParams(query);
-}, { deep: true });
+watch(
+  () => route.query,
+  (query) => {
+    applyUrlParams(query);
+  },
+  { deep: true }
+);
 
 const onLocationConfirmed = async ({ cityId, cityName, districtId, districtName }) => {
-  localStorage.setItem(LOCATION_KEY, JSON.stringify({ cityId, cityName, districtId, districtName }));
+  localStorage.setItem(
+    LOCATION_KEY,
+    JSON.stringify({ cityId, cityName, districtId, districtName })
+  );
   showCityModal.value = false;
   selectedCityId.value = cityId;
   selectedDistrictId.value = districtId;
@@ -300,7 +311,8 @@ onMounted(async () => {
   await loadCities();
 
   // URL params take priority over localStorage
-  const hasUrlParams = route.query.city || route.query.district || route.query.status || route.query.search;
+  const hasUrlParams =
+    route.query.city || route.query.district || route.query.status || route.query.search;
   if (hasUrlParams) {
     await applyUrlParams(route.query);
     return;

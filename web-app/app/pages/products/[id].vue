@@ -6,10 +6,7 @@
     </div>
 
     <!-- Error State -->
-    <div
-      v-else-if="error"
-      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
-    >
+    <div v-else-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
       <p><strong>Error:</strong> {{ error }}</p>
     </div>
 
@@ -74,9 +71,7 @@
                   </p>
                 </div>
                 <div class="flex items-center gap-3">
-                  <span
-                    class="bg-green-700 text-white text-sm px-3 py-1.5 rounded font-semibold"
-                  >
+                  <span class="bg-green-700 text-white text-sm px-3 py-1.5 rounded font-semibold">
                     {{ calculateDaysUntil(currentItem.expiryDate) }}
                   </span>
                   <div
@@ -103,14 +98,9 @@
                 @change="onInventoryItemChange"
                 class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-600 focus:border-green-600"
               >
-                <option
-                  v-for="item in allSupermarketItems"
-                  :key="item.id"
-                  :value="item.id"
-                >
+                <option v-for="item in allSupermarketItems" :key="item.id" :value="item.id">
                   Batch - Expires: {{ formatDate(item.expiryDate) }} -
-                  {{ item.quantityAvailable }} units -
-                  {{ item.sellingPrice.toLocaleString() }}₫
+                  {{ item.quantityAvailable }} units - {{ item.sellingPrice.toLocaleString() }}₫
                 </option>
               </select>
             </div>
@@ -164,12 +154,7 @@
 
       <!-- Back Button -->
       <div class="text-center">
-        <button
-          @click="goBack"
-          class="btn bg-gray-500 text-white hover:bg-gray-600"
-        >
-          ← Back
-        </button>
+        <button @click="goBack" class="btn bg-gray-500 text-white hover:bg-gray-600">← Back</button>
       </div>
     </div>
 
@@ -261,16 +246,16 @@ const supermarketName = computed(() => {
 const productEmoji = computed(() => {
   const category = categoryName.value.toLowerCase();
   const emojiMap = {
-    "dairy": "🧀",
-    "bakery": "🥐",
-    "beverages": "🥤",
-    "spices": "🌶️",
-    "cosmetics": "💄",
-    "meat": "🍖",
-    "seafood": "🦐",
-    "produce": "🥬",
-    "fruits": "🍎",
-    "vegetables": "🥕",
+    dairy: "🧀",
+    bakery: "🥐",
+    beverages: "🥤",
+    spices: "🌶️",
+    cosmetics: "💄",
+    meat: "🍖",
+    seafood: "🦐",
+    produce: "🥬",
+    fruits: "🍎",
+    vegetables: "🥕",
   };
 
   for (const [keyword, emoji] of Object.entries(emojiMap)) {
@@ -292,9 +277,7 @@ const allSupermarketItems = computed(() => {
 
 // Get other inventory items (excluding current one)
 const otherInventoryItems = computed(() => {
-  return allSupermarketItems.value.filter(
-    (item) => item.id !== selectedInventoryItemId.value
-  );
+  return allSupermarketItems.value.filter((item) => item.id !== selectedInventoryItemId.value);
 });
 
 // Get grouped items by supermarket (excluding current supermarket)
@@ -353,9 +336,7 @@ const calculateDaysUntil = (timestamp) => {
 
 const calculateDiscount = (originalPrice, sellingPrice) => {
   if (!originalPrice || !sellingPrice) return "";
-  const discount = Math.round(
-    ((originalPrice - sellingPrice) / originalPrice) * 100
-  );
+  const discount = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100);
   return `-${discount}%`;
 };
 
@@ -409,11 +390,15 @@ const goBack = () => {
 };
 
 // Watch for changes to currentItem and update store
-watch(() => currentItem.value, (newItem) => {
-  if (newItem && newItem.supermarketId) {
-    supermarketStore.setSelectedSupermarketId(newItem.supermarketId);
-  }
-}, { immediate: true });
+watch(
+  () => currentItem.value,
+  (newItem) => {
+    if (newItem && newItem.supermarketId) {
+      supermarketStore.setSelectedSupermarketId(newItem.supermarketId);
+    }
+  },
+  { immediate: true }
+);
 
 // Load data on mount
 onMounted(() => {

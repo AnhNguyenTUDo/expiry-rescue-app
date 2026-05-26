@@ -6,7 +6,10 @@
     </div>
 
     <!-- Error State -->
-    <div v-else-if="orderStore.error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    <div
+      v-else-if="orderStore.error"
+      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+    >
       <p><strong>Error:</strong> {{ orderStore.error }}</p>
       <NuxtLink to="/orders" class="text-red-800 underline mt-2 inline-block">
         ← Back to Orders
@@ -38,7 +41,9 @@
             </div>
             <div>
               <p class="text-sm text-gray-600">Total Amount</p>
-              <p class="text-2xl font-bold text-green-600">{{ (order.totalAmount ?? 0).toLocaleString() }}₫</p>
+              <p class="text-2xl font-bold text-green-600">
+                {{ (order.totalAmount ?? 0).toLocaleString() }}₫
+              </p>
             </div>
           </div>
         </div>
@@ -65,11 +70,7 @@
       <div class="bg-white p-6 rounded-lg shadow">
         <h2 class="text-2xl font-bold mb-4">Order Items</h2>
         <div class="space-y-4">
-          <div
-            v-for="item in order.items"
-            :key="item.id"
-            class="border-b pb-4 last:border-b-0"
-          >
+          <div v-for="item in order.items" :key="item.id" class="border-b pb-4 last:border-b-0">
             <div class="flex justify-between items-start">
               <div class="flex-1">
                 <h3 class="text-lg font-semibold text-gray-800">{{ item.productName }}</h3>
@@ -77,8 +78,12 @@
                 <p class="text-sm text-gray-500">Expires: {{ formatDate(item.expiryDate) }}</p>
               </div>
               <div class="text-right">
-                <p class="text-gray-600">{{ item.quantity }} × {{ (item.price ?? 0).toLocaleString() }}₫</p>
-                <p class="text-lg font-bold text-green-600">{{ (item.subtotal ?? 0).toLocaleString() }}₫</p>
+                <p class="text-gray-600">
+                  {{ item.quantity }} × {{ (item.price ?? 0).toLocaleString() }}₫
+                </p>
+                <p class="text-lg font-bold text-green-600">
+                  {{ (item.subtotal ?? 0).toLocaleString() }}₫
+                </p>
               </div>
             </div>
           </div>
@@ -87,7 +92,10 @@
 
       <!-- Back Button -->
       <div class="text-center">
-        <NuxtLink to="/orders" class="inline-block px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition cursor-pointer">
+        <NuxtLink
+          to="/orders"
+          class="inline-block px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition cursor-pointer"
+        >
           ← Back to Orders
         </NuxtLink>
       </div>
@@ -96,75 +104,74 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useOrderStore } from '~/stores/order'
-import { useAuthStore } from '~/stores/auth'
+import { ref, onMounted, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useOrderStore } from "~/stores/order";
+import { useAuthStore } from "~/stores/auth";
 
+const route = useRoute();
+const router = useRouter();
+const orderStore = useOrderStore();
 
-const route = useRoute()
-const router = useRouter()
-const orderStore = useOrderStore()
+const orderId = route.params.id;
 
-const orderId = route.params.id
-
-const order = computed(() => orderStore.currentOrder)
+const order = computed(() => orderStore.currentOrder);
 
 onMounted(async () => {
   try {
-    await orderStore.fetchOrderById(orderId)
+    await orderStore.fetchOrderById(orderId);
   } catch (error) {
-    console.error('Failed to load order:', error)
+    console.error("Failed to load order:", error);
   }
-})
+});
 
 const handleCancelOrder = async () => {
-  if (!confirm('Are you sure you want to cancel this order?')) return
+  if (!confirm("Are you sure you want to cancel this order?")) return;
 
   try {
-    await orderStore.cancelOrder(orderId)
-    alert('Order cancelled successfully')
+    await orderStore.cancelOrder(orderId);
+    alert("Order cancelled successfully");
   } catch (error) {
-    alert('Failed to cancel order')
+    alert("Failed to cancel order");
   }
-}
+};
 
 const handleDeleteOrder = async () => {
-  if (!confirm('Are you sure you want to delete this order? This action cannot be undone.')) return
+  if (!confirm("Are you sure you want to delete this order? This action cannot be undone.")) return;
 
   try {
-    await orderStore.deleteOrder(orderId)
-    alert('Order deleted successfully')
-    router.push('/orders')
+    await orderStore.deleteOrder(orderId);
+    alert("Order deleted successfully");
+    router.push("/orders");
   } catch (error) {
-    alert('Failed to delete order')
+    alert("Failed to delete order");
   }
-}
+};
 
 const getStatusClass = (status) => {
   const classes = {
-    CONFIRMED: 'bg-green-100 text-green-800',
-    CANCELLED: 'bg-red-100 text-red-800'
-  }
-  return classes[status] || 'bg-gray-100 text-gray-800'
-}
+    CONFIRMED: "bg-green-100 text-green-800",
+    CANCELLED: "bg-red-100 text-red-800",
+  };
+  return classes[status] || "bg-gray-100 text-gray-800";
+};
 
 const getStatusLabel = (status) => {
   const labels = {
-    CONFIRMED: '✅ Confirmed',
-    CANCELLED: '❌ Cancelled'
-  }
-  return labels[status] || status
-}
+    CONFIRMED: "✅ Confirmed",
+    CANCELLED: "❌ Cancelled",
+  };
+  return labels[status] || status;
+};
 
 const formatDate = (timestamp) => {
-  if (!timestamp) return 'N/A'
-  return new Date(timestamp).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-}
+  if (!timestamp) return "N/A";
+  return new Date(timestamp).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
 </script>

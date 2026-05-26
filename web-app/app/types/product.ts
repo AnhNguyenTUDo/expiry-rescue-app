@@ -1,6 +1,6 @@
 export enum InventoryStatus {
-  AVAILABLE = 'AVAILABLE',
-  NOT_AVAILABLE = 'NOT_AVAILABLE',
+  AVAILABLE = "AVAILABLE",
+  NOT_AVAILABLE = "NOT_AVAILABLE",
 }
 
 export interface ProductInventoryResponse {

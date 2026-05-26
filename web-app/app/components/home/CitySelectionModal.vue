@@ -3,12 +3,15 @@
     <div class="absolute inset-0 bg-gray-900/50"></div>
 
     <div class="relative p-4 w-full max-w-lg max-h-[90vh] flex flex-col">
-      <div class="relative bg-white border border-gray-200 rounded-lg shadow-sm p-4 md:p-6 flex flex-col min-h-0">
-
+      <div
+        class="relative bg-white border border-gray-200 rounded-lg shadow-sm p-4 md:p-6 flex flex-col min-h-0"
+      >
         <!-- Header -->
         <div class="border-b border-gray-200 pb-4 mb-4 shrink-0">
           <h3 class="text-lg font-semibold text-gray-900">Welcome to Expiry Rescue</h3>
-          <p class="text-sm text-gray-500 mt-1">Please select the area you'd like to browse stores in.</p>
+          <p class="text-sm text-gray-500 mt-1">
+            Please select the area you'd like to browse stores in.
+          </p>
         </div>
 
         <!-- Search bar -->
@@ -17,7 +20,9 @@
         </div>
 
         <!-- City + district list -->
-        <div v-if="loading" class="h-64 flex items-center justify-center text-gray-500 text-sm">Loading...</div>
+        <div v-if="loading" class="h-64 flex items-center justify-center text-gray-500 text-sm">
+          Loading...
+        </div>
         <div v-else class="overflow-y-auto space-y-1 h-64">
           <template v-for="city in filteredCities" :key="city.id">
             <!-- City row (toggle) -->
@@ -30,9 +35,17 @@
               <svg
                 class="w-4 h-4 text-gray-400 transition-transform duration-200"
                 :class="isExpanded(city.id) ? 'rotate-180' : ''"
-                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
               >
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m19 9-7 7-7-7"
+                />
               </svg>
             </button>
 
@@ -42,9 +55,11 @@
                 v-if="!searchQuery.trim()"
                 type="button"
                 @click="select(city, 'all', 'All Districts')"
-                :class="isSelected(city.id, 'all')
-                  ? 'border-green-500 bg-green-50 text-green-700 font-medium'
-                  : 'border-gray-300 text-gray-700 hover:border-green-500 hover:bg-green-50'"
+                :class="
+                  isSelected(city.id, 'all')
+                    ? 'border-green-500 bg-green-50 text-green-700 font-medium'
+                    : 'border-gray-300 text-gray-700 hover:border-green-500 hover:bg-green-50'
+                "
                 class="px-3 py-1.5 rounded-[10px] border text-sm transition-colors duration-150 cursor-pointer"
               >
                 All Districts
@@ -54,16 +69,20 @@
                 :key="district.id"
                 type="button"
                 @click="select(city, district.id, district.name)"
-                :class="isSelected(city.id, district.id)
-                  ? 'border-green-500 bg-green-50 text-green-700 font-medium'
-                  : 'border-gray-300 text-gray-700 hover:border-green-500 hover:bg-green-50'"
+                :class="
+                  isSelected(city.id, district.id)
+                    ? 'border-green-500 bg-green-50 text-green-700 font-medium'
+                    : 'border-gray-300 text-gray-700 hover:border-green-500 hover:bg-green-50'
+                "
                 class="px-3 py-1.5 rounded-[10px] border text-sm transition-colors duration-150 cursor-pointer"
               >
                 {{ district.name }}
               </button>
             </div>
           </template>
-          <p v-if="filteredCities.length === 0" class="text-center text-gray-400 text-sm py-6">No results found.</p>
+          <p v-if="filteredCities.length === 0" class="text-center text-gray-400 text-sm py-6">
+            No results found.
+          </p>
         </div>
 
         <!-- Footer -->
@@ -73,14 +92,15 @@
             :disabled="!selection"
             @click="confirm"
             class="px-4 py-2 rounded-[10px] text-sm font-medium text-white transition-colors duration-150"
-            :class="selection
-              ? 'bg-green-600 hover:bg-green-700 cursor-pointer'
-              : 'bg-gray-300 cursor-not-allowed'"
+            :class="
+              selection
+                ? 'bg-green-600 hover:bg-green-700 cursor-pointer'
+                : 'bg-gray-300 cursor-not-allowed'
+            "
           >
             Confirm
           </button>
         </div>
-
       </div>
     </div>
   </div>
