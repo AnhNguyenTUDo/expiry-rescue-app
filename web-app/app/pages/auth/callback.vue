@@ -124,49 +124,49 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useAuthStore } from "~/stores/auth";
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useAuthStore } from '~/stores/auth'
 
-const route = useRoute();
-const router = useRouter();
-const authStore = useAuthStore();
+const route = useRoute()
+const router = useRouter()
+const authStore = useAuthStore()
 
-const isProcessing = ref(true);
-const isSuccess = ref(false);
-const errorMessage = ref(null);
+const isProcessing = ref(true)
+const isSuccess = ref(false)
+const errorMessage = ref(null)
 
 const goToLogin = () => {
-  router.push("/login");
-};
+  router.push('/login')
+}
 
 onMounted(async () => {
   // Get token or error from URL query parameters
-  const token = route.query.token;
-  const error = route.query.error;
+  const token = route.query.token
+  const error = route.query.error
 
   // Simulate a small delay for UX
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 1000))
 
   if (token) {
     // Success: Store the token and fetch user profile
-    await authStore.handleOAuthCallback(token);
-    isProcessing.value = false;
-    isSuccess.value = true;
+    await authStore.handleOAuthCallback(token)
+    isProcessing.value = false
+    isSuccess.value = true
 
     // Redirect to home after a short delay
     setTimeout(() => {
-      router.push("/");
-    }, 1500);
+      router.push('/')
+    }, 1500)
   } else if (error) {
     // Error: Show error message
-    isProcessing.value = false;
-    authStore.handleOAuthError(error);
-    errorMessage.value = authStore.error;
+    isProcessing.value = false
+    authStore.handleOAuthError(error)
+    errorMessage.value = authStore.error
   } else {
     // No token or error - invalid callback
-    isProcessing.value = false;
-    errorMessage.value = "Invalid authentication callback. Please try again.";
+    isProcessing.value = false
+    errorMessage.value = 'Invalid authentication callback. Please try again.'
   }
-});
+})
 </script>

@@ -1,3 +1,3 @@
 export const useHeaderShadow = () => {
-  return useState("headerShadow", () => true);
-};
+  return useState('headerShadow', () => true)
+}

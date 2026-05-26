@@ -90,41 +90,41 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useProductInventory } from "~/composables/useProductInventory";
+import { ref, onMounted } from 'vue'
+import { useProductInventory } from '~/composables/useProductInventory'
 
 // State
-const inventories = ref([]);
-const loading = ref(false);
-const error = ref(null);
+const inventories = ref([])
+const loading = ref(false)
+const error = ref(null)
 
 // Get API methods
-const { getAllInventories } = useProductInventory();
+const { getAllInventories } = useProductInventory()
 
 /**
  * Fetch all inventories from API
  */
 const fetchInventories = async () => {
-  loading.value = true;
-  error.value = null;
+  loading.value = true
+  error.value = null
 
   try {
-    const response = await getAllInventories();
+    const response = await getAllInventories()
 
     // Extract data from API response
     if (response.success && response.data) {
-      inventories.value = response.data;
-      console.log("Inventories loaded:", inventories.value);
+      inventories.value = response.data
+      console.log('Inventories loaded:', inventories.value)
     } else {
-      inventories.value = [];
+      inventories.value = []
     }
   } catch (err) {
-    error.value = err.response?.data?.message || err.message || "Failed to load inventories";
-    console.error("Error fetching inventories:", err);
+    error.value = err.response?.data?.message || err.message || 'Failed to load inventories'
+    console.error('Error fetching inventories:', err)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 /**
  * Format timestamp to readable date
@@ -132,19 +132,19 @@ const fetchInventories = async () => {
  * @returns {string} - Formatted date string
  */
 const formatDate = (timestamp) => {
-  if (!timestamp) return "N/A";
-  const date = new Date(timestamp);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-};
+  if (!timestamp) return 'N/A'
+  const date = new Date(timestamp)
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
+}
 
 // Fetch inventories on component mount
 onMounted(() => {
-  fetchInventories();
-});
+  fetchInventories()
+})
 </script>
 
 <style scoped>

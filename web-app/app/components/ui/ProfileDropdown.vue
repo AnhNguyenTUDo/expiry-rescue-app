@@ -129,32 +129,32 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
-import { useRouter } from "vue-router";
-import { useAuthStore } from "~/stores/auth";
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '~/stores/auth'
 
-const isOpen = ref(false);
-const dropdownRef = ref(null);
-const authStore = useAuthStore();
-const router = useRouter();
+const isOpen = ref(false)
+const dropdownRef = ref(null)
+const authStore = useAuthStore()
+const router = useRouter()
 
 const handleLogout = () => {
-  authStore.logout();
-  isOpen.value = false;
-  router.push("/");
-};
+  authStore.logout()
+  isOpen.value = false
+  router.push('/')
+}
 
 const handleClickOutside = (event) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
-    isOpen.value = false;
+    isOpen.value = false
   }
-};
+}
 
 onMounted(() => {
-  document.addEventListener("click", handleClickOutside);
-});
+  document.addEventListener('click', handleClickOutside)
+})
 
 onUnmounted(() => {
-  document.removeEventListener("click", handleClickOutside);
-});
+  document.removeEventListener('click', handleClickOutside)
+})
 </script>

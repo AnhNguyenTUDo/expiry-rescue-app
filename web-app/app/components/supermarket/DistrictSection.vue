@@ -49,8 +49,8 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
-import SupermarketCard from "@/components/supermarket/SupermarketCard.vue";
+import { ref, computed, watch } from 'vue'
+import SupermarketCard from '@/components/supermarket/SupermarketCard.vue'
 
 const props = defineProps({
   districtName: {
@@ -65,24 +65,24 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-});
+})
 
-const PAGE_SIZE = 8;
-const visibleCount = ref(PAGE_SIZE);
+const PAGE_SIZE = 8
+const visibleCount = ref(PAGE_SIZE)
 
 // Reset pagination whenever the stores list changes (e.g. filter applied)
 watch(
   () => props.stores,
   () => {
-    visibleCount.value = PAGE_SIZE;
+    visibleCount.value = PAGE_SIZE
   }
-);
+)
 
-const visibleStores = computed(() => props.stores.slice(0, visibleCount.value));
-const hasMore = computed(() => props.stores.length > visibleCount.value);
-const remaining = computed(() => props.stores.length - visibleCount.value);
+const visibleStores = computed(() => props.stores.slice(0, visibleCount.value))
+const hasMore = computed(() => props.stores.length > visibleCount.value)
+const remaining = computed(() => props.stores.length - visibleCount.value)
 
 const showMore = () => {
-  visibleCount.value += PAGE_SIZE;
-};
+  visibleCount.value += PAGE_SIZE
+}
 </script>

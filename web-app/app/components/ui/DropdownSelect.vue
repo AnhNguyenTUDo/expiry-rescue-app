@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -73,32 +73,32 @@ const props = defineProps({
   },
   minWidth: {
     type: String,
-    default: "160px",
+    default: '160px',
   },
-});
+})
 
-const emit = defineEmits(["update:modelValue", "change"]);
+const emit = defineEmits(['update:modelValue', 'change'])
 
-const isOpen = ref(false);
-const dropdownRef = ref(null);
+const isOpen = ref(false)
+const dropdownRef = ref(null)
 
 const selectedLabel = computed(
   () => props.options.find((o) => o.value === props.modelValue)?.label ?? props.modelValue
-);
+)
 
 const select = (value) => {
-  emit("update:modelValue", value);
-  emit("change", value);
-  isOpen.value = false;
-};
+  emit('update:modelValue', value)
+  emit('change', value)
+  isOpen.value = false
+}
 
 // Close on click outside
 const handleClickOutside = (event) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
-    isOpen.value = false;
+    isOpen.value = false
   }
-};
+}
 
-onMounted(() => document.addEventListener("mousedown", handleClickOutside));
-onUnmounted(() => document.removeEventListener("mousedown", handleClickOutside));
+onMounted(() => document.addEventListener('mousedown', handleClickOutside))
+onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 </script>

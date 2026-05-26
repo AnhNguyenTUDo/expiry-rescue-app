@@ -28,18 +28,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted } from 'vue'
 
-const visible = ref(false);
+const visible = ref(false)
 
 const onScroll = () => {
-  visible.value = window.scrollY > 300;
-};
+  visible.value = window.scrollY > 300
+}
 
 const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-};
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 
-onMounted(() => window.addEventListener("scroll", onScroll));
-onUnmounted(() => window.removeEventListener("scroll", onScroll));
+onMounted(() => window.addEventListener('scroll', onScroll))
+onUnmounted(() => window.removeEventListener('scroll', onScroll))
 </script>

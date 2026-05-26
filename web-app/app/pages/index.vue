@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-import HomeView from "@/components/home/HomeView.vue";
+import HomeView from '@/components/home/HomeView.vue'
 </script>

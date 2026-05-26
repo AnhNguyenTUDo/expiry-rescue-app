@@ -21,7 +21,7 @@
             open ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800',
           ]"
         >
-          {{ open ? "Open" : "Closed" }}
+          {{ open ? 'Open' : 'Closed' }}
         </span>
       </div>
 
@@ -50,37 +50,37 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-});
+})
 
 const STORE_COLORS = [
-  "bg-gradient-to-br from-emerald-500 to-green-700",
-  "bg-gradient-to-br from-teal-500 to-emerald-700",
-  "bg-gradient-to-br from-green-500 to-teal-700",
-  "bg-gradient-to-br from-cyan-500 to-teal-700",
-  "bg-gradient-to-br from-lime-500 to-green-700",
-  "bg-gradient-to-br from-emerald-400 to-cyan-600",
-];
+  'bg-gradient-to-br from-emerald-500 to-green-700',
+  'bg-gradient-to-br from-teal-500 to-emerald-700',
+  'bg-gradient-to-br from-green-500 to-teal-700',
+  'bg-gradient-to-br from-cyan-500 to-teal-700',
+  'bg-gradient-to-br from-lime-500 to-green-700',
+  'bg-gradient-to-br from-emerald-400 to-cyan-600',
+]
 
 const storeBgClass = (name) => {
-  if (!name) return STORE_COLORS[0];
-  return STORE_COLORS[name.charCodeAt(0) % STORE_COLORS.length];
-};
+  if (!name) return STORE_COLORS[0]
+  return STORE_COLORS[name.charCodeAt(0) % STORE_COLORS.length]
+}
 
 const formatHour = (time) => {
-  if (!time) return "";
-  const [h, m] = time.split(":");
-  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-};
+  if (!time) return ''
+  const [h, m] = time.split(':')
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+}
 
 const open = computed(() => {
-  const { operatingHoursFrom: from, operatingHoursTo: to } = props.supermarket;
-  if (!from || !to) return false;
-  const now = new Date();
-  const cur = now.getHours() * 60 + now.getMinutes();
-  const [fh, fm] = from.split(":").map(Number);
-  const [th, tm] = to.split(":").map(Number);
-  const start = fh * 60 + fm;
-  const end = th * 60 + tm;
-  return start <= end ? cur >= start && cur < end : cur >= start || cur < end;
-});
+  const { operatingHoursFrom: from, operatingHoursTo: to } = props.supermarket
+  if (!from || !to) return false
+  const now = new Date()
+  const cur = now.getHours() * 60 + now.getMinutes()
+  const [fh, fm] = from.split(':').map(Number)
+  const [th, tm] = to.split(':').map(Number)
+  const start = fh * 60 + fm
+  const end = th * 60 + tm
+  return start <= end ? cur >= start && cur < end : cur >= start || cur < end
+})
 </script>

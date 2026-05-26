@@ -178,19 +178,19 @@
 </template>
 
 <script setup>
-import { useCartStore } from "~/stores/cart";
-import { useOrderStore } from "~/stores/order";
-import { useRouter } from "vue-router";
+import { useCartStore } from '~/stores/cart'
+import { useOrderStore } from '~/stores/order'
+import { useRouter } from 'vue-router'
 
-const cartStore = useCartStore();
-const orderStore = useOrderStore();
-const router = useRouter();
+const cartStore = useCartStore()
+const orderStore = useOrderStore()
+const router = useRouter()
 
 // Checkout handler
 const handleCheckout = async () => {
   if (cartStore.selectedItems.length === 0) {
-    alert("Please select items to checkout");
-    return;
+    alert('Please select items to checkout')
+    return
   }
 
   try {
@@ -200,55 +200,55 @@ const handleCheckout = async () => {
         inventoryId: item.inventoryId,
         quantity: item.quantity,
       })),
-    };
+    }
 
     // Create order
-    const order = await orderStore.createOrder(orderData);
+    const order = await orderStore.createOrder(orderData)
 
     if (order) {
       // Remove checked out items from cart
       cartStore.selectedItems.forEach((item) => {
-        cartStore.removeFromCart(item.inventoryId);
-      });
+        cartStore.removeFromCart(item.inventoryId)
+      })
 
       // Redirect to order detail page
-      alert(`Order #${order.orderNumber} created successfully!`);
-      router.push(`/orders/${order.id}`);
+      alert(`Order #${order.orderNumber} created successfully!`)
+      router.push(`/orders/${order.id}`)
     }
   } catch (error) {
-    console.error("Checkout failed:", error);
-    alert("Failed to create order. Please try again.");
+    console.error('Checkout failed:', error)
+    alert('Failed to create order. Please try again.')
   }
-};
+}
 
 // Helper functions
 const formatDate = (timestamp) => {
-  if (!timestamp) return "N/A";
-  const date = new Date(timestamp);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-};
+  if (!timestamp) return 'N/A'
+  const date = new Date(timestamp)
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
 
 const calculateDaysUntil = (timestamp) => {
-  if (!timestamp) return "N/A";
-  const now = Date.now();
-  const diff = timestamp - now;
-  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  if (!timestamp) return 'N/A'
+  const now = Date.now()
+  const diff = timestamp - now
+  const days = Math.ceil(diff / (1000 * 60 * 60 * 24))
 
-  if (days < 0) return "Expired";
-  if (days === 0) return "Today";
-  if (days === 1) return "1 day";
-  return `${days} days`;
-};
+  if (days < 0) return 'Expired'
+  if (days === 0) return 'Today'
+  if (days === 1) return '1 day'
+  return `${days} days`
+}
 
 const calculateDiscount = (originalPrice, sellingPrice) => {
-  if (!originalPrice || !sellingPrice) return "";
-  const discount = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100);
-  return `-${discount}%`;
-};
+  if (!originalPrice || !sellingPrice) return ''
+  const discount = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100)
+  return `-${discount}%`
+}
 </script>
 
 <style scoped>

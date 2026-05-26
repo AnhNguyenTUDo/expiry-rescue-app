@@ -66,7 +66,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -79,43 +79,43 @@ const props = defineProps({
   },
   currentSupermarketName: {
     type: String,
-    default: "",
+    default: '',
   },
-});
+})
 
-const emit = defineEmits(["update:modelValue", "change"]);
+const emit = defineEmits(['update:modelValue', 'change'])
 
 const sortedSupermarkets = computed(() => {
   return [...props.supermarkets].sort((a, b) => {
-    const nameA = a.name || "";
-    const nameB = b.name || "";
-    return nameA.localeCompare(nameB);
-  });
-});
+    const nameA = a.name || ''
+    const nameB = b.name || ''
+    return nameA.localeCompare(nameB)
+  })
+})
 
-const isOpen = ref(false);
-const dropdownRef = ref(null);
+const isOpen = ref(false)
+const dropdownRef = ref(null)
 
 const selectedLabel = computed(() => {
   if (props.currentSupermarketName) {
-    return props.currentSupermarketName;
+    return props.currentSupermarketName
   }
-  return "Select Supermarket";
-});
+  return 'Select Supermarket'
+})
 
 const select = (value) => {
-  emit("update:modelValue", value);
-  emit("change", value);
-  isOpen.value = false;
-};
+  emit('update:modelValue', value)
+  emit('change', value)
+  isOpen.value = false
+}
 
 // Close on click outside
 const handleClickOutside = (event) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
-    isOpen.value = false;
+    isOpen.value = false
   }
-};
+}
 
-onMounted(() => document.addEventListener("mousedown", handleClickOutside));
-onUnmounted(() => document.removeEventListener("mousedown", handleClickOutside));
+onMounted(() => document.addEventListener('mousedown', handleClickOutside))
+onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 </script>

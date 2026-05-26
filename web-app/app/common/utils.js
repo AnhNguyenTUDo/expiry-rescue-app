@@ -1,12 +1,12 @@
 export async function requestAxios(promise, errorCallBack) {
   try {
-    const response = await promise;
+    const response = await promise
 
-    return response.data;
+    return response.data
   } catch (error) {
     if (errorCallBack) {
-      errorCallBack(error);
+      errorCallBack(error)
     }
-    console.error(error);
+    console.error(error)
   }
 }

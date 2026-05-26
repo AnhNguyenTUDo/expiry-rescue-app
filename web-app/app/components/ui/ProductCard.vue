@@ -75,15 +75,15 @@ const props = defineProps({
     type: String,
     required: false,
   },
-});
+})
 
 const navigateToDetail = () => {
   // Navigate to product detail page with new URL structure
-  const productMasterId = props.product.productMasterId || props.product.id;
+  const productMasterId = props.product.productMasterId || props.product.id
   const targetUrl = props.supermarketId
     ? `/supermarkets/${props.supermarketId}/products/${productMasterId}`
-    : `/products/${productMasterId}`;
+    : `/products/${productMasterId}`
 
-  navigateTo(targetUrl);
-};
+  navigateTo(targetUrl)
+}
 </script>

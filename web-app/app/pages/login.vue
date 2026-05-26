@@ -228,48 +228,48 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useAuthStore } from "~/stores/auth";
+import { ref } from 'vue'
+import { useAuthStore } from '~/stores/auth'
 
-const authStore = useAuthStore();
+const authStore = useAuthStore()
 
 // Form data
-const email = ref("");
-const password = ref("");
-const isLoading = ref(false);
-const loginProvider = ref(null);
+const email = ref('')
+const password = ref('')
+const isLoading = ref(false)
+const loginProvider = ref(null)
 
 // Handle Google login
 const handleGoogleLogin = () => {
-  isLoading.value = true;
-  loginProvider.value = "google";
-  authStore.clearError();
-  authStore.loginWithGoogle();
-};
+  isLoading.value = true
+  loginProvider.value = 'google'
+  authStore.clearError()
+  authStore.loginWithGoogle()
+}
 
 // Handle Facebook login
 const handleFacebookLogin = () => {
-  isLoading.value = true;
-  loginProvider.value = "facebook";
-  authStore.clearError();
-  authStore.loginWithFacebook();
-};
+  isLoading.value = true
+  loginProvider.value = 'facebook'
+  authStore.clearError()
+  authStore.loginWithFacebook()
+}
 
 // Handle email login (placeholder)
 const handleEmailLogin = () => {
   // TODO: Implement email/password login
-  console.log("Email login not implemented yet");
-};
+  console.log('Email login not implemented yet')
+}
 
 // Initialize auth store
 onMounted(() => {
-  authStore.initAuth();
+  authStore.initAuth()
 
   // If already authenticated, redirect to home
   if (authStore.isAuthenticated) {
-    navigateTo("/");
+    navigateTo('/')
   }
-});
+})
 </script>
 
 <style scoped>
