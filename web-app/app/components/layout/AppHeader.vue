@@ -1,8 +1,11 @@
 <template>
-  <header class="sticky top-0 z-40 bg-gray-100 border-b-2 border-green-600 text-gray-800 py-6">
+  <header class="sticky top-0 z-40 bg-white shadow-lg text-gray-800 py-6">
     <div class="max-w-7xl mx-auto flex justify-between items-center px-4">
       <div class="flex items-center gap-4">
-        <NuxtLink to="/" class="text-2xl font-bold text-green-700 hover:opacity-90 transition">
+        <NuxtLink
+          to="/"
+          class="text-2xl font-bold text-green-700 hover:opacity-90 transition"
+        >
           Expiry Rescue
         </NuxtLink>
 
@@ -18,17 +21,24 @@
       </div>
 
       <nav class="flex gap-3">
-        <NuxtLink to="/" class="px-4 py-1.5 flex items-center rounded-[10px] border transition border-gray-300 text-gray-700 hover:bg-gray-200">Home</NuxtLink>
+        <NuxtLink
+          to="/"
+          class="px-4 py-1.5 flex items-center rounded-[10px] border transition border-gray-300 text-gray-700 hover:bg-gray-200"
+          >Home</NuxtLink
+        >
         <!-- <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-gray-300 text-gray-700 hover:bg-gray-200">Products</button>
         <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-gray-300 text-gray-700 hover:bg-gray-200">About</button> -->
-        <NuxtLink to="/cart" class="px-4 py-1.5 flex items-center rounded-[10px] border transition border-gray-300 text-gray-700 hover:bg-gray-200 relative">
+        <NuxtLink
+          to="/cart"
+          class="px-4 py-1.5 flex items-center rounded-[10px] border transition border-gray-300 text-gray-700 hover:bg-gray-200 relative"
+        >
           Cart
           <span v-if="cartTotal > 0" class="ml-1">({{ cartTotal }})</span>
           <span
             v-if="cartTotal > 0"
             class="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
           >
-            {{ cartTotal > 99 ? '99+' : cartTotal }}
+            {{ cartTotal > 99 ? "99+" : cartTotal }}
           </span>
         </NuxtLink>
         <!-- Profile Dropdown -->
