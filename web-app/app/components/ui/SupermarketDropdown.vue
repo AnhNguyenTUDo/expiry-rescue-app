@@ -3,13 +3,13 @@
     <button
       type="button"
       @click="isOpen = !isOpen"
-      class="bg-white/10 border border-white/30 text-white rounded-[10px] px-4 py-1.5 pr-10 focus:outline-none focus:ring-1 focus:ring-white/50 focus:border-white/50 cursor-pointer hover:bg-white/20 flex items-center justify-between min-w-full w-full"
+      class="bg-transparent border border-gray-300 text-gray-700 rounded-[10px] px-4 py-1.5 pr-10 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 cursor-pointer hover:bg-gray-200 flex items-center justify-between min-w-full w-full"
     >
       <span class="truncate">
         {{ selectedLabel }}
       </span>
       <svg
-        class="w-3 h-3 text-white transition-transform duration-200 absolute right-4"
+        class="w-3 h-3 text-gray-500 transition-transform duration-200 absolute right-4"
         :class="isOpen ? 'rotate-180' : ''"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

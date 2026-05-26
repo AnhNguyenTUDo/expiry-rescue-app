@@ -2,7 +2,7 @@
   <div class="relative" ref="dropdownRef">
     <button 
       @click="isOpen = !isOpen"
-      class="px-2 py-1.5 rounded-[10px] border border-white/40 text-white hover:bg-white/20 transition group cursor-pointer flex items-center justify-center"
+      class="px-2 py-1.5 rounded-[10px] border border-gray-300 text-gray-700 hover:bg-gray-200 transition group cursor-pointer flex items-center justify-center"
       title="Account"
     >
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
