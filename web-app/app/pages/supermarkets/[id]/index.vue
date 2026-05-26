@@ -17,21 +17,14 @@
         ref="detailsRef"
         class="bg-white -mt-5 mb-6 w-screen relative left-[calc(50%-50vw)] shadow-lg"
       >
-        <div class="max-w-7xl mx-auto px-10 py-6">
+        <div class="max-w-7xl mx-auto px-4 py-6">
           <h1 class="text-3xl font-bold text-gray-800">{{ supermarket.name }}</h1>
           <div class="mt-4 space-y-2">
             <p class="text-gray-600">
               <span class="font-medium">Address:</span> {{ supermarket.address }}
             </p>
-            <p v-if="supermarket.districtName" class="text-gray-600">
-              <span class="font-medium">District:</span> {{ supermarket.districtName
-              }}<span v-if="supermarket.cityName">, {{ supermarket.cityName }}</span>
-            </p>
             <p v-if="supermarket.phone" class="text-gray-600">
               <span class="font-medium">Phone:</span> {{ supermarket.phone }}
-            </p>
-            <p v-if="supermarket.contactPerson" class="text-gray-600">
-              <span class="font-medium">Contact Person:</span> {{ supermarket.contactPerson }}
             </p>
             <p
               v-if="supermarket.operatingHoursFrom && supermarket.operatingHoursTo"
@@ -95,7 +88,7 @@
           >
             <button
               @click="toggleCategory(category.id)"
-              class="btn bg-green-600 text-white hover:bg-green-700"
+              class="px-4 py-2 rounded-lg border transition bg-green-600 text-white hover:bg-green-700"
             >
               Show More ({{ category.products.length - 4 }} more)
             </button>
@@ -105,7 +98,7 @@
           <div v-if="expandedCategories[category.id]" class="text-center mt-4">
             <button
               @click="toggleCategory(category.id)"
-              class="btn bg-gray-500 text-white hover:bg-gray-600"
+              class="px-4 py-2 rounded-lg border transition bg-gray-500 text-white hover:bg-gray-600"
             >
               Show Less
             </button>
@@ -384,10 +377,3 @@ onBeforeUnmount(() => {
   headerShadow.value = true
 })
 </script>
-
-<style scoped>
-@reference "tailwindcss";
-.btn {
-  @apply px-4 py-2 rounded-lg border transition;
-}
-</style>
