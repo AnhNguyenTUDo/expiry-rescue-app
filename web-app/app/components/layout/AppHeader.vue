@@ -1,5 +1,8 @@
 <template>
-  <header class="sticky top-0 z-40 bg-white shadow-lg text-gray-800 py-6">
+  <header
+    class="sticky top-0 z-40 bg-white text-gray-800 py-6 transition-shadow duration-200"
+    :class="{ 'shadow-lg': headerShadow }"
+  >
     <div class="max-w-7xl mx-auto flex justify-between items-center px-4">
       <div class="flex items-center gap-4">
         <NuxtLink
@@ -71,4 +74,7 @@ const emit = defineEmits(["supermarket-change"]);
 
 // Two-way binding for the dropdown selection
 const selectedSupermarket = defineModel("selectedSupermarket");
+
+// Controlled by pages that want to transfer the shadow (e.g. supermarket details)
+const headerShadow = useHeaderShadow();
 </script>

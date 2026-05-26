@@ -16,25 +16,30 @@
     <!-- Supermarket Details -->
     <div v-else-if="supermarket">
       <!-- Supermarket Header -->
-      <div class="bg-white p-6 rounded-xl shadow mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">{{ supermarket.name }}</h1>
-        <div class="mt-4 space-y-2">
-          <p class="text-gray-600">
-            <span class="font-medium">Address:</span> {{ supermarket.address }}
-          </p>
-          <p v-if="supermarket.districtName" class="text-gray-600">
-            <span class="font-medium">District:</span> {{ supermarket.districtName }}<span v-if="supermarket.cityName">, {{ supermarket.cityName }}</span>
-          </p>
-          <p v-if="supermarket.phone" class="text-gray-600">
-            <span class="font-medium">Phone:</span> {{ supermarket.phone }}
-          </p>
-          <p v-if="supermarket.contactPerson" class="text-gray-600">
-            <span class="font-medium">Contact Person:</span> {{ supermarket.contactPerson }}
-          </p>
-          <p v-if="supermarket.operatingHoursFrom && supermarket.operatingHoursTo" class="text-gray-600">
-            <span class="font-medium">Operating Hours:</span>
-            {{ supermarket.operatingHoursFrom }} - {{ supermarket.operatingHoursTo }}
-          </p>
+      <div
+        ref="detailsRef"
+        class="bg-white -mt-5 mb-6 w-screen relative left-[calc(50%-50vw)] shadow-lg"
+      >
+        <div class="max-w-7xl mx-auto px-10 py-6">
+          <h1 class="text-3xl font-bold text-gray-800">{{ supermarket.name }}</h1>
+          <div class="mt-4 space-y-2">
+            <p class="text-gray-600">
+              <span class="font-medium">Address:</span> {{ supermarket.address }}
+            </p>
+            <p v-if="supermarket.districtName" class="text-gray-600">
+              <span class="font-medium">District:</span> {{ supermarket.districtName }}<span v-if="supermarket.cityName">, {{ supermarket.cityName }}</span>
+            </p>
+            <p v-if="supermarket.phone" class="text-gray-600">
+              <span class="font-medium">Phone:</span> {{ supermarket.phone }}
+            </p>
+            <p v-if="supermarket.contactPerson" class="text-gray-600">
+              <span class="font-medium">Contact Person:</span> {{ supermarket.contactPerson }}
+            </p>
+            <p v-if="supermarket.operatingHoursFrom && supermarket.operatingHoursTo" class="text-gray-600">
+              <span class="font-medium">Operating Hours:</span>
+              {{ supermarket.operatingHoursFrom }} - {{ supermarket.operatingHoursTo }}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -122,7 +127,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import SupermarketService from "~/services/supermarket.service";
 import ProductCategoryService from "~/services/product-category.service";
@@ -139,6 +144,19 @@ const selectedCategoryFilter = ref("all");
 const loading = ref(true);
 const error = ref(null);
 const expandedCategories = ref({});
+const detailsRef = ref(null);
+
+// Header shadow control: the details section owns the shadow at the top of
+// the page; once it scrolls past the header, the header takes the shadow over.
+const headerShadow = useHeaderShadow();
+
+const updateHeaderShadow = () => {
+  if (!detailsRef.value) return;
+  const header = document.querySelector("header");
+  const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+  const detailsBottom = detailsRef.value.getBoundingClientRect().bottom;
+  headerShadow.value = detailsBottom <= headerBottom;
+};
 
 // Fetch supermarket details with products
 const fetchSupermarketWithProducts = async () => {
@@ -367,10 +385,23 @@ const toggleCategory = (categoryId) => {
 
 // Load data on mount
 onMounted(async () => {
+  headerShadow.value = false;
+  window.addEventListener("scroll", updateHeaderShadow, { passive: true });
+  window.addEventListener("resize", updateHeaderShadow);
+
   await Promise.all([
     fetchSupermarketWithProducts(),
     fetchCategories(),
   ]);
+  // Recompute after details are rendered so initial state is correct
+  await nextTick();
+  updateHeaderShadow();
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("scroll", updateHeaderShadow);
+  window.removeEventListener("resize", updateHeaderShadow);
+  headerShadow.value = true;
 });
 </script>
 

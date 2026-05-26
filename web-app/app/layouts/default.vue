@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-gray-100 text-gray-800">
+  <div class="min-h-screen flex flex-col bg-gray-100 text-gray-800 overflow-x-clip">
     <AppHeader
       v-model:selected-supermarket="selectedSupermarket"
       :supermarkets="supermarketStore.supermarkets"
