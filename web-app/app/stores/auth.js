@@ -115,8 +115,6 @@ export const useAuthStore = defineStore("auth", {
       try {
         const runtimeConfig = useRuntimeConfig();
         const endpoint = `${runtimeConfig.public.apiBase}/auth/me`;
-        console.log("🔍 Fetching user profile from:", endpoint);
-        console.log("🔑 Using token:", this.token.substring(0, 20) + "...");
 
         const response = await fetch(endpoint, {
           headers: {
@@ -124,11 +122,8 @@ export const useAuthStore = defineStore("auth", {
           },
         });
 
-        console.log("📡 Response status:", response.status);
-
         if (response.ok) {
           const userData = await response.json();
-          console.log("✅ User data received:", userData);
           this.user = userData.data;
 
           if (typeof window !== "undefined") {
