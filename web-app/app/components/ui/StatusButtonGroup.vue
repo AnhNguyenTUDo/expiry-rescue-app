@@ -8,10 +8,8 @@
         type="button"
         @click="select(option.value)"
         :class="[
-          'px-3 text-sm rounded-[9px] cursor-pointer transition-all duration-150 leading-none',
-          modelValue === option.value
-            ? 'bg-white text-gray-900 shadow-sm py-3.5'
-            : 'hover:text-gray-900 py-3',
+          'px-3 py-2 text-sm rounded-[9px] cursor-pointer transition-all duration-150 leading-none',
+          modelValue === option.value ? 'bg-white text-gray-900 shadow-sm' : 'hover:text-gray-900',
         ]"
       >
         {{ option.label }}

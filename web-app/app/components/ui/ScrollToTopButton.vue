@@ -14,15 +14,7 @@
       class="fixed bottom-6 right-6 z-50 p-3 border-2 border-green-700 text-green-700 rounded-full shadow-lg cursor-pointer transition-all duration-300 hover:-translate-y-0.5 active:scale-85 hover:shadow-xl"
       aria-label="Scroll to top"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24">
-        <path
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M5 15l7-7 7 7"
-        />
-      </svg>
+      <SvgIcon name="icon-chevron-up" class="w-5 h-5" />
     </button>
   </Transition>
 </template>

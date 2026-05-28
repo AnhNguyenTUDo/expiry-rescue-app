@@ -197,3 +197,5 @@ db-backup/
 
 start.bat
 .history
+
+web-app/app/assets/sprite/

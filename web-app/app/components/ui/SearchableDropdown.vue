@@ -15,24 +15,11 @@
       :style="{ minWidth: minWidth }"
     >
       <span>{{ selectedLabel }}</span>
-      <svg
-        class="w-3 h-3 transition-transform duration-200"
-        :class="[isOpen ? 'rotate-180' : '', isDisabled ? 'text-gray-300' : 'text-gray-500']"
-        aria-hidden="true"
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="m19 9-7 7-7-7"
-        />
-      </svg>
+      <SvgIcon
+        name="icon-chevron-down"
+        class="w-3 h-3 text-gray-500 transition-transform duration-200"
+        :class="isOpen ? 'rotate-180' : ''"
+      />
     </button>
 
     <!-- Flowbite Tooltip Element -->
