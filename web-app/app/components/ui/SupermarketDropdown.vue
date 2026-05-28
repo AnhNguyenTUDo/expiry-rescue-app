@@ -8,21 +8,11 @@
       <span class="truncate">
         {{ selectedLabel }}
       </span>
-      <svg
+      <SvgIcon
+        name="icon-chevron-down"
         class="w-3 h-3 text-gray-500 transition-transform duration-200 absolute right-4"
         :class="isOpen ? 'rotate-180' : ''"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 10 6"
-      >
-        <path
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="m1 1 4 4 4-4"
-        />
-      </svg>
+      />
     </button>
 
     <Transition

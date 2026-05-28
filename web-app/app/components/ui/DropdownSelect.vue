@@ -7,22 +7,12 @@
       class="inline-flex items-center justify-between gap-2 border border-gray-300 rounded-[10px] px-3 py-1.5 text-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-green-600 focus:border-green-600 cursor-pointer"
       :style="{ minWidth: minWidth }"
     >
-      <span>{{ selectedLabel }}</span>
-      <svg
+      <span>{{ selectedLabel }} </span>
+      <SvgIcon
+        name="icon-chevron-down"
         class="w-3 h-3 text-gray-500 transition-transform duration-200"
         :class="isOpen ? 'rotate-180' : ''"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 10 6"
-      >
-        <path
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="m1 1 4 4 4-4"
-        />
-      </svg>
+      />
     </button>
 
     <!-- Dropdown menu -->
