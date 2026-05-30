@@ -1,6 +1,6 @@
 import { useAxios } from '../composables/useAxios'
-import { requestAxios } from '../common/utils'
-import Constants from '../common/url-constants'
+import { requestAxios } from '../utils/axios-helper'
+import Constants from '../utils/url-constants'
 
 class ProductInventoryService {
   // /**
