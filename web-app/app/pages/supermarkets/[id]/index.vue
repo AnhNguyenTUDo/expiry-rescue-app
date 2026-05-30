@@ -141,58 +141,10 @@ const fetchCategories = async () => {
   }
 }
 
-const formatDate = (timestamp) => {
-  if (!timestamp) return 'N/A'
-  const date = new Date(timestamp)
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-}
-
-const calculateDaysUntil = (timestamp) => {
-  if (!timestamp) return 'N/A'
-  const now = new Date().getTime()
-  const days = Math.ceil((timestamp - now) / (1000 * 60 * 60 * 24))
-  if (days < 0) return 'Expired'
-  if (days === 0) return 'Today'
-  if (days === 1) return '1 day'
-  return `${days} days`
-}
-
-const calculateDiscount = (originalPrice, sellingPrice) => {
-  if (!originalPrice || !sellingPrice) return ''
-  return `-${Math.round(((originalPrice - sellingPrice) / originalPrice) * 100)}%`
-}
-
-const calculateAvailability = (expiryDate, quantityAvailable, status) => {
-  if (status !== 'AVAILABLE') return 'out of stock'
-  const now = new Date().getTime()
-  if (expiryDate <= now) return 'out of stock'
-  const daysUntilExpiry = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24))
-  if (daysUntilExpiry <= 3) return 'limited'
-  if (quantityAvailable === 0) return 'out of stock'
-  if (quantityAvailable <= 10) return 'limited'
-  return 'available'
-}
-
-const getCategoryEmoji = (categoryName) => {
-  if (!categoryName) return '🛒'
-  const lowerName = categoryName.toLowerCase()
-  const emojiMap = {
-    dairy: '🧀',
-    bakery: '🥐',
-    beverages: '🥤',
-    spices: '🌶️',
-    cosmetics: '💄',
-    meat: '🍖',
-    seafood: '🦐',
-    produce: '🥬',
-    fruits: '🍎',
-    vegetables: '🥕',
-  }
-  for (const [keyword, emoji] of Object.entries(emojiMap)) {
-    if (lowerName.includes(keyword)) return emoji
-  }
-  return '🛒'
-}
+// Shared helpers
+import { formatDate, calculateDaysUntil } from '~/utils/date'
+import { calculateDiscount } from '~/utils/price'
+import { calculateAvailability, getCategoryEmoji } from '~/utils/product'
 
 const filteredCategoriesWithProducts = computed(() => {
   let categoriesToShow = allCategories.value

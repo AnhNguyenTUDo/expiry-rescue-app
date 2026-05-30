@@ -126,20 +126,8 @@ const fetchInventories = async () => {
   }
 }
 
-/**
- * Format timestamp to readable date
- * @param {number} timestamp - Milliseconds since epoch
- * @returns {string} - Formatted date string
- */
-const formatDate = (timestamp) => {
-  if (!timestamp) return 'N/A'
-  const date = new Date(timestamp)
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
-}
+// Shared helpers
+import { formatDate } from '~/utils/date'
 
 // Fetch inventories on component mount
 onMounted(() => {

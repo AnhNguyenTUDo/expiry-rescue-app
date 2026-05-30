@@ -221,34 +221,9 @@ const handleCheckout = async () => {
   }
 }
 
-// Helper functions
-const formatDate = (timestamp) => {
-  if (!timestamp) return 'N/A'
-  const date = new Date(timestamp)
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
-}
-
-const calculateDaysUntil = (timestamp) => {
-  if (!timestamp) return 'N/A'
-  const now = Date.now()
-  const diff = timestamp - now
-  const days = Math.ceil(diff / (1000 * 60 * 60 * 24))
-
-  if (days < 0) return 'Expired'
-  if (days === 0) return 'Today'
-  if (days === 1) return '1 day'
-  return `${days} days`
-}
-
-const calculateDiscount = (originalPrice, sellingPrice) => {
-  if (!originalPrice || !sellingPrice) return ''
-  const discount = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100)
-  return `-${discount}%`
-}
+// Shared helpers
+import { formatDate, calculateDaysUntil } from '~/utils/date'
+import { calculateDiscount } from '~/utils/price'
 </script>
 
 <style scoped>

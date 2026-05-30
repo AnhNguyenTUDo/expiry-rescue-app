@@ -86,19 +86,8 @@ const currentDistrictLabel = computed(() => {
 })
 
 // Helpers
-const isOpen = (from, to) => {
-  if (!from || !to) return false
-  const now = new Date()
-  const currentMinutes = now.getHours() * 60 + now.getMinutes()
-  const [fh, fm] = from.split(':').map(Number)
-  const [th, tm] = to.split(':').map(Number)
-  const fromMinutes = fh * 60 + fm
-  const toMinutes = th * 60 + tm
-  if (fromMinutes <= toMinutes) {
-    return currentMinutes >= fromMinutes && currentMinutes < toMinutes
-  }
-  return currentMinutes >= fromMinutes || currentMinutes < toMinutes
-}
+import { isSupermarketOpen } from '~/utils/supermarket'
+const isOpen = isSupermarketOpen
 
 const passesStatusFilter = (supermarket) => {
   if (selectedStatus.value === 'all') return true
