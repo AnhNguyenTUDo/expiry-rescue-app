@@ -66,21 +66,9 @@ const storeBgClass = (name) => {
   return STORE_COLORS[name.charCodeAt(0) % STORE_COLORS.length]
 }
 
-const formatHour = (time) => {
-  if (!time) return ''
-  const [h, m] = time.split(':')
-  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
-}
+import { isSupermarketOpen, formatHour } from '~/utils/supermarket'
 
 const open = computed(() => {
-  const { operatingHoursFrom: from, operatingHoursTo: to } = props.supermarket
-  if (!from || !to) return false
-  const now = new Date()
-  const cur = now.getHours() * 60 + now.getMinutes()
-  const [fh, fm] = from.split(':').map(Number)
-  const [th, tm] = to.split(':').map(Number)
-  const start = fh * 60 + fm
-  const end = th * 60 + tm
-  return start <= end ? cur >= start && cur < end : cur >= start || cur < end
+  return isSupermarketOpen(props.supermarket.operatingHoursFrom, props.supermarket.operatingHoursTo)
 })
 </script>

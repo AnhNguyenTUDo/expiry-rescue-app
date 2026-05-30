@@ -148,30 +148,10 @@ const handleDeleteOrder = async () => {
   }
 }
 
-const getStatusClass = (status) => {
-  const classes = {
-    CONFIRMED: 'bg-green-100 text-green-800',
-    CANCELLED: 'bg-red-100 text-red-800',
-  }
-  return classes[status] || 'bg-gray-100 text-gray-800'
-}
+// Shared helpers
+import { formatDateTime } from '~/utils/date'
+import { getStatusClass, getStatusLabel } from '~/utils/order'
 
-const getStatusLabel = (status) => {
-  const labels = {
-    CONFIRMED: '✅ Confirmed',
-    CANCELLED: '❌ Cancelled',
-  }
-  return labels[status] || status
-}
-
-const formatDate = (timestamp) => {
-  if (!timestamp) return 'N/A'
-  return new Date(timestamp).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
+// Use formatDateTime for orders (includes time)
+const formatDate = formatDateTime
 </script>

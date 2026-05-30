@@ -148,63 +148,10 @@ const fetchProducts = async () => {
   }
 }
 
-// Helper functions
-const formatDate = (timestamp) => {
-  if (!timestamp) return 'N/A'
-  const date = new Date(timestamp)
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
-}
-
-const calculateDaysUntil = (timestamp) => {
-  if (!timestamp) return 'N/A'
-  const now = new Date().getTime()
-  const diff = timestamp - now
-  const days = Math.ceil(diff / (1000 * 60 * 60 * 24))
-
-  if (days < 0) return 'Expired'
-  if (days === 0) return 'Today'
-  if (days === 1) return '1 day'
-  return `${days} days`
-}
-
-const calculateDiscount = (originalPrice, sellingPrice) => {
-  if (!originalPrice || !sellingPrice) return ''
-  const discount = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100)
-  return `-${discount}%`
-}
-
-// Calculate availability based on expiry date and quantity
-const calculateAvailability = (expiryDate, quantityAvailable, status) => {
-  // If status is not AVAILABLE, mark as out of stock
-  if (status !== 'AVAILABLE') {
-    return 'out of stock'
-  }
-
-  // Check if product has expired
-  const now = new Date().getTime()
-  if (expiryDate <= now) {
-    return 'out of stock'
-  }
-
-  // Check if product is expiring soon (within 3 days)
-  const daysUntilExpiry = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24))
-  if (daysUntilExpiry <= 3) {
-    return 'limited'
-  }
-
-  // Check quantity
-  if (quantityAvailable === 0) {
-    return 'out of stock'
-  } else if (quantityAvailable <= 10) {
-    return 'limited'
-  }
-
-  return 'available'
-}
+// Shared helpers
+import { formatDate, calculateDaysUntil } from '~/utils/date'
+import { calculateDiscount } from '~/utils/price'
+import { calculateAvailability } from '~/utils/product'
 
 // Filter products by category (can be implemented later)
 const filteredProducts = computed(() => {

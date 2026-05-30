@@ -286,29 +286,7 @@ const supermarketName = computed(() => {
   return currentItem.value?.supermarketName || 'Unknown Supermarket'
 })
 
-const productEmoji = computed(() => {
-  const category = categoryName.value.toLowerCase()
-  const emojiMap = {
-    dairy: '🧀',
-    bakery: '🥐',
-    beverages: '🥤',
-    spices: '🌶️',
-    cosmetics: '💄',
-    meat: '🍖',
-    seafood: '🦐',
-    produce: '🥬',
-    fruits: '🍎',
-    vegetables: '🥕',
-  }
-
-  for (const [keyword, emoji] of Object.entries(emojiMap)) {
-    if (category.includes(keyword)) {
-      return emoji
-    }
-  }
-
-  return '🛒'
-})
+const productEmoji = computed(() => getCategoryEmoji(categoryName.value))
 
 // Get all inventory items from the same supermarket
 const allSupermarketItems = computed(() => {
@@ -354,62 +332,10 @@ const otherLocations = computed(() => {
   return Array.from(locationMap.values())
 })
 
-// Helper functions
-const formatDate = (timestamp) => {
-  if (!timestamp) return 'N/A'
-  const date = new Date(timestamp)
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
-}
-
-const calculateDaysUntil = (timestamp) => {
-  if (!timestamp) return 'N/A'
-  const now = Date.now()
-  const diff = timestamp - now
-  const days = Math.ceil(diff / (1000 * 60 * 60 * 24))
-
-  if (days < 0) return 'Expired'
-  if (days === 0) return 'Today'
-  if (days === 1) return '1 day'
-  return `${days} days`
-}
-
-const calculateDiscount = (originalPrice, sellingPrice) => {
-  if (!originalPrice || !sellingPrice) return ''
-  const discount = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100)
-  return `-${discount}%`
-}
-
-const calculateAvailability = (expiryDate, quantityAvailable, status) => {
-  if (status !== 'AVAILABLE') {
-    return 'out of stock'
-  }
-
-  const now = Date.now()
-  if (expiryDate <= now) {
-    return 'out of stock'
-  }
-
-  const daysUntilExpiry = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24))
-  if (daysUntilExpiry <= 3) {
-    return 'limited'
-  }
-
-  if (quantityAvailable === 0) {
-    return 'out of stock'
-  } else if (quantityAvailable <= 10) {
-    return 'limited'
-  }
-
-  return 'available'
-}
-
-const getAvailability = (item) => {
-  return calculateAvailability(item.expiryDate, item.quantityAvailable, item.status)
-}
+// Shared helpers
+import { formatDate, calculateDaysUntil } from '~/utils/date'
+import { calculateDiscount } from '~/utils/price'
+import { calculateAvailability, getAvailability, getCategoryEmoji } from '~/utils/product'
 
 // Event handlers
 const onInventoryItemChange = () => {
