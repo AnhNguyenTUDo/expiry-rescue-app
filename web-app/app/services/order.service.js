@@ -1,6 +1,6 @@
 import { useAxios } from '../composables/useAxios'
-import { requestAxios } from '../common/utils'
-import urlConstants from '~/common/url-constants'
+import { requestAxios } from '../utils/axios-helper'
+import urlConstants from '~/utils/url-constants'
 
 class OrderService {
   constructor() {
