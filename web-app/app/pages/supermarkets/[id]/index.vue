@@ -7,7 +7,7 @@
     <div v-else-if="supermarket">
       <SupermarketDetailHeader :supermarket="supermarket" />
 
-      <ProductFilter v-model="selectedCategoryFilter" :categories="allCategories" />
+      <ProductFilter v-model="productNameFilter" />
 
       <ProductCategorySection
         v-for="category in filteredCategoriesWithProducts"
@@ -38,7 +38,7 @@ const supermarketId = route.params.id
 const supermarket = ref(null)
 const products = ref([])
 const allCategories = ref([])
-const selectedCategoryFilter = ref('all')
+const productNameFilter = ref('')
 const loading = ref(true)
 const error = ref(null)
 const expandedCategories = ref({})
@@ -142,13 +142,12 @@ import { calculateDiscount } from '~/utils/price'
 import { calculateAvailability, getCategoryEmoji } from '~/utils/product'
 
 const filteredCategoriesWithProducts = computed(() => {
-  let categoriesToShow = allCategories.value
-  if (selectedCategoryFilter.value !== 'all') {
-    categoriesToShow = categoriesToShow.filter((cat) => cat.id === selectedCategoryFilter.value)
-  }
-  return categoriesToShow.map((category) => ({
+  const query = productNameFilter.value.trim().toLowerCase()
+  return allCategories.value.map((category) => ({
     ...category,
-    products: products.value.filter((p) => p.categoryId === category.id),
+    products: products.value.filter(
+      (p) => p.categoryId === category.id && (!query || p.name.toLowerCase().includes(query))
+    ),
   }))
 })
 
