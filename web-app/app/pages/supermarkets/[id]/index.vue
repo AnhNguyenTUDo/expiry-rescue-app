@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SupermarketService from '~/services/supermarket.service'
 import ProductCategoryService from '~/services/product-category.service'
@@ -48,6 +48,8 @@ const selectedCategoryId = ref(ENDING_SOON_ID)
 const loading = ref(true)
 const error = ref(null)
 const expandedCategories = ref({})
+
+const headerShadow = useHeaderShadow()
 
 const fetchSupermarketWithProducts = async () => {
   try {
@@ -194,6 +196,11 @@ const toggleCategory = (sectionId) => {
 }
 
 onMounted(async () => {
+  headerShadow.value = false
   await Promise.all([fetchSupermarketWithProducts(), fetchCategories()])
+})
+
+onBeforeUnmount(() => {
+  headerShadow.value = true
 })
 </script>
