@@ -4,7 +4,7 @@
     <CitySelectionModal :show="showCityModal" :cities="cities" @confirm="onLocationConfirmed" />
 
     <!-- Filters -->
-    <HomeFilter
+    <SupermarketFilter
       v-model:cityId="selectedCityId"
       v-model:districtId="selectedDistrictId"
       v-model:status="selectedStatus"
@@ -18,26 +18,17 @@
     <!-- Supermarkets Section -->
     <SupermarketSection :district-sections="districtSections" />
 
-    <!-- Loading State -->
-    <div v-if="loading" class="text-center py-12">
-      <p class="text-gray-600 text-lg">Loading...</p>
-    </div>
-
-    <!-- Error State -->
-    <div
-      v-else-if="error"
-      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-8"
-    >
-      <p><strong>Error:</strong> {{ error }}</p>
-      <button @click="loadSupermarkets" class="mt-2 text-sm underline">Retry</button>
-    </div>
+    <LoadingState v-if="loading" message="Loading..." />
+    <ErrorAlert v-else-if="error" :error="error" class="mt-8" @retry="loadSupermarkets" />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import HomeFilter from '@/components/home/HomeFilter.vue'
+import SupermarketFilter from '@/components/supermarket/SupermarketFilter.vue'
+import LoadingState from '@/components/ui/LoadingState.vue'
+import ErrorAlert from '@/components/ui/ErrorAlert.vue'
 import SupermarketSection from '@/components/supermarket/SupermarketSection.vue'
 import CitySelectionModal from '@/components/home/CitySelectionModal.vue'
 import SupermarketService from '~/services/supermarket.service'

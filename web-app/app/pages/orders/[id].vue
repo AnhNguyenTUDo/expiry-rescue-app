@@ -1,20 +1,11 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <!-- Loading State -->
-    <div v-if="orderStore.loading" class="text-center py-12">
-      <p class="text-gray-600 text-lg">Loading order details...</p>
-    </div>
-
-    <!-- Error State -->
-    <div
-      v-else-if="orderStore.error"
-      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
-    >
-      <p><strong>Error:</strong> {{ orderStore.error }}</p>
+    <LoadingState v-if="orderStore.loading" message="Loading order details..." />
+    <ErrorAlert v-else-if="orderStore.error" :error="orderStore.error" class="mb-4">
       <NuxtLink to="/orders" class="text-red-800 underline mt-2 inline-block">
         ← Back to Orders
       </NuxtLink>
-    </div>
+    </ErrorAlert>
 
     <!-- Order Details -->
     <div v-else-if="order" class="space-y-6">
@@ -108,6 +99,8 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useOrderStore } from '~/stores/order'
 import { useAuthStore } from '~/stores/auth'
+import LoadingState from '~/components/ui/LoadingState.vue'
+import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 
 const route = useRoute()
 const router = useRouter()

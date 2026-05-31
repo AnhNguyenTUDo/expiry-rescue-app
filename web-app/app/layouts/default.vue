@@ -48,11 +48,6 @@ const updateSelectedSupermarket = () => {
       selectedSupermarket.value = supermarketId
       supermarketStore.setSelectedSupermarketId(supermarketId)
     }
-  }
-  // Check if we're on a product page with supermarketId query param
-  else if (route.path.startsWith('/products/') && route.query.supermarketId) {
-    selectedSupermarket.value = route.query.supermarketId
-    supermarketStore.setSelectedSupermarketId(route.query.supermarketId)
   } else {
     selectedSupermarket.value = ''
     supermarketStore.clearSelectedSupermarket()

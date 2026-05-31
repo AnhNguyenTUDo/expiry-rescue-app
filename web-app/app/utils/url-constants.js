@@ -1,7 +1,6 @@
 export default {
   endpoints: {
     product_inventory: {
-      GET_ALL_PRODUCT_INVENTORY: '/products/inventory',
       GET_INVENTORY_BY_SUPERMARKET: (supermarketId) =>
         `/products/inventory/supermarket/${supermarketId}`,
       GET_INVENTORY_BY_PRODUCT_MASTER: (productMasterId) =>

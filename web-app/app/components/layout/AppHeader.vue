@@ -49,8 +49,8 @@
 </template>
 
 <script setup>
-import SupermarketDropdown from '~/components/ui/SupermarketDropdown.vue'
-import ProfileDropdown from '~/components/ui/ProfileDropdown.vue'
+import SupermarketDropdown from '~/components/supermarket/SupermarketDropdown.vue'
+import ProfileDropdown from '~/components/layout/ProfileDropdown.vue'
 
 defineProps({
   supermarkets: {

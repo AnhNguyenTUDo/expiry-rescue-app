@@ -14,11 +14,6 @@ class ProductInventoryService {
     // console.log("call api - Instance ID:", this.instanceId);
     this.axios = useAxios() // Initialize once
   }
-  getAllProductInventory(errorCallBack) {
-    const url = Constants.endpoints.product_inventory.GET_ALL_PRODUCT_INVENTORY
-    return requestAxios(this.axios.get(url), errorCallBack)
-  }
-
   /**
    * Get product inventory by supermarket ID
    * @param {string} supermarketId - Supermarket ID (UUID)

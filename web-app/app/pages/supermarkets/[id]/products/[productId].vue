@@ -1,14 +1,7 @@
 <template>
   <div>
-    <!-- Loading State -->
-    <div v-if="loading" class="text-center py-12">
-      <p class="text-gray-600 text-lg">Loading product details...</p>
-    </div>
-
-    <!-- Error State -->
-    <div v-else-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-      <p><strong>Error:</strong> {{ error }}</p>
-    </div>
+    <LoadingState v-if="loading" message="Loading product details..." />
+    <ErrorAlert v-else-if="error" :error="error" />
 
     <!-- Product Details -->
     <div v-else-if="currentItem">
@@ -194,6 +187,8 @@
 
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
+import LoadingState from '~/components/ui/LoadingState.vue'
+import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 import { useRoute, useRouter } from 'vue-router'
 import ProductInventoryService from '~/services/product-inventory.service'
 import { useSupermarketStore } from '~/stores/supermarket'

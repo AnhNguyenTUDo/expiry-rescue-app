@@ -2,18 +2,8 @@
   <div>
     <h1 class="text-3xl font-bold mb-6">Product Inventory</h1>
 
-    <!-- Loading State -->
-    <div v-if="loading" class="text-center py-8">
-      <p class="text-gray-600">Loading inventories...</p>
-    </div>
-
-    <!-- Error State -->
-    <div
-      v-else-if="error"
-      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
-    >
-      <p><strong>Error:</strong> {{ error }}</p>
-    </div>
+    <LoadingState v-if="loading" message="Loading inventories..." />
+    <ErrorAlert v-else-if="error" :error="error" class="mb-4" />
 
     <!-- Success State - Display Inventories -->
     <div v-else>
@@ -92,6 +82,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useProductInventory } from '~/composables/useProductInventory'
+import LoadingState from '~/components/ui/LoadingState.vue'
+import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 
 // State
 const inventories = ref([])

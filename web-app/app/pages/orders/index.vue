@@ -44,18 +44,8 @@
       </div>
     </div>
 
-    <!-- Loading State -->
-    <div v-if="orderStore.loading" class="text-center py-12">
-      <p class="text-gray-600 text-lg">Loading orders...</p>
-    </div>
-
-    <!-- Error State -->
-    <div
-      v-else-if="orderStore.error"
-      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
-    >
-      <p><strong>Error:</strong> {{ orderStore.error }}</p>
-    </div>
+    <LoadingState v-if="orderStore.loading" message="Loading orders..." />
+    <ErrorAlert v-else-if="orderStore.error" :error="orderStore.error" class="mb-4" />
 
     <!-- Orders List -->
     <div v-else-if="orderStore.orders.length > 0" class="space-y-4">
@@ -114,6 +104,8 @@
 import { ref, onMounted } from 'vue'
 import { useOrderStore } from '~/stores/order'
 import { useAuthStore } from '~/stores/auth'
+import LoadingState from '~/components/ui/LoadingState.vue'
+import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 
 const orderStore = useOrderStore()
 
