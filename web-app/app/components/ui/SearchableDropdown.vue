@@ -157,5 +157,7 @@ watch(isOpen, (val) => {
   if (!val) query.value = ''
 })
 
-useClickOutside(dropdownRef, () => { isOpen.value = false })
+useClickOutside(dropdownRef, () => {
+  isOpen.value = false
+})
 </script>

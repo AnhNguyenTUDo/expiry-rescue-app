@@ -132,5 +132,7 @@ const handleLogout = () => {
   router.push('/')
 }
 
-useClickOutside(dropdownRef, () => { isOpen.value = false })
+useClickOutside(dropdownRef, () => {
+  isOpen.value = false
+})
 </script>

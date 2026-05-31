@@ -83,5 +83,7 @@ const select = (value) => {
   isOpen.value = false
 }
 
-useClickOutside(dropdownRef, () => { isOpen.value = false })
+useClickOutside(dropdownRef, () => {
+  isOpen.value = false
+})
 </script>

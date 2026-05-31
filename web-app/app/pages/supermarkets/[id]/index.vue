@@ -1,14 +1,7 @@
 <template>
   <div>
-    <!-- Loading State -->
-    <div v-if="loading" class="text-center py-12">
-      <p class="text-gray-600 text-lg">Loading supermarket details...</p>
-    </div>
-
-    <!-- Error State -->
-    <div v-else-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-      <p><strong>Error:</strong> {{ error }}</p>
-    </div>
+    <LoadingState v-if="loading" message="Loading supermarket details..." />
+    <ErrorAlert v-else-if="error" :error="error" />
 
     <!-- Supermarket Details -->
     <div v-else-if="supermarket">
@@ -36,6 +29,8 @@ import ProductCategoryService from '~/services/product-category.service'
 import SupermarketDetailHeader from '~/components/supermarket/product-list/SupermarketDetailHeader.vue'
 import ProductCategorySection from '~/components/supermarket/product-list/ProductCategorySection.vue'
 import ProductFilter from '~/components/supermarket/product-list/product-filter/ProductFilter.vue'
+import LoadingState from '~/components/ui/LoadingState.vue'
+import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 
 const route = useRoute()
 const supermarketId = route.params.id

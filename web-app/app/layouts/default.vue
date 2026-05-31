@@ -48,7 +48,6 @@ const updateSelectedSupermarket = () => {
       selectedSupermarket.value = supermarketId
       supermarketStore.setSelectedSupermarketId(supermarketId)
     }
-  }
   } else {
     selectedSupermarket.value = ''
     supermarketStore.clearSelectedSupermarket()
