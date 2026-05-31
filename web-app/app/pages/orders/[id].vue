@@ -33,7 +33,7 @@
             <div>
               <p class="text-sm text-gray-600">Total Amount</p>
               <p class="text-2xl font-bold text-green-600">
-                {{ (order.totalAmount ?? 0).toLocaleString() }}₫
+                {{ formatPrice(order.totalAmount ?? 0) }}
               </p>
             </div>
           </div>
@@ -70,10 +70,10 @@
               </div>
               <div class="text-right">
                 <p class="text-gray-600">
-                  {{ item.quantity }} × {{ (item.price ?? 0).toLocaleString() }}₫
+                  {{ item.quantity }} × {{ formatPrice(item.price ?? 0) }}
                 </p>
                 <p class="text-lg font-bold text-green-600">
-                  {{ (item.subtotal ?? 0).toLocaleString() }}₫
+                  {{ formatPrice(item.subtotal ?? 0) }}
                 </p>
               </div>
             </div>
@@ -143,6 +143,7 @@ const handleDeleteOrder = async () => {
 
 // Shared helpers
 import { formatDateTime } from '~/utils/date'
+import { formatPrice } from '~/utils/price'
 import { getStatusClass, getStatusLabel } from '~/utils/order'
 
 // Use formatDateTime for orders (includes time)

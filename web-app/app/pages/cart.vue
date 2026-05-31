@@ -78,10 +78,10 @@
                 <!-- Price -->
                 <div class="flex items-center gap-3 mb-3">
                   <span class="text-2xl font-bold text-green-700">
-                    {{ item.sellingPrice.toLocaleString() }}₫
+                    {{ formatPrice(item.sellingPrice) }}
                   </span>
                   <span class="text-sm line-through text-gray-400">
-                    {{ item.originalPrice.toLocaleString() }}₫
+                    {{ formatPrice(item.originalPrice) }}
                   </span>
                   <span class="bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">
                     {{ calculateDiscount(item.originalPrice, item.sellingPrice) }}
@@ -118,7 +118,7 @@
               <!-- Subtotal and Delete -->
               <div class="text-right space-y-2">
                 <div class="text-xl font-bold text-gray-800">
-                  {{ (item.sellingPrice * item.quantity).toLocaleString() }}₫
+                  {{ formatPrice(item.sellingPrice * item.quantity) }}
                 </div>
                 <button
                   @click="cartStore.removeFromCart(item.inventoryId)"
@@ -147,7 +147,7 @@
           <div class="text-right">
             <div class="text-sm text-gray-600 mb-1">Total Price:</div>
             <div class="text-3xl font-bold text-green-700">
-              {{ cartStore.totalPrice.toLocaleString() }}₫
+              {{ formatPrice(cartStore.totalPrice) }}
             </div>
           </div>
         </div>
@@ -223,7 +223,7 @@ const handleCheckout = async () => {
 
 // Shared helpers
 import { formatDate, calculateDaysUntil } from '~/utils/date'
-import { calculateDiscount } from '~/utils/price'
+import { calculateDiscount, formatPrice } from '~/utils/price'
 </script>
 
 <style scoped>

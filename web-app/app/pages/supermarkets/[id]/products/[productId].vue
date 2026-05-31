@@ -32,13 +32,13 @@
                 <div>
                   <span class="text-sm text-gray-600">Original Price:</span>
                   <p class="text-lg line-through text-gray-400">
-                    {{ currentItem.originalPrice.toLocaleString() }}₫
+                    {{ formatPrice(currentItem.originalPrice) }}
                   </p>
                 </div>
                 <div>
                   <span class="text-sm text-gray-600">Sale Price:</span>
                   <p class="text-2xl font-bold text-green-700">
-                    {{ currentItem.sellingPrice.toLocaleString() }}₫
+                    {{ formatPrice(currentItem.sellingPrice) }}
                   </p>
                 </div>
                 <div>
@@ -95,7 +95,7 @@
               >
                 <option v-for="item in allSupermarketItems" :key="item.id" :value="item.id">
                   Batch - Expires: {{ formatDate(item.expiryDate) }} -
-                  {{ item.quantityAvailable }} units - {{ item.sellingPrice.toLocaleString() }}₫
+                  {{ item.quantityAvailable }} units - {{ formatPrice(item.sellingPrice) }}
                 </option>
               </select>
             </div>
@@ -163,7 +163,7 @@
               </p>
               <p class="text-gray-600">
                 <span class="font-medium">Best Price:</span>
-                {{ location.bestPrice.toLocaleString() }}₫
+                {{ formatPrice(location.bestPrice) }}
               </p>
               <p class="text-gray-600">
                 <span class="font-medium">Expires:</span>
@@ -329,7 +329,7 @@ const otherLocations = computed(() => {
 
 // Shared helpers
 import { formatDate, calculateDaysUntil } from '~/utils/date'
-import { calculateDiscount } from '~/utils/price'
+import { calculateDiscount, formatPrice } from '~/utils/price'
 import { getAvailability } from '~/utils/product'
 
 // Event handlers
