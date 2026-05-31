@@ -41,7 +41,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import ProductCard from '@/components/ui/ProductCard.vue'
+import ProductCard from '@/components/supermarket/product-list/ProductCard.vue'
 
 const props = defineProps({
   category: {
