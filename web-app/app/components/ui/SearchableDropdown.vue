@@ -81,7 +81,8 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
+import { useClickOutside } from '~/composables/useClickOutside'
 import Tooltip from '@/components/ui/Tooltip.vue'
 
 const props = defineProps({
@@ -156,18 +157,5 @@ watch(isOpen, (val) => {
   if (!val) query.value = ''
 })
 
-// Close on click outside
-const handleClickOutside = (event) => {
-  if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
-    isOpen.value = false
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('mousedown', handleClickOutside)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('mousedown', handleClickOutside)
-})
+useClickOutside(dropdownRef, () => { isOpen.value = false })
 </script>
