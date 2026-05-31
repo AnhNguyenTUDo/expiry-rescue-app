@@ -1,9 +1,13 @@
 <template>
   <div class="mb-8">
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex items-center mb-4">
       <h3 class="text-xl font-semibold text-green-700">
         {{ category.name }} ({{ category.products.length }})
       </h3>
+    </div>
+
+    <div>
+      <slot name="filters" />
     </div>
 
     <div v-if="category.products.length === 0" class="text-center py-8 bg-gray-50 rounded-lg">

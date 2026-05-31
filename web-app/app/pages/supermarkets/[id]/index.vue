@@ -15,7 +15,11 @@
         :expanded="expandedCategories[displayedSection.id]"
         :supermarket-id="supermarketId"
         @toggle="toggleCategory(displayedSection.id)"
-      />
+      >
+        <template #filters>
+          <ProductListFilters v-model:sort="sortBy" />
+        </template>
+      </ProductCategorySection>
     </div>
   </div>
 </template>
@@ -28,6 +32,7 @@ import ProductCategoryService from '~/services/product-category.service'
 import SupermarketDetailHeader from '~/components/supermarket/product-list/SupermarketDetailHeader.vue'
 import ProductCategorySection from '~/components/supermarket/product-list/ProductCategorySection.vue'
 import CategorySelector from '~/components/supermarket/product-list/product-filter/CategorySelector.vue'
+import ProductListFilters from '~/components/supermarket/product-list/product-filter/ProductListFilters.vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 
@@ -45,6 +50,7 @@ const supermarket = ref(null)
 const products = ref([])
 const allCategories = ref([])
 const selectedCategoryId = ref(ENDING_SOON_ID)
+const sortBy = ref('expiry')
 const loading = ref(true)
 const error = ref(null)
 const expandedCategories = ref({})
@@ -111,7 +117,11 @@ const fetchSupermarketWithProducts = async () => {
             expireDays: calculateDaysUntil(item.expiryDate),
             oldPrice: formatPrice(item.originalPrice),
             newPrice: formatPrice(item.sellingPrice),
+            sellingPrice: item.sellingPrice,
             discount: calculateDiscount(item.originalPrice, item.sellingPrice),
+            discountPercent: Math.round(
+              ((item.originalPrice - item.sellingPrice) / item.originalPrice) * 100
+            ),
             availability,
             quantityAvailable: item.quantityAvailable,
             earliestExpiryDate: item.expiryDate,
@@ -147,6 +157,18 @@ const endingSoonProducts = computed(() =>
   products.value.filter((p) => isEndingSoon(p.earliestExpiryDate))
 )
 
+// Sorts a copy of the list; out-of-stock products always sink to the bottom.
+const sortProducts = (list) => {
+  const comparators = {
+    expiry: (a, b) => a.earliestExpiryDate - b.earliestExpiryDate,
+    discount: (a, b) => b.discountPercent - a.discountPercent,
+    price_asc: (a, b) => a.sellingPrice - b.sellingPrice,
+    price_desc: (a, b) => b.sellingPrice - a.sellingPrice,
+  }
+  const outOfStock = (p) => (p.availability === 'out of stock' ? 1 : 0)
+  return [...list].sort((a, b) => outOfStock(a) - outOfStock(b) || comparators[sortBy.value](a, b))
+}
+
 const categoryOptions = computed(() => {
   const options = []
 
@@ -170,7 +192,11 @@ const categoryOptions = computed(() => {
 
 const displayedSection = computed(() => {
   if (selectedCategoryId.value === ENDING_SOON_ID) {
-    return { id: ENDING_SOON_ID, name: 'Ending soon', products: endingSoonProducts.value }
+    return {
+      id: ENDING_SOON_ID,
+      name: 'Ending soon',
+      products: sortProducts(endingSoonProducts.value),
+    }
   }
 
   const cat = allCategories.value.find((c) => c.id === selectedCategoryId.value)
@@ -178,7 +204,7 @@ const displayedSection = computed(() => {
 
   return {
     ...cat,
-    products: products.value.filter((p) => p.categoryId === cat.id),
+    products: sortProducts(products.value.filter((p) => p.categoryId === cat.id)),
   }
 })
 
