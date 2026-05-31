@@ -24,9 +24,11 @@
       >
     </div>
 
-    <!-- Product Emoji (centered) -->
+    <!-- Product image  -->
     <div class="flex justify-center mb-3 py-10">
-      <div class="text-5xl">{{ product.emoji }}</div>
+      <div class="text-5xl">
+        <SvgIcon name="icon-products" class="text-gray-400 w-30 h-30" />
+      </div>
     </div>
 
     <h3 class="text-lg font-semibold">{{ product.name }}</h3>

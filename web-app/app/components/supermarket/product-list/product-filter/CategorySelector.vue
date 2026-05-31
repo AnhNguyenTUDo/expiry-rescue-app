@@ -1,6 +1,6 @@
 <template>
-  <div class="sticky top-20 z-30 bg-white py-3">
-    <div class="relative flex items-center">
+  <div class="sticky top-20 z-30 bg-white shadow-lg mb-6 w-screen ml-[calc(50%-50vw)]">
+    <div class="max-w-7xl mx-auto px-4 py-3 relative flex items-center">
       <button
         type="button"
         class="shrink-0 p-1.5 rounded-[8px] transition-all duration-150"
@@ -20,17 +20,19 @@
           v-for="option in options"
           :key="option.id"
           type="button"
-          class="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] text-sm whitespace-nowrap transition-all duration-150"
+          class="cursor-pointer flex-col items-center gap-1.5 px-3 py-1.5 rounded-[10px] whitespace-nowrap transition-all duration-150"
           :class="
-            modelValue === option.id
-              ? 'bg-green-50 border-0 shadow-sm'
-              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+            modelValue === option.id ? 'bg-green-50' : 'bg-white text-gray-700 hover:bg-gray-100'
           "
           @click="emit('update:modelValue', option.id)"
         >
-          <span>{{ option.emoji }}</span>
-          <span>{{ option.name }}</span>
-          <span class="text-xs opacity-70">({{ option.count }})</span>
+          <div class="flex justify-center">
+            <SvgIcon name="icon-shopping-cart" class="text-gray-400 w-10 h-10" />
+          </div>
+          <div class="flex items-center gap-1">
+            <span>{{ option.name }}</span>
+            <span class="text-sm opacity-70">({{ option.count }})</span>
+          </div>
         </button>
       </div>
 

@@ -5,15 +5,17 @@
 
     <!-- Product Details -->
     <div v-else-if="currentItem">
-      <!-- Product Header with Emoji taking 1/3 width -->
+      <!-- Product Header with Image-->
       <div class="bg-white p-8 rounded-xl shadow mb-6">
         <div class="flex gap-8">
-          <!-- Product Emoji - 1/3 width -->
+          <!-- Product image-->
           <div class="w-1/3 flex items-center justify-center">
-            <div class="text-9xl">{{ productEmoji }}</div>
+            <div class="text-9xl">
+              <SvgIcon name="icon-products" class="text-gray-400 w-30 h-30" />
+            </div>
           </div>
 
-          <!-- Product Info - 2/3 width -->
+          <!-- Product Info -->
           <div class="w-2/3">
             <h1 class="text-4xl font-bold text-gray-800 mb-2">{{ productName }}</h1>
             <p class="text-xl text-gray-600 mb-4">{{ categoryName }}</p>
