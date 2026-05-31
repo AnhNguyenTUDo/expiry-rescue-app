@@ -26,24 +26,3 @@ export const isEndingSoon = (expiryDate, days = ENDING_SOON_DAYS) => {
   const daysUntil = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24))
   return daysUntil <= days
 }
-
-export const getCategoryEmoji = (categoryName) => {
-  if (!categoryName) return '🛒'
-  const lowerName = categoryName.toLowerCase()
-  const emojiMap = {
-    dairy: '🧀',
-    bakery: '🥐',
-    beverages: '🥤',
-    spices: '🌶️',
-    cosmetics: '💄',
-    meat: '🍖',
-    seafood: '🦐',
-    produce: '🥬',
-    fruits: '🍎',
-    vegetables: '🥕',
-  }
-  for (const [keyword, emoji] of Object.entries(emojiMap)) {
-    if (lowerName.includes(keyword)) return emoji
-  }
-  return '🛒'
-}

@@ -34,7 +34,7 @@ import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 // Shared helpers
 import { formatDate, calculateDaysUntil } from '~/utils/date'
 import { calculateDiscount } from '~/utils/price'
-import { calculateAvailability, getCategoryEmoji, isEndingSoon } from '~/utils/product'
+import { calculateAvailability, isEndingSoon } from '~/utils/product'
 
 const route = useRoute()
 const supermarketId = route.params.id
@@ -102,7 +102,6 @@ const fetchSupermarketWithProducts = async () => {
             productMasterId: item.productMasterId,
             categoryId: item.categoryId,
             categoryName: item.categoryName,
-            emoji: getCategoryEmoji(item.categoryName),
             category: item.categoryName,
             name: item.productName,
             location: item.supermarketName,
@@ -155,7 +154,6 @@ const categoryOptions = computed(() => {
     options.push({
       id: ENDING_SOON_ID,
       name: 'Ending soon',
-      emoji: '⏰',
       count: endingSoonProducts.value.length,
     })
   }
@@ -163,7 +161,7 @@ const categoryOptions = computed(() => {
   for (const cat of allCategories.value) {
     const count = products.value.filter((p) => p.categoryId === cat.id).length
     if (count > 0) {
-      options.push({ id: cat.id, name: cat.name, emoji: getCategoryEmoji(cat.name), count })
+      options.push({ id: cat.id, name: cat.name, count })
     }
   }
 
@@ -196,11 +194,11 @@ const toggleCategory = (sectionId) => {
 }
 
 onMounted(async () => {
-  headerShadow.value = false
+  headerShadow.value = false // The AppHeader should have no shadow on this page
   await Promise.all([fetchSupermarketWithProducts(), fetchCategories()])
 })
 
 onBeforeUnmount(() => {
-  headerShadow.value = true
+  headerShadow.value = true // Restores the default so every other page still gets the app header shadow
 })
 </script>

@@ -283,8 +283,6 @@ const supermarketName = computed(() => {
   return currentItem.value?.supermarketName || 'Unknown Supermarket'
 })
 
-const productEmoji = computed(() => getCategoryEmoji(categoryName.value))
-
 // Get all inventory items from the same supermarket
 const allSupermarketItems = computed(() => {
   if (!currentItem.value) return []
@@ -332,7 +330,7 @@ const otherLocations = computed(() => {
 // Shared helpers
 import { formatDate, calculateDaysUntil } from '~/utils/date'
 import { calculateDiscount } from '~/utils/price'
-import { calculateAvailability, getAvailability, getCategoryEmoji } from '~/utils/product'
+import { getAvailability } from '~/utils/product'
 
 // Event handlers
 const onInventoryItemChange = () => {
