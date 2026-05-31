@@ -19,29 +19,18 @@
       />
     </div>
 
-    <div v-if="category.products.length > 4 && !expanded" class="text-center mt-4">
-      <button
-        class="px-4 py-2 rounded-lg border transition bg-green-600 text-white hover:bg-green-700"
-        @click="emit('toggle')"
-      >
-        Show More ({{ category.products.length - 4 }} more)
-      </button>
-    </div>
-
-    <div v-if="expanded" class="text-center mt-4">
-      <button
-        class="px-4 py-2 rounded-lg border transition bg-gray-500 text-white hover:bg-gray-600"
-        @click="emit('toggle')"
-      >
-        Show Less
-      </button>
-    </div>
+    <ShowMoreButton
+      v-if="category.products.length > 4 && !expanded"
+      :remaining="category.products.length - 4"
+      @click="emit('toggle')"
+    />
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import ProductCard from '@/components/supermarket/product-list/ProductCard.vue'
+import ShowMoreButton from '~/components/ui/ShowMoreButton.vue'
 
 const props = defineProps({
   category: {
