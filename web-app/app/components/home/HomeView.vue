@@ -4,7 +4,7 @@
     <CitySelectionModal :show="showCityModal" :cities="cities" @confirm="onLocationConfirmed" />
 
     <!-- Filters -->
-    <HomeFilter
+    <SupermarketFilter
       v-model:cityId="selectedCityId"
       v-model:districtId="selectedDistrictId"
       v-model:status="selectedStatus"
@@ -37,7 +37,7 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import HomeFilter from '@/components/home/HomeFilter.vue'
+import SupermarketFilter from '@/components/supermarket/SupermarketFilter.vue'
 import SupermarketSection from '@/components/supermarket/SupermarketSection.vue'
 import CitySelectionModal from '@/components/home/CitySelectionModal.vue'
 import SupermarketService from '~/services/supermarket.service'
