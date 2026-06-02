@@ -20,6 +20,7 @@
         :key="product.id"
         :product="product"
         :supermarket-id="supermarketId"
+        :show-category="showCategory"
       />
     </div>
 
@@ -48,6 +49,10 @@ const props = defineProps({
   supermarketId: {
     type: String,
     required: true,
+  },
+  showCategory: {
+    type: Boolean,
+    default: false,
   },
 })
 

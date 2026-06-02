@@ -29,6 +29,7 @@
         {{ product.availability.charAt(0).toUpperCase() + product.availability.slice(1) }}
       </div>
       <span
+        v-if="showCategory"
         class="py-1.5 text-xs px-3 py-1 font-semibold text-gray-700 rounded-[7px] border border-gray-400"
         >{{ product.category }}</span
       >
@@ -78,6 +79,10 @@ const props = defineProps({
     required: true,
   },
   showLocation: {
+    type: Boolean,
+    default: false,
+  },
+  showCategory: {
     type: Boolean,
     default: false,
   },

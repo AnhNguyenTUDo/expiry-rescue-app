@@ -14,6 +14,7 @@
         :category="displayedSection"
         :expanded="expandedCategories[displayedSection.id]"
         :supermarket-id="supermarketId"
+        :show-category="displayedSection.id === ENDING_SOON_ID"
         @toggle="toggleCategory(displayedSection.id)"
       >
         <template #filters>
