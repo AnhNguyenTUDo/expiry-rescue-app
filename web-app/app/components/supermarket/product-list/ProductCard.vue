@@ -45,14 +45,7 @@
     </h3>
     <p v-if="showLocation" class="text-gray-500 text-sm mb-3 mt-1">{{ product.location }}</p>
 
-    <div class="flex items-center gap-1.5 text-sm text-gray-600">
-      <SvgIcon :name="expiryIcon.name" class="w-6 h-6" :class="expiryIcon.class" />
-      <span>Expires {{ product.expire }}</span>
-      <span
-        class="text-xs px-2 pt-px pb-0.75 rounded-sm font-semibold bg-gray-200 text-gray-700 border border-gray-400"
-        >{{ product.expireDays }}</span
-      >
-    </div>
+    <ExpiryBadge :expiry-date="product.earliestExpiryDate" />
 
     <div class="flex justify-between items-center mt-auto pt-4">
       <div class="flex flex-col">
@@ -68,6 +61,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
 
 const props = defineProps({
   product: {
@@ -86,17 +80,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-})
-
-const daysUntilExpiry = computed(() =>
-  Math.ceil((props.product.earliestExpiryDate - Date.now()) / (1000 * 60 * 60 * 24))
-)
-
-const expiryIcon = computed(() => {
-  const days = daysUntilExpiry.value
-  if (days <= 3) return { name: 'icon-calendar-sad', class: 'text-red-500' }
-  if (days <= 7) return { name: 'icon-calendar-neutral', class: 'text-yellow-500' }
-  return { name: 'icon-calendar-happy', class: 'text-green-600' }
 })
 
 const detailLink = computed(() => {
