@@ -1,6 +1,6 @@
 <template>
-  <div
-    @click="navigateToDetail"
+  <NuxtLink
+    :to="detailLink"
     class="flex flex-col h-full cursor-pointer bg-white rounded-xl shadow hover:shadow-lg transition p-5 border border-gray-200"
   >
     <!-- Status and Category Header -->
@@ -62,7 +62,7 @@
         product.discount
       }}</span>
     </div>
-  </div>
+  </NuxtLink>
 </template>
 
 <script setup>
@@ -94,8 +94,8 @@ const expiryIcon = computed(() => {
   return { name: 'icon-calendar-happy', class: 'text-green-600' }
 })
 
-const navigateToDetail = () => {
+const detailLink = computed(() => {
   const productMasterId = props.product.productMasterId || props.product.id
-  navigateTo(`/supermarkets/${props.supermarketId}/products/${productMasterId}`)
-}
+  return `/supermarkets/${props.supermarketId}/products/${productMasterId}`
+})
 </script>
