@@ -5,29 +5,7 @@
   >
     <!-- Status and Category Header -->
     <div class="flex justify-between items-start mb-3">
-      <div
-        class="text-xs px-3 py-1.5 rounded-[7px] font-semibold flex items-center gap-1"
-        :class="{
-          'bg-green-50 border border-green-200 text-green-700':
-            product.availability === 'available',
-          'bg-yellow-50 border border-yellow-400 text-yellow-600':
-            product.availability === 'limited',
-          'bg-red-50 border border-red-200 text-[#dc3545]': product.availability === 'out of stock',
-        }"
-      >
-        <SvgIcon
-          v-if="product.availability === 'available'"
-          name="icon-checkmark"
-          class="w-3 h-3"
-        />
-        <SvgIcon v-if="product.availability === 'limited'" name="icon-time" class="w-3 h-3" />
-        <SvgIcon
-          v-if="product.availability === 'out of stock'"
-          name="icon-out-of-stock"
-          class="w-3 h-3"
-        />
-        {{ product.availability.charAt(0).toUpperCase() + product.availability.slice(1) }}
-      </div>
+      <AvailabilityTag :availability="product.availability" />
       <span
         v-if="showCategory"
         class="py-1.5 text-xs px-3 py-1 font-semibold text-gray-700 rounded-[7px] border border-gray-400"
@@ -62,6 +40,7 @@
 <script setup>
 import { computed } from 'vue'
 import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
+import AvailabilityTag from '~/components/ui/AvailabilityTag.vue'
 
 const props = defineProps({
   product: {

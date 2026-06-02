@@ -1,7 +1,7 @@
 <template>
   <div
-    class="rounded-[7px] font-semibold flex items-center gap-1"
-    :class="[config.class, size === 'lg' ? 'text-sm px-3 py-1.5' : 'text-xs px-3 py-1.5']"
+    class="rounded-[7px] font-semibold flex items-center gap-1.5"
+    :class="[config.class, size === 'lg' ? 'text-sm px-2.5 py-1.5' : 'text-xs px-2.5 py-1.5']"
   >
     <SvgIcon :name="config.icon" :class="size === 'lg' ? 'w-4 h-4' : 'w-3 h-3'" />
     {{ label }}
