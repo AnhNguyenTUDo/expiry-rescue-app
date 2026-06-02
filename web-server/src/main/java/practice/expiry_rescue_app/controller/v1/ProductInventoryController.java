@@ -9,7 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import practice.expiry_rescue_app.business.StaffBusiness;
 import practice.expiry_rescue_app.model.common.ApiResponse;
+import practice.expiry_rescue_app.model.common.PagedResponse;
 import practice.expiry_rescue_app.model.product.CreateProductInventoryRequest;
+import practice.expiry_rescue_app.model.product.LocationSummaryResponse;
 import practice.expiry_rescue_app.model.product.ProductInventoryResponse;
 import practice.expiry_rescue_app.model.product.UpdateProductInventoryRequest;
 import practice.expiry_rescue_app.entity.Staff;
@@ -68,6 +70,29 @@ public class ProductInventoryController {
     public ResponseEntity<ApiResponse<List<ProductInventoryResponse>>> getInventoriesByProductMaster(@PathVariable UUID productMasterId) {
         log.info("Get inventories by product master ID request received: {}", productMasterId);
         List<ProductInventoryResponse> response = inventoryService.getInventoriesByProductMaster(productMasterId);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @GetMapping("/supermarket/{supermarketId}/product-master/{productMasterId}")
+    public ResponseEntity<ApiResponse<List<ProductInventoryResponse>>> getInventoriesBySupermarketAndProductMaster(
+            @PathVariable UUID supermarketId,
+            @PathVariable UUID productMasterId) {
+        log.info("Get inventories by supermarket {} and product master {} request received", supermarketId, productMasterId);
+        List<ProductInventoryResponse> response =
+                inventoryService.getInventoriesBySupermarketAndProductMaster(supermarketId, productMasterId);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @GetMapping("/product-master/{productMasterId}/other-locations")
+    public ResponseEntity<ApiResponse<PagedResponse<LocationSummaryResponse>>> getOtherLocationSummaries(
+            @PathVariable UUID productMasterId,
+            @RequestParam UUID excludeSupermarketId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size) {
+        log.info("Get other location summaries for product master {} excluding supermarket {} [page={}, size={}] request received",
+                productMasterId, excludeSupermarketId, page, size);
+        PagedResponse<LocationSummaryResponse> response =
+                inventoryService.getOtherLocationSummariesInCity(productMasterId, excludeSupermarketId, page, size);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 

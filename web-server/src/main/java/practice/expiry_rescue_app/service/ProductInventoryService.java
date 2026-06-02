@@ -1,6 +1,8 @@
 package practice.expiry_rescue_app.service;
 
+import practice.expiry_rescue_app.model.common.PagedResponse;
 import practice.expiry_rescue_app.model.product.CreateProductInventoryRequest;
+import practice.expiry_rescue_app.model.product.LocationSummaryResponse;
 import practice.expiry_rescue_app.model.product.ProductInventoryResponse;
 import practice.expiry_rescue_app.model.product.UpdateProductInventoryRequest;
 import practice.expiry_rescue_app.enums.InventoryStatus;
@@ -23,6 +25,11 @@ public interface ProductInventoryService {
     List<ProductInventoryResponse> getInventoriesBySupermarket(UUID supermarketId);
 
     List<ProductInventoryResponse> getInventoriesByProductMaster(UUID productMasterId);
+
+    List<ProductInventoryResponse> getInventoriesBySupermarketAndProductMaster(UUID supermarketId, UUID productMasterId);
+
+    PagedResponse<LocationSummaryResponse> getOtherLocationSummariesInCity(
+            UUID productMasterId, UUID excludeSupermarketId, int page, int size);
 
     List<ProductInventoryResponse> getExpiringInventories(Integer daysBeforeExpiry);
 

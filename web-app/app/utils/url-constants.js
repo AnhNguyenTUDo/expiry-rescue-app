@@ -5,6 +5,11 @@ export default {
         `/products/inventory/supermarket/${supermarketId}`,
       GET_INVENTORY_BY_PRODUCT_MASTER: (productMasterId) =>
         `/products/inventory/product-master/${productMasterId}`,
+      GET_INVENTORY_BY_SUPERMARKET_AND_PRODUCT_MASTER: (supermarketId, productMasterId) =>
+        `/products/inventory/supermarket/${supermarketId}/product-master/${productMasterId}`,
+      GET_OTHER_LOCATION_SUMMARIES: (productMasterId, excludeSupermarketId, page = 0, size = 6) =>
+        `/products/inventory/product-master/${productMasterId}/other-locations` +
+        `?excludeSupermarketId=${excludeSupermarketId}&page=${page}&size=${size}`,
     },
     supermarket: {
       GET_ALL_SUPERMARKETS: '/supermarkets',
