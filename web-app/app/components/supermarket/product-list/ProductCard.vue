@@ -36,35 +36,19 @@
 
     <!-- Product image  -->
     <div class="flex justify-center mb-3 py-10">
-      <div class="text-5xl">
-        <SvgIcon name="icon-products" class="text-gray-400 w-30 h-30" />
-      </div>
+      <SvgIcon name="icon-products" class="text-gray-400 w-30 h-30" />
     </div>
 
     <h3 class="text-lg font-semibold">{{ product.name }}</h3>
-    <p class="text-gray-500 text-sm mb-3 mt-1">{{ product.location }}</p>
+    <p v-if="showLocation" class="text-gray-500 text-sm mb-3 mt-1">{{ product.location }}</p>
 
-    <div class="text-sm bg-green-50 border border-green-200 rounded-md p-3 space-y-2">
-      <div class="flex justify-between items-center">
-        <span class="text-gray-500 font-semibold">Sell until:</span>
-        <div class="flex items-center gap-2">
-          <p class="text-green-700 font-semibold">{{ product.sellUntil }}</p>
-          <span
-            class="bg-green-700 text-white text-xs px-2 pt-px pb-0.75 rounded-sm font-semibold"
-            >{{ product.sellDays }}</span
-          >
-        </div>
-      </div>
-      <div class="flex justify-between items-center">
-        <span class="text-gray-500 font-semibold">Expires:</span>
-        <div class="flex items-center gap-2">
-          <p class="text-green-700 font-semibold">{{ product.expire }}</p>
-          <span
-            class="bg-green-700 text-white text-xs px-2 pt-px pb-0.75 rounded-sm font-semibold"
-            >{{ product.expireDays }}</span
-          >
-        </div>
-      </div>
+    <div class="flex items-center gap-1.5 text-sm text-gray-600">
+      <SvgIcon :name="expiryIcon.name" class="w-6 h-6" :class="expiryIcon.class" />
+      <span>Expires {{ product.expire }}</span>
+      <span
+        class="text-xs px-2 pt-px pb-0.75 rounded-sm font-semibold bg-gray-200 text-gray-700 border border-gray-400"
+        >{{ product.expireDays }}</span
+      >
     </div>
 
     <div class="flex justify-between items-center mt-4">
@@ -72,7 +56,7 @@
         <span class="line-through text-gray-400 text-sm">{{ product.oldPrice }}</span>
         <span class="text-green-700 font-bold text-2xl">{{ product.newPrice }}</span>
       </div>
-      <span class="bg-[#da4150] text-white text-sm font-semibold px-3 py-1 rounded-md">{{
+      <span class="bg-green-700 text-white text-sm font-semibold px-3 py-1 rounded-md">{{
         product.discount
       }}</span>
     </div>
@@ -80,6 +64,8 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+
 const props = defineProps({
   product: {
     type: Object,
@@ -89,6 +75,21 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  showLocation: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const daysUntilExpiry = computed(() =>
+  Math.ceil((props.product.earliestExpiryDate - Date.now()) / (1000 * 60 * 60 * 24))
+)
+
+const expiryIcon = computed(() => {
+  const days = daysUntilExpiry.value
+  if (days <= 3) return { name: 'icon-calendar-sad', class: 'text-red-500' }
+  if (days <= 7) return { name: 'icon-calendar-neutral', class: 'text-yellow-500' }
+  return { name: 'icon-calendar-happy', class: 'text-green-600' }
 })
 
 const navigateToDetail = () => {

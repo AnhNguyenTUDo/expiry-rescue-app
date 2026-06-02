@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <LoadingState v-if="loading" message="Loading supermarket details..." />
     <ErrorAlert v-else-if="error" :error="error" />
@@ -79,9 +79,7 @@ const fetchSupermarketWithProducts = async () => {
 
           if (item.expiryDate < existingProduct.earliestExpiryDate) {
             existingProduct.earliestExpiryDate = item.expiryDate
-            existingProduct.sellUntil = formatDate(item.expiryDate)
             existingProduct.expire = formatDate(item.expiryDate)
-            existingProduct.sellDays = calculateDaysUntil(item.expiryDate)
             existingProduct.expireDays = calculateDaysUntil(item.expiryDate)
           }
 
@@ -111,9 +109,7 @@ const fetchSupermarketWithProducts = async () => {
             category: item.categoryName,
             name: item.productName,
             location: item.supermarketName,
-            sellUntil: formatDate(item.expiryDate),
             expire: formatDate(item.expiryDate),
-            sellDays: calculateDaysUntil(item.expiryDate),
             expireDays: calculateDaysUntil(item.expiryDate),
             oldPrice: formatPrice(item.originalPrice),
             newPrice: formatPrice(item.sellingPrice),
