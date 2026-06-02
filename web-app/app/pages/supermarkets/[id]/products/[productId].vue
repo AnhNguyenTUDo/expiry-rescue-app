@@ -28,31 +28,16 @@
 
             <!-- Pricing Information -->
             <div class="bg-gray-50 p-4 rounded-lg mb-4">
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <span class="text-sm text-gray-600">Original Price:</span>
-                  <p class="text-lg line-through text-gray-400">
-                    {{ formatPrice(currentItem.originalPrice) }}
-                  </p>
-                </div>
-                <div>
-                  <span class="text-sm text-gray-600">Sale Price:</span>
-                  <p class="text-2xl font-bold text-green-700">
-                    {{ formatPrice(currentItem.sellingPrice) }}
-                  </p>
-                </div>
-                <div>
-                  <span class="text-sm text-gray-600">Discount:</span>
-                  <p class="text-lg font-semibold text-red-600">
-                    {{ calculateDiscount(currentItem.originalPrice, currentItem.sellingPrice) }}
-                  </p>
-                </div>
-                <div>
-                  <span class="text-sm text-gray-600">Available Units:</span>
-                  <p class="text-lg font-semibold text-gray-800">
-                    {{ currentItem.quantityAvailable }} units
-                  </p>
-                </div>
+              <PriceBlock
+                :original-price="currentItem.originalPrice"
+                :selling-price="currentItem.sellingPrice"
+                size="lg"
+              />
+              <div class="mt-3">
+                <span class="text-sm text-gray-600">Available Units:</span>
+                <p class="text-lg font-semibold text-gray-800">
+                  {{ currentItem.quantityAvailable }} units
+                </p>
               </div>
             </div>
 
@@ -180,6 +165,7 @@ import { ref, onMounted, computed, watch } from 'vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
+import PriceBlock from '~/components/ui/PriceBlock.vue'
 import { useRoute, useRouter } from 'vue-router'
 import ProductInventoryService from '~/services/product-inventory.service'
 import { useSupermarketStore } from '~/stores/supermarket'
@@ -318,7 +304,7 @@ const otherInventoryItems = computed(() => {
 
 // Shared helpers
 import { formatDate } from '~/utils/date'
-import { calculateDiscount, formatPrice } from '~/utils/price'
+import { formatPrice } from '~/utils/price'
 import { getAvailability } from '~/utils/product'
 
 // Event handlers
