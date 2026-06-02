@@ -2,6 +2,8 @@ package practice.expiry_rescue_app.business.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import practice.expiry_rescue_app.business.ProductInventoryBusiness;
@@ -15,6 +17,7 @@ import practice.expiry_rescue_app.entity.Staff;
 import practice.expiry_rescue_app.entity.Supermarket;
 import practice.expiry_rescue_app.enums.InventoryStatus;
 import practice.expiry_rescue_app.repository.ProductInventoryRepository;
+import practice.expiry_rescue_app.repository.projection.LocationSummaryProjection;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -129,6 +132,26 @@ public class ProductInventoryBusinessImpl implements ProductInventoryBusiness {
     public List<ProductInventory> getInventoriesByProductMaster(UUID productMasterId) {
         productMasterBusiness.validateProductMasterExists(productMasterId);
         return inventoryRepository.findByProductMasterIdAndDeletedAtIsNull(productMasterId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductInventory> getInventoriesBySupermarketAndProductMaster(UUID supermarketId, UUID productMasterId) {
+        supermarketBusiness.validateSupermarketExists(supermarketId);
+        productMasterBusiness.validateProductMasterExists(productMasterId);
+        return inventoryRepository.findBySupermarketIdAndProductMasterIdAndDeletedAtIsNull(supermarketId, productMasterId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<LocationSummaryProjection> getOtherLocationSummariesInCity(
+            UUID productMasterId, UUID excludeSupermarketId, Pageable pageable) {
+        productMasterBusiness.validateProductMasterExists(productMasterId);
+        // Scope "other locations" to the same city as the supermarket the user is currently viewing
+        Supermarket currentSupermarket = supermarketBusiness.getActiveSupermarketById(excludeSupermarketId);
+        UUID cityId = currentSupermarket.getDistrict().getCity().getId();
+        return inventoryRepository.findOtherLocationSummariesInCity(
+                productMasterId, excludeSupermarketId, cityId, pageable);
     }
 
     @Override

@@ -1,7 +1,10 @@
 package practice.expiry_rescue_app.business;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import practice.expiry_rescue_app.entity.ProductInventory;
 import practice.expiry_rescue_app.enums.InventoryStatus;
+import practice.expiry_rescue_app.repository.projection.LocationSummaryProjection;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,6 +27,11 @@ public interface ProductInventoryBusiness {
     List<ProductInventory> getInventoriesBySupermarket(UUID supermarketId);
 
     List<ProductInventory> getInventoriesByProductMaster(UUID productMasterId);
+
+    List<ProductInventory> getInventoriesBySupermarketAndProductMaster(UUID supermarketId, UUID productMasterId);
+
+    Page<LocationSummaryProjection> getOtherLocationSummariesInCity(
+            UUID productMasterId, UUID excludeSupermarketId, Pageable pageable);
 
     List<ProductInventory> getExpiringInventories(Long beforeDate);
 

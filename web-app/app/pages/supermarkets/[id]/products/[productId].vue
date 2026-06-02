@@ -141,10 +141,10 @@
         </button>
       </div>
 
-      <!-- Other Locations (if product available at other supermarkets) -->
+      <!-- Other Locations in the same city (if product available at other supermarkets) -->
       <div v-if="otherLocations.length > 0" class="bg-white p-6 rounded-xl shadow mb-6">
         <h2 class="text-2xl font-bold mb-4">
-          Also available at {{ otherLocations.length }} other location(s)
+          Also available at {{ otherLocationsTotal }} other location(s) in this city
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -171,6 +171,20 @@
               </p>
             </div>
           </div>
+        </div>
+
+        <!-- Load more -->
+        <div v-if="otherLocationsHasNext" class="text-center mt-4">
+          <button
+            @click="loadMoreLocations"
+            :disabled="loadingMoreLocations"
+            class="btn bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            {{ loadingMoreLocations ? 'Loading...' : 'Load more locations' }}
+          </button>
+          <p class="text-sm text-gray-500 mt-2">
+            Showing {{ otherLocations.length }} of {{ otherLocationsTotal }}
+          </p>
         </div>
       </div>
 
@@ -208,15 +222,55 @@ const productMasterId = route.params.productId
 const batchId = route.query.batch
 
 // State
-const allInventoryItems = ref([])
+// Batches of this product at the current supermarket (drives header + batch dropdown)
+const supermarketItems = ref([])
 const selectedInventoryItemId = ref(null)
 const loading = ref(true)
 const error = ref(null)
 
-// Fetch all inventory items for this product master
+// Other locations in the same city (server-aggregated + paginated, accumulated as we load more)
+const LOCATIONS_PAGE_SIZE = 6
+const otherLocations = ref([])
+const otherLocationsPageIndex = ref(0)
+const otherLocationsTotal = ref(0)
+const otherLocationsHasNext = ref(false)
+const loadingMoreLocations = ref(false)
+
+// Fetch a page of "other locations in this city" and append it to the list
+const loadOtherLocations = async (page = 0) => {
+  loadingMoreLocations.value = true
+  try {
+    const res = await ProductInventoryService.getOtherLocationSummaries(
+      productMasterId,
+      supermarketId,
+      page,
+      LOCATIONS_PAGE_SIZE,
+      (err) => console.error('Error fetching other locations:', err)
+    )
+    const paged = res?.data
+    if (paged && Array.isArray(paged.content)) {
+      otherLocations.value =
+        page === 0 ? paged.content : [...otherLocations.value, ...paged.content]
+      otherLocationsPageIndex.value = paged.page
+      otherLocationsTotal.value = paged.totalElements
+      otherLocationsHasNext.value = paged.hasNext
+    }
+  } finally {
+    loadingMoreLocations.value = false
+  }
+}
+
+const loadMoreLocations = () => {
+  if (otherLocationsHasNext.value && !loadingMoreLocations.value) {
+    loadOtherLocations(otherLocationsPageIndex.value + 1)
+  }
+}
+
+// Fetch this product's batches at the current supermarket, plus a summary of other locations
 const fetchProductInventory = async () => {
   try {
-    const response = await ProductInventoryService.getInventoryByProductMaster(
+    const response = await ProductInventoryService.getInventoryBySupermarketAndProductMaster(
+      supermarketId,
       productMasterId,
       (err) => {
         console.error('Error fetching product inventory:', err)
@@ -225,35 +279,31 @@ const fetchProductInventory = async () => {
     )
 
     if (response && response.data) {
-      // Items are already filtered by productMasterId from the backend
-      allInventoryItems.value = response.data
+      supermarketItems.value = response.data
 
-      if (allInventoryItems.value.length === 0) {
-        error.value = 'Product not found'
+      if (supermarketItems.value.length === 0) {
+        error.value = 'Product not found at this supermarket'
+        return
+      }
+
+      // Set the initial selected batch based on the batch query param, else the first batch
+      if (batchId) {
+        const batchItem = supermarketItems.value.find((item) => item.id === batchId)
+        selectedInventoryItemId.value = batchItem?.id || supermarketItems.value[0].id
       } else {
-        // Set the initial selected item based on batch query param or supermarket
-        if (batchId) {
-          // If specific batch ID is provided in query param
-          const batchItem = allInventoryItems.value.find((item) => item.id === batchId)
-          selectedInventoryItemId.value = batchItem?.id || allInventoryItems.value[0].id
-        } else if (supermarketId) {
-          // Find first item from the specified supermarket
-          const itemFromSupermarket = allInventoryItems.value.find(
-            (item) => item.supermarketId === supermarketId
-          )
-          selectedInventoryItemId.value = itemFromSupermarket?.id || allInventoryItems.value[0].id
-        } else {
-          selectedInventoryItemId.value = allInventoryItems.value[0].id
-        }
+        selectedInventoryItemId.value = supermarketItems.value[0].id
+      }
 
-        // Update URL to include batch ID if not already present
-        if (!batchId && selectedInventoryItemId.value) {
-          router.replace({
-            query: { batch: selectedInventoryItemId.value },
-          })
-        }
+      // Update URL to include batch ID if not already present
+      if (!batchId && selectedInventoryItemId.value) {
+        router.replace({
+          query: { batch: selectedInventoryItemId.value },
+        })
       }
     }
+
+    // Fetch the first page of "also available in this city" (non-blocking for the main view)
+    await loadOtherLocations(0)
   } catch (err) {
     console.error('Error:', err)
     error.value = 'Failed to load product details'
@@ -264,7 +314,7 @@ const fetchProductInventory = async () => {
 
 // Computed properties
 const currentItem = computed(() => {
-  return allInventoryItems.value.find((item) => item.id === selectedInventoryItemId.value)
+  return supermarketItems.value.find((item) => item.id === selectedInventoryItemId.value)
 })
 
 const productName = computed(() => {
@@ -283,48 +333,12 @@ const supermarketName = computed(() => {
   return currentItem.value?.supermarketName || 'Unknown Supermarket'
 })
 
-// Get all inventory items from the same supermarket
-const allSupermarketItems = computed(() => {
-  if (!currentItem.value) return []
-  return allInventoryItems.value.filter(
-    (item) => item.supermarketId === currentItem.value.supermarketId
-  )
-})
+// All batches of this product at the current supermarket (already scoped by the API)
+const allSupermarketItems = computed(() => supermarketItems.value)
 
-// Get other inventory items (excluding current one)
+// Other batches at this supermarket (excluding the selected one)
 const otherInventoryItems = computed(() => {
   return allSupermarketItems.value.filter((item) => item.id !== selectedInventoryItemId.value)
-})
-
-// Get grouped items by supermarket (excluding current supermarket)
-const otherLocations = computed(() => {
-  if (!currentItem.value) return []
-
-  const locationMap = new Map()
-
-  for (const item of allInventoryItems.value) {
-    // Skip items from current supermarket
-    if (item.supermarketId === currentItem.value.supermarketId) continue
-
-    const key = item.supermarketId
-
-    if (locationMap.has(key)) {
-      const location = locationMap.get(key)
-      location.totalQuantity += item.quantityAvailable
-      location.bestPrice = Math.min(location.bestPrice, item.sellingPrice)
-      location.earliestExpiry = Math.min(location.earliestExpiry, item.expiryDate)
-    } else {
-      locationMap.set(key, {
-        supermarketId: item.supermarketId,
-        supermarketName: item.supermarketName,
-        totalQuantity: item.quantityAvailable,
-        bestPrice: item.sellingPrice,
-        earliestExpiry: item.expiryDate,
-      })
-    }
-  }
-
-  return Array.from(locationMap.values())
 })
 
 // Shared helpers

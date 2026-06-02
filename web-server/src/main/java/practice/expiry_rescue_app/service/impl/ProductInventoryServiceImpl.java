@@ -2,13 +2,18 @@ package practice.expiry_rescue_app.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import practice.expiry_rescue_app.business.ProductInventoryBusiness;
+import practice.expiry_rescue_app.model.common.PagedResponse;
 import practice.expiry_rescue_app.model.product.CreateProductInventoryRequest;
+import practice.expiry_rescue_app.model.product.LocationSummaryResponse;
 import practice.expiry_rescue_app.model.product.ProductInventoryResponse;
 import practice.expiry_rescue_app.model.product.UpdateProductInventoryRequest;
 import practice.expiry_rescue_app.entity.ProductInventory;
 import practice.expiry_rescue_app.enums.InventoryStatus;
+import practice.expiry_rescue_app.repository.projection.LocationSummaryProjection;
 import practice.expiry_rescue_app.service.ProductInventoryService;
 
 import java.util.Date;
@@ -100,6 +105,35 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
     }
 
     @Override
+    public List<ProductInventoryResponse> getInventoriesBySupermarketAndProductMaster(UUID supermarketId, UUID productMasterId) {
+        log.debug("Service: Getting inventories for product master {} at supermarket {}", productMasterId, supermarketId);
+        List<ProductInventory> inventories =
+                inventoryBusiness.getInventoriesBySupermarketAndProductMaster(supermarketId, productMasterId);
+        return inventories.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public PagedResponse<LocationSummaryResponse> getOtherLocationSummariesInCity(
+            UUID productMasterId, UUID excludeSupermarketId, int page, int size) {
+        log.debug("Service: Getting other location summaries (city-scoped) for product master {} excluding supermarket {} [page={}, size={}]",
+                productMasterId, excludeSupermarketId, page, size);
+        Page<LocationSummaryProjection> summaries = inventoryBusiness.getOtherLocationSummariesInCity(
+                productMasterId, excludeSupermarketId, PageRequest.of(page, size));
+        List<LocationSummaryResponse> content = summaries.getContent().stream()
+                .map(this::mapToLocationSummaryResponse)
+                .collect(Collectors.toList());
+        return new PagedResponse<>(
+                content,
+                summaries.getNumber(),
+                summaries.getSize(),
+                summaries.getTotalElements(),
+                summaries.getTotalPages(),
+                summaries.hasNext());
+    }
+
+    @Override
     public List<ProductInventoryResponse> getExpiringInventories(Integer daysBeforeExpiry) {
         log.debug("Service: Getting inventories expiring within {} days", daysBeforeExpiry);
         long expiryDate = new Date().getTime() + (daysBeforeExpiry * 24L * 60 * 60 * 1000);
@@ -149,5 +183,15 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
         response.setCreatedAt(inventory.getCreatedAt());
         response.setUpdatedAt(inventory.getUpdatedAt());
         return response;
+    }
+
+    private LocationSummaryResponse mapToLocationSummaryResponse(LocationSummaryProjection projection) {
+        return new LocationSummaryResponse(
+                projection.getSupermarketId(),
+                projection.getSupermarketName(),
+                projection.getTotalQuantity(),
+                projection.getBestPrice(),
+                projection.getEarliestExpiry()
+        );
     }
 }
