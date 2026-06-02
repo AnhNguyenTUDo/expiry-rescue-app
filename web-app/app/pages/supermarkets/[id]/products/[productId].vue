@@ -103,11 +103,7 @@
             <!-- Add to Cart Button -->
             <div class="mt-6">
               <button
-                v-if="
-                  currentItem &&
-                  currentItem.status === 'AVAILABLE' &&
-                  currentItem.quantityAvailable > 0
-                "
+                v-if="currentItem && getAvailability(currentItem) !== 'out of stock'"
                 @click="addToCart"
                 :disabled="isInCart"
                 class="w-full py-3 px-6 rounded-lg font-semibold text-lg transition"
