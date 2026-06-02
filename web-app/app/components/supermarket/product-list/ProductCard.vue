@@ -25,14 +25,8 @@
 
     <ExpiryBadge :expiry-date="product.earliestExpiryDate" />
 
-    <div class="flex justify-between items-center mt-auto pt-4">
-      <div class="flex flex-col">
-        <span class="line-through text-gray-400 text-sm">{{ product.oldPrice }}</span>
-        <span class="text-green-700 font-bold text-2xl">{{ product.newPrice }}</span>
-      </div>
-      <span class="bg-green-700 text-white text-sm font-semibold px-3 py-1 rounded-md">{{
-        product.discount
-      }}</span>
+    <div class="mt-auto pt-4">
+      <PriceBlock :original-price="product.originalPrice" :selling-price="product.sellingPrice" />
     </div>
   </NuxtLink>
 </template>
@@ -41,6 +35,7 @@
 import { computed } from 'vue'
 import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
 import AvailabilityTag from '~/components/ui/AvailabilityTag.vue'
+import PriceBlock from '~/components/ui/PriceBlock.vue'
 
 const props = defineProps({
   product: {
