@@ -1,7 +1,7 @@
 <template>
   <div
     @click="navigateToDetail"
-    class="cursor-pointer bg-white rounded-xl shadow hover:shadow-lg transition p-5 border border-gray-200"
+    class="flex flex-col h-full cursor-pointer bg-white rounded-xl shadow hover:shadow-lg transition p-5 border border-gray-200"
   >
     <!-- Status and Category Header -->
     <div class="flex justify-between items-start mb-3">
@@ -39,7 +39,9 @@
       <SvgIcon name="icon-products" class="text-gray-400 w-30 h-30" />
     </div>
 
-    <h3 class="text-lg font-semibold">{{ product.name }}</h3>
+    <h3 class="text-lg font-semibold line-clamp-2 min-h-14">
+      {{ product.name }}
+    </h3>
     <p v-if="showLocation" class="text-gray-500 text-sm mb-3 mt-1">{{ product.location }}</p>
 
     <div class="flex items-center gap-1.5 text-sm text-gray-600">
@@ -51,7 +53,7 @@
       >
     </div>
 
-    <div class="flex justify-between items-center mt-4">
+    <div class="flex justify-between items-center mt-auto pt-4">
       <div class="flex flex-col">
         <span class="line-through text-gray-400 text-sm">{{ product.oldPrice }}</span>
         <span class="text-green-700 font-bold text-2xl">{{ product.newPrice }}</span>
