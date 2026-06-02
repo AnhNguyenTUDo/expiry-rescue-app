@@ -58,19 +58,7 @@
 
             <!-- Expiry Information -->
             <div class="border border-gray-200 rounded-lg p-4 mb-4">
-              <div class="flex justify-between items-center">
-                <ExpiryBadge :expiry-date="currentItem.expiryDate" size="lg" />
-                <div
-                  class="text-sm px-4 py-2 rounded-full font-semibold"
-                  :class="{
-                    'bg-green-700 text-white': getAvailability(currentItem) === 'available',
-                    'bg-yellow-500 text-black': getAvailability(currentItem) === 'limited',
-                    'bg-red-600 text-white': getAvailability(currentItem) === 'out of stock',
-                  }"
-                >
-                  {{ getAvailability(currentItem) }}
-                </div>
-              </div>
+              <ExpiryBadge :expiry-date="currentItem.expiryDate" size="lg" />
             </div>
 
             <!-- Other Inventory Items Dropdown (if multiple items exist in same supermarket) -->
