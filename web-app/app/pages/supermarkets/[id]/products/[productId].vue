@@ -57,28 +57,18 @@
             </div>
 
             <!-- Expiry Information -->
-            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+            <div class="border border-gray-200 rounded-lg p-4 mb-4">
               <div class="flex justify-between items-center">
-                <div>
-                  <span class="text-sm text-gray-600 font-semibold">Expires:</span>
-                  <p class="text-lg text-green-700 font-semibold">
-                    {{ formatDate(currentItem.expiryDate) }}
-                  </p>
-                </div>
-                <div class="flex items-center gap-3">
-                  <span class="bg-green-700 text-white text-sm px-3 py-1.5 rounded font-semibold">
-                    {{ calculateDaysUntil(currentItem.expiryDate) }}
-                  </span>
-                  <div
-                    class="text-sm px-4 py-2 rounded-full font-semibold"
-                    :class="{
-                      'bg-green-700 text-white': getAvailability(currentItem) === 'available',
-                      'bg-yellow-500 text-black': getAvailability(currentItem) === 'limited',
-                      'bg-red-600 text-white': getAvailability(currentItem) === 'out of stock',
-                    }"
-                  >
-                    {{ getAvailability(currentItem) }}
-                  </div>
+                <ExpiryBadge :expiry-date="currentItem.expiryDate" size="lg" />
+                <div
+                  class="text-sm px-4 py-2 rounded-full font-semibold"
+                  :class="{
+                    'bg-green-700 text-white': getAvailability(currentItem) === 'available',
+                    'bg-yellow-500 text-black': getAvailability(currentItem) === 'limited',
+                    'bg-red-600 text-white': getAvailability(currentItem) === 'out of stock',
+                  }"
+                >
+                  {{ getAvailability(currentItem) }}
                 </div>
               </div>
             </div>
@@ -201,6 +191,7 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
+import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
 import { useRoute, useRouter } from 'vue-router'
 import ProductInventoryService from '~/services/product-inventory.service'
 import { useSupermarketStore } from '~/stores/supermarket'
@@ -338,7 +329,7 @@ const otherInventoryItems = computed(() => {
 })
 
 // Shared helpers
-import { formatDate, calculateDaysUntil } from '~/utils/date'
+import { formatDate } from '~/utils/date'
 import { calculateDiscount, formatPrice } from '~/utils/price'
 import { getAvailability } from '~/utils/product'
 
