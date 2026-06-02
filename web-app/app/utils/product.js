@@ -17,23 +17,12 @@ export const getAvailability = (item) => {
   return calculateAvailability(item.expiryDate, item.quantityAvailable, item.status)
 }
 
-export const getCategoryEmoji = (categoryName) => {
-  if (!categoryName) return '🛒'
-  const lowerName = categoryName.toLowerCase()
-  const emojiMap = {
-    dairy: '🧀',
-    bakery: '🥐',
-    beverages: '🥤',
-    spices: '🌶️',
-    cosmetics: '💄',
-    meat: '🍖',
-    seafood: '🦐',
-    produce: '🥬',
-    fruits: '🍎',
-    vegetables: '🥕',
-  }
-  for (const [keyword, emoji] of Object.entries(emojiMap)) {
-    if (lowerName.includes(keyword)) return emoji
-  }
-  return '🛒'
+export const ENDING_SOON_DAYS = 7
+
+export const isEndingSoon = (expiryDate, days = ENDING_SOON_DAYS) => {
+  if (!expiryDate) return false
+  const now = Date.now()
+  if (expiryDate <= now) return false
+  const daysUntil = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24))
+  return daysUntil <= days
 }

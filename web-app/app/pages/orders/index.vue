@@ -73,7 +73,7 @@
         </div>
 
         <div class="text-xl font-bold text-green-600">
-          {{ order.totalAmount.toLocaleString() }}₫
+          {{ formatPrice(order.totalAmount) }}
         </div>
       </div>
     </div>
@@ -135,6 +135,7 @@ const clearFilters = async () => {
 
 // Shared helpers
 import { formatDateTime } from '~/utils/date'
+import { formatPrice } from '~/utils/price'
 import { getStatusClass, getStatusLabel } from '~/utils/order'
 
 // Use formatDateTime for orders (includes time)

@@ -1,9 +1,13 @@
 <template>
   <div class="mb-8">
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex items-center mb-4">
       <h3 class="text-xl font-semibold text-green-700">
         {{ category.name }} ({{ category.products.length }})
       </h3>
+    </div>
+
+    <div>
+      <slot name="filters" />
     </div>
 
     <div v-if="category.products.length === 0" class="text-center py-8 bg-gray-50 rounded-lg">
@@ -16,32 +20,22 @@
         :key="product.id"
         :product="product"
         :supermarket-id="supermarketId"
+        :show-category="showCategory"
       />
     </div>
 
-    <div v-if="category.products.length > 4 && !expanded" class="text-center mt-4">
-      <button
-        class="px-4 py-2 rounded-lg border transition bg-green-600 text-white hover:bg-green-700"
-        @click="emit('toggle')"
-      >
-        Show More ({{ category.products.length - 4 }} more)
-      </button>
-    </div>
-
-    <div v-if="expanded" class="text-center mt-4">
-      <button
-        class="px-4 py-2 rounded-lg border transition bg-gray-500 text-white hover:bg-gray-600"
-        @click="emit('toggle')"
-      >
-        Show Less
-      </button>
-    </div>
+    <ShowMoreButton
+      v-if="category.products.length > 4 && !expanded"
+      :remaining="category.products.length - 4"
+      @click="emit('toggle')"
+    />
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import ProductCard from '@/components/supermarket/product-list/ProductCard.vue'
+import ShowMoreButton from '~/components/ui/ShowMoreButton.vue'
 
 const props = defineProps({
   category: {
@@ -55,6 +49,10 @@ const props = defineProps({
   supermarketId: {
     type: String,
     required: true,
+  },
+  showCategory: {
+    type: Boolean,
+    default: false,
   },
 })
 

@@ -5,15 +5,17 @@
 
     <!-- Product Details -->
     <div v-else-if="currentItem">
-      <!-- Product Header with Emoji taking 1/3 width -->
+      <!-- Product Header with Image-->
       <div class="bg-white p-8 rounded-xl shadow mb-6">
         <div class="flex gap-8">
-          <!-- Product Emoji - 1/3 width -->
+          <!-- Product image-->
           <div class="w-1/3 flex items-center justify-center">
-            <div class="text-9xl">{{ productEmoji }}</div>
+            <div class="text-9xl">
+              <SvgIcon name="icon-products" class="text-gray-400 w-30 h-30" />
+            </div>
           </div>
 
-          <!-- Product Info - 2/3 width -->
+          <!-- Product Info -->
           <div class="w-2/3">
             <h1 class="text-4xl font-bold text-gray-800 mb-2">{{ productName }}</h1>
             <p class="text-xl text-gray-600 mb-4">{{ categoryName }}</p>
@@ -30,13 +32,13 @@
                 <div>
                   <span class="text-sm text-gray-600">Original Price:</span>
                   <p class="text-lg line-through text-gray-400">
-                    {{ currentItem.originalPrice.toLocaleString() }}₫
+                    {{ formatPrice(currentItem.originalPrice) }}
                   </p>
                 </div>
                 <div>
                   <span class="text-sm text-gray-600">Sale Price:</span>
                   <p class="text-2xl font-bold text-green-700">
-                    {{ currentItem.sellingPrice.toLocaleString() }}₫
+                    {{ formatPrice(currentItem.sellingPrice) }}
                   </p>
                 </div>
                 <div>
@@ -93,7 +95,7 @@
               >
                 <option v-for="item in allSupermarketItems" :key="item.id" :value="item.id">
                   Batch - Expires: {{ formatDate(item.expiryDate) }} -
-                  {{ item.quantityAvailable }} units - {{ item.sellingPrice.toLocaleString() }}₫
+                  {{ item.quantityAvailable }} units - {{ formatPrice(item.sellingPrice) }}
                 </option>
               </select>
             </div>
@@ -161,7 +163,7 @@
               </p>
               <p class="text-gray-600">
                 <span class="font-medium">Best Price:</span>
-                {{ location.bestPrice.toLocaleString() }}₫
+                {{ formatPrice(location.bestPrice) }}
               </p>
               <p class="text-gray-600">
                 <span class="font-medium">Expires:</span>
@@ -281,8 +283,6 @@ const supermarketName = computed(() => {
   return currentItem.value?.supermarketName || 'Unknown Supermarket'
 })
 
-const productEmoji = computed(() => getCategoryEmoji(categoryName.value))
-
 // Get all inventory items from the same supermarket
 const allSupermarketItems = computed(() => {
   if (!currentItem.value) return []
@@ -329,8 +329,8 @@ const otherLocations = computed(() => {
 
 // Shared helpers
 import { formatDate, calculateDaysUntil } from '~/utils/date'
-import { calculateDiscount } from '~/utils/price'
-import { calculateAvailability, getAvailability, getCategoryEmoji } from '~/utils/product'
+import { calculateDiscount, formatPrice } from '~/utils/price'
+import { getAvailability } from '~/utils/product'
 
 // Event handlers
 const onInventoryItemChange = () => {
