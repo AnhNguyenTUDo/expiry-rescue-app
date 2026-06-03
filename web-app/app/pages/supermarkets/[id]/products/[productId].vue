@@ -65,7 +65,9 @@
               >
                 <span class="flex items-center justify-center gap-2">
                   <SvgIcon
-                    :name="isInCart ? 'icon-check-circle' : 'icon-shopping-basket-add-outline'"
+                    :name="
+                      isInCart ? 'icon-check-circle-outline' : 'icon-shopping-basket-add-outline'
+                    "
                     class="w-6 h-6"
                   />
                   {{ isInCart ? 'Added to cart' : 'Add to cart' }}
