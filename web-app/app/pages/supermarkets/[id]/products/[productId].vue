@@ -126,11 +126,11 @@
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div
+          <NuxtLink
             v-for="location in otherLocations"
             :key="location.supermarketId"
-            class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer"
-            @click="navigateToProductAtSupermarket(location.supermarketId)"
+            :to="`/supermarkets/${location.supermarketId}/products/${productMasterId}`"
+            class="block border border-gray-200 rounded-lg p-4 hover:shadow-md transition"
           >
             <h3 class="text-lg font-semibold text-gray-800 mb-2">
               {{ location.supermarketName }}
@@ -148,7 +148,7 @@
                 {{ formatDate(location.earliestExpiry) }}
               </p>
             </div>
-          </div>
+          </NuxtLink>
         </div>
 
         <!-- Load more -->
@@ -340,10 +340,6 @@ const onInventoryItemChange = () => {
 // Navigation
 const navigateToSupermarket = (supermarketIdParam) => {
   router.push(`/supermarkets/${supermarketIdParam}`)
-}
-
-const navigateToProductAtSupermarket = (supermarketIdParam) => {
-  router.push(`/supermarkets/${supermarketIdParam}/products/${productMasterId}`)
 }
 
 // Cart functionality
