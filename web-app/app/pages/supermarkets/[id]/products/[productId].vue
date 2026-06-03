@@ -5,6 +5,19 @@
 
     <!-- Product Details -->
     <div v-else-if="currentItem" class="max-w-4xl mx-auto">
+      <!-- Breadcrumb navigation-->
+      <nav class="flex items-center gap-1.5 text-sm text-gray-500 mb-4">
+        <NuxtLink to="/" class="hover:text-green-700 transition">Home</NuxtLink>
+        <span>/</span>
+        <NuxtLink
+          :to="`/supermarkets/${currentItem.supermarketId}`"
+          class="hover:text-green-700 transition"
+          >{{ supermarketName }}</NuxtLink
+        >
+        <span>/</span>
+        <span class="text-gray-800 font-medium truncate">{{ productName }}</span>
+      </nav>
+
       <!-- Product Header with Image-->
       <div class="flex gap-4 mb-6">
         <!-- Product image-->
@@ -108,7 +121,7 @@
 
       <!-- Other Locations in the same city (if product available at other supermarkets) -->
       <div v-if="otherLocations.length > 0" class="bg-white p-6 rounded-lg mb-6">
-        <h2 class="text-2xl font-bold mb-4">
+        <h2 class="text-2xl font-semibold mb-4">
           Also available at {{ otherLocationsTotal }} other location(s) in this city
         </h2>
 
@@ -151,11 +164,6 @@
             Showing {{ otherLocations.length }} of {{ otherLocationsTotal }}
           </p>
         </div>
-      </div>
-
-      <!-- Back Button -->
-      <div class="text-center">
-        <button @click="goBack" class="btn bg-gray-500 text-white hover:bg-gray-600">← Back</button>
       </div>
     </div>
 
@@ -336,10 +344,6 @@ const navigateToSupermarket = (supermarketIdParam) => {
 
 const navigateToProductAtSupermarket = (supermarketIdParam) => {
   router.push(`/supermarkets/${supermarketIdParam}/products/${productMasterId}`)
-}
-
-const goBack = () => {
-  router.back()
 }
 
 // Cart functionality
