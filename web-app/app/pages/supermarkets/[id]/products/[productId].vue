@@ -4,104 +4,108 @@
     <ErrorAlert v-else-if="error" :error="error" />
 
     <!-- Product Details -->
-    <div v-else-if="currentItem">
+    <div v-else-if="currentItem" class="max-w-4xl mx-auto">
       <!-- Product Header with Image-->
-      <div class="bg-white p-8 rounded-xl shadow mb-6">
-        <div class="flex gap-8">
-          <!-- Product image-->
-          <div class="w-1/3 flex items-center justify-center">
-            <div class="text-9xl">
-              <SvgIcon name="icon-products" class="text-gray-400 w-30 h-30" />
-            </div>
-          </div>
+      <div class="flex gap-4 mb-6">
+        <!-- Product image-->
+        <div class="w-1/2 h-114 bg-white rounded-lg flex items-center justify-center p-8">
+          <SvgIcon name="icon-products" class="text-gray-400 w-full h-full object-contain" />
+        </div>
 
+        <!-- Right column -->
+        <div class="w-1/2 flex flex-col gap-4">
           <!-- Product Info -->
-          <div class="w-2/3">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">{{ productName }}</h1>
-            <p class="text-xl text-gray-600 mb-4">{{ categoryName }}</p>
-
-            <!-- Description -->
-            <div v-if="productDescription" class="mb-6">
-              <h3 class="text-lg font-semibold text-gray-700 mb-2">Description</h3>
-              <p class="text-gray-600">{{ productDescription }}</p>
-            </div>
+          <div class="bg-white rounded-lg p-5">
+            <h1 class="text-2xl font-semibold text-gray-800 mb-1">{{ productName }}</h1>
+            <p class="text-lg text-gray-500 mb-5">{{ categoryName }}</p>
 
             <!-- Pricing Information -->
-            <div class="bg-gray-50 p-4 rounded-lg mb-4">
+            <div class="mb-5">
               <PriceBlock
                 :original-price="currentItem.originalPrice"
                 :selling-price="currentItem.sellingPrice"
-                size="lg"
               />
-              <div class="mt-3">
-                <span class="text-sm text-gray-600">Available Units:</span>
-                <p class="text-lg font-semibold text-gray-800">
-                  {{ currentItem.quantityAvailable }} units
-                </p>
-              </div>
             </div>
 
             <!-- Expiry Information -->
-            <div class="border border-gray-200 rounded-lg p-4 mb-4">
+            <div class="mb-3">
               <ExpiryBadge :expiry-date="currentItem.expiryDate" size="lg" />
             </div>
 
-            <!-- Other Inventory Items Dropdown (if multiple items exist in same supermarket) -->
-            <div v-if="otherInventoryItems.length > 0" class="mb-4">
+            <!-- Batch selector -->
+            <div v-if="otherInventoryItems.length > 0" class="mb-3">
               <label class="block text-sm font-semibold text-gray-700 mb-2">
-                Other batches of this product at {{ supermarketName }}:
+                Other batches at {{ supermarketName }}:
               </label>
-              <select
+              <DropdownSelect
                 v-model="selectedInventoryItemId"
+                :options="batchOptions"
+                min-width="100%"
                 @change="onInventoryItemChange"
-                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-600 focus:border-green-600"
-              >
-                <option v-for="item in allSupermarketItems" :key="item.id" :value="item.id">
-                  Batch - Expires: {{ formatDate(item.expiryDate) }} -
-                  {{ item.quantityAvailable }} units - {{ formatPrice(item.sellingPrice) }}
-                </option>
-              </select>
+              />
             </div>
 
-            <!-- Add to Cart Button -->
-            <div class="mt-6">
+            <!-- Units left -->
+            <p class="mb-2.5 text-sm text-gray-600">
+              {{ currentItem.quantityAvailable }} units left
+            </p>
+
+            <!-- Add to cart Button -->
+            <div>
               <button
                 v-if="currentItem && getAvailability(currentItem) !== 'out of stock'"
                 @click="addToCart"
                 :disabled="isInCart"
-                class="w-full py-3 px-6 rounded-lg font-semibold text-lg transition"
+                class="w-full py-3 px-6 rounded-[11px] font-bold transition"
                 :class="
                   isInCart
                     ? 'bg-gray-400 text-white cursor-not-allowed'
-                    : 'bg-green-600 text-white hover:bg-green-700 cursor-pointer'
+                    : 'bg-green-700 text-white hover:bg-green-800 cursor-pointer'
                 "
               >
-                {{ isInCart ? '✓ Added to Cart' : 'Add to Cart' }}
+                <span class="flex items-center justify-center gap-2">
+                  <SvgIcon
+                    :name="isInCart ? 'icon-check-circle' : 'icon-shopping-basket-add-outline'"
+                    class="w-6 h-6"
+                  />
+                  {{ isInCart ? 'Added to cart' : 'Add to cart' }}
+                </span>
               </button>
               <div
                 v-else
-                class="w-full py-3 px-6 rounded-lg font-semibold text-lg bg-gray-300 text-gray-600 text-center"
+                class="w-full py-3 px-6 rounded-[11px] font-semibold bg-gray-300 text-gray-600 text-center"
               >
                 Not Available
               </div>
             </div>
           </div>
+
+          <!-- View all products -->
+          <div class="bg-white rounded-[12px]">
+            <button
+              @click="navigateToSupermarket(currentItem.supermarketId)"
+              class="group w-full flex items-center justify-between px-5 py-3 text-sm text-gray-600 hover:text-green-700 transition cursor-pointer"
+            >
+              <span
+                >View all products at <span class="font-semibold">{{ supermarketName }}</span></span
+              >
+              <SvgIcon
+                name="icon-chevron-right"
+                class="w-3.5 h-3.5 text-gray-400 group-hover:text-green-700 transition"
+              />
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Supermarket Information -->
-      <div class="bg-white p-6 rounded-xl shadow mb-6">
-        <h2 class="text-2xl font-bold mb-4">Available at {{ supermarketName }}</h2>
-        <button
-          @click="navigateToSupermarket(currentItem.supermarketId)"
-          class="btn bg-green-600 text-white hover:bg-green-700"
-        >
-          View all products at this supermarket
-        </button>
+      <!-- Description -->
+      <div v-if="productDescription" class="bg-white rounded-lg p-6 mb-6">
+        <h3 class="font-semibold uppercase tracking-wide mb-2">Description</h3>
+        <p class="text-gray-600 text-sm">{{ productDescription }}</p>
       </div>
 
       <!-- Other Locations in the same city (if product available at other supermarkets) -->
-      <div v-if="otherLocations.length > 0" class="bg-white p-6 rounded-xl shadow mb-6">
+      <div v-if="otherLocations.length > 0" class="bg-white p-6 rounded-lg mb-6">
         <h2 class="text-2xl font-bold mb-4">
           Also available at {{ otherLocationsTotal }} other location(s) in this city
         </h2>
@@ -154,7 +158,7 @@
     </div>
 
     <!-- No Data State -->
-    <div v-else class="text-center py-12 bg-white rounded-lg shadow">
+    <div v-else class="text-center py-12 bg-white rounded-lg">
       <p class="text-gray-500 text-lg">No product information available</p>
     </div>
   </div>
@@ -166,6 +170,7 @@ import LoadingState from '~/components/ui/LoadingState.vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
 import PriceBlock from '~/components/ui/PriceBlock.vue'
+import DropdownSelect from '~/components/ui/DropdownSelect.vue'
 import { useRoute, useRouter } from 'vue-router'
 import ProductInventoryService from '~/services/product-inventory.service'
 import { useSupermarketStore } from '~/stores/supermarket'
@@ -301,6 +306,13 @@ const allSupermarketItems = computed(() => supermarketItems.value)
 const otherInventoryItems = computed(() => {
   return allSupermarketItems.value.filter((item) => item.id !== selectedInventoryItemId.value)
 })
+
+const batchOptions = computed(() =>
+  allSupermarketItems.value.map((item) => ({
+    value: item.id,
+    label: `Expires ${formatDate(item.expiryDate)} · ${item.quantityAvailable} units · ${formatPrice(item.sellingPrice)}`,
+  }))
+)
 
 // Shared helpers
 import { formatDate } from '~/utils/date'

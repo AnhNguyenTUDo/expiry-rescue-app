@@ -1,7 +1,7 @@
 <template>
   <NuxtLink
     :to="detailLink"
-    class="flex flex-col h-full cursor-pointer bg-white rounded-xl shadow hover:shadow-lg transition p-5 border border-gray-200"
+    class="flex flex-col h-full cursor-pointer bg-white rounded-xl hover:shadow-md transition p-5"
   >
     <!-- Status and Category Header -->
     <div class="flex justify-between items-start mb-3">
@@ -26,7 +26,7 @@
     <ExpiryBadge :expiry-date="product.earliestExpiryDate" />
 
     <div class="mt-auto pt-4">
-      <PriceBlock :original-price="product.originalPrice" :selling-price="product.sellingPrice" />
+      <PriceTag :original-price="product.originalPrice" :selling-price="product.sellingPrice" />
     </div>
   </NuxtLink>
 </template>
@@ -35,7 +35,7 @@
 import { computed } from 'vue'
 import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
 import AvailabilityTag from '~/components/ui/AvailabilityTag.vue'
-import PriceBlock from '~/components/ui/PriceBlock.vue'
+import PriceTag from '~/components/ui/PriceTag.vue'
 
 const props = defineProps({
   product: {
