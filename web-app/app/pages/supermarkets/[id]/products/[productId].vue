@@ -152,15 +152,15 @@
         </div>
 
         <!-- Load more -->
-        <div v-if="otherLocationsHasNext" class="text-center mt-4">
-          <button
+        <div v-if="otherLocationsHasNext">
+          <ShowMoreButton
+            :remaining="otherLocationsTotal - otherLocations.length"
+            :show-remaining="false"
+            :loading="loadingMoreLocations"
+            label="Load more locations"
             @click="loadMoreLocations"
-            :disabled="loadingMoreLocations"
-            class="btn bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-          >
-            {{ loadingMoreLocations ? 'Loading...' : 'Load more locations' }}
-          </button>
-          <p class="text-sm text-gray-500 mt-2">
+          />
+          <p class="text-sm text-gray-500 mt-2 text-center">
             Showing {{ otherLocations.length }} of {{ otherLocationsTotal }}
           </p>
         </div>
@@ -181,6 +181,7 @@ import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
 import PriceBlock from '~/components/ui/PriceBlock.vue'
 import DropdownSelect from '~/components/ui/DropdownSelect.vue'
+import ShowMoreButton from '~/components/ui/ShowMoreButton.vue'
 import { useRoute, useRouter } from 'vue-router'
 import ProductInventoryService from '~/services/product-inventory.service'
 import { useSupermarketStore } from '~/stores/supermarket'
