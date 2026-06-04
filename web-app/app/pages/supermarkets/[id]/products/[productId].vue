@@ -191,6 +191,9 @@ import QuantityCounter from '~/components/ui/QuantityCounter.vue'
 import { useRoute, useRouter } from 'vue-router'
 import ProductInventoryService from '~/services/product-inventory.service'
 import { useSupermarketStore } from '~/stores/supermarket'
+import { formatDate } from '~/utils/date'
+import { formatPrice } from '~/utils/price'
+import { getAvailability } from '~/utils/product'
 import { useCartStore } from '~/stores/cart'
 import { useAuthStore } from '~/stores/auth'
 
@@ -328,11 +331,6 @@ const batchOptions = computed(() =>
     label: `Expires ${formatDate(item.expiryDate)} · ${item.quantityAvailable} units · ${formatPrice(item.sellingPrice)}`,
   }))
 )
-
-// Shared helpers
-import { formatDate } from '~/utils/date'
-import { formatPrice } from '~/utils/price'
-import { getAvailability } from '~/utils/product'
 
 // Event handlers
 const onInventoryItemChange = () => {
