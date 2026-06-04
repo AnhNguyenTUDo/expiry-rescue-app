@@ -1,15 +1,8 @@
-import { defineConfig } from 'eslint/config'
+import withNuxt from './.nuxt/eslint.config.mjs'
 import eslintConfigPrettier from 'eslint-config-prettier/flat'
-import importPlugin from 'eslint-plugin-import'
 
-export default defineConfig([
+export default withNuxt(
   {
-    ignores: ['.nuxt/**', '.output/**', 'node_modules/**'],
-  },
-  {
-    plugins: {
-      import: importPlugin,
-    },
     rules: {
       'no-unused-vars': 'warn',
       'no-console': ['warn', { allow: ['error', 'warn'] }],
@@ -35,5 +28,8 @@ export default defineConfig([
       ],
     },
   },
-  eslintConfigPrettier,
-])
+  {
+    ignores: ['.nuxt/**', '.output/**', 'node_modules/**'],
+  },
+  eslintConfigPrettier
+)
