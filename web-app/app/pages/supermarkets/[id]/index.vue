@@ -39,7 +39,6 @@ import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 
 // Shared helpers
 import { formatDate, calculateDaysUntil } from '~/utils/date'
-import { calculateDiscount, formatPrice } from '~/utils/price'
 import { calculateAvailability, isEndingSoon } from '~/utils/product'
 
 const route = useRoute()
@@ -112,10 +111,8 @@ const fetchSupermarketWithProducts = async () => {
             location: item.supermarketName,
             expire: formatDate(item.expiryDate),
             expireDays: calculateDaysUntil(item.expiryDate),
-            oldPrice: formatPrice(item.originalPrice),
-            newPrice: formatPrice(item.sellingPrice),
+            originalPrice: item.originalPrice,
             sellingPrice: item.sellingPrice,
-            discount: calculateDiscount(item.originalPrice, item.sellingPrice),
             discountPercent: Math.round(
               ((item.originalPrice - item.sellingPrice) / item.originalPrice) * 100
             ),

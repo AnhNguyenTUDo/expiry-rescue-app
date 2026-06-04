@@ -4,155 +4,138 @@
     <ErrorAlert v-else-if="error" :error="error" />
 
     <!-- Product Details -->
-    <div v-else-if="currentItem">
+    <div v-else-if="currentItem" class="max-w-4xl mx-auto">
+      <!-- Breadcrumb navigation-->
+      <nav class="flex items-center gap-1.5 text-sm text-gray-500 mb-4">
+        <NuxtLink to="/" class="hover:text-green-700 transition">Home</NuxtLink>
+        <span>/</span>
+        <NuxtLink
+          :to="`/supermarkets/${currentItem.supermarketId}`"
+          class="hover:text-green-700 transition"
+          >{{ supermarketName }}</NuxtLink
+        >
+        <span>/</span>
+        <span class="text-gray-800 font-medium truncate">{{ productName }}</span>
+      </nav>
+
       <!-- Product Header with Image-->
-      <div class="bg-white p-8 rounded-xl shadow mb-6">
-        <div class="flex gap-8">
-          <!-- Product image-->
-          <div class="w-1/3 flex items-center justify-center">
-            <div class="text-9xl">
-              <SvgIcon name="icon-products" class="text-gray-400 w-30 h-30" />
-            </div>
-          </div>
+      <div class="flex gap-4 mb-6">
+        <!-- Product image-->
+        <div class="w-1/2 h-114 bg-white rounded-lg flex items-center justify-center p-8">
+          <SvgIcon name="icon-products" class="text-gray-400 w-full h-full object-contain" />
+        </div>
 
+        <!-- Right column -->
+        <div class="w-1/2 flex flex-col gap-4">
           <!-- Product Info -->
-          <div class="w-2/3">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">{{ productName }}</h1>
-            <p class="text-xl text-gray-600 mb-4">{{ categoryName }}</p>
-
-            <!-- Description -->
-            <div v-if="productDescription" class="mb-6">
-              <h3 class="text-lg font-semibold text-gray-700 mb-2">Description</h3>
-              <p class="text-gray-600">{{ productDescription }}</p>
-            </div>
+          <div class="bg-white rounded-lg p-5">
+            <h1 class="text-2xl font-semibold text-gray-800 mb-1">{{ productName }}</h1>
+            <p class="text-lg text-gray-500 mb-5">{{ categoryName }}</p>
 
             <!-- Pricing Information -->
-            <div class="bg-gray-50 p-4 rounded-lg mb-4">
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <span class="text-sm text-gray-600">Original Price:</span>
-                  <p class="text-lg line-through text-gray-400">
-                    {{ formatPrice(currentItem.originalPrice) }}
-                  </p>
-                </div>
-                <div>
-                  <span class="text-sm text-gray-600">Sale Price:</span>
-                  <p class="text-2xl font-bold text-green-700">
-                    {{ formatPrice(currentItem.sellingPrice) }}
-                  </p>
-                </div>
-                <div>
-                  <span class="text-sm text-gray-600">Discount:</span>
-                  <p class="text-lg font-semibold text-red-600">
-                    {{ calculateDiscount(currentItem.originalPrice, currentItem.sellingPrice) }}
-                  </p>
-                </div>
-                <div>
-                  <span class="text-sm text-gray-600">Available Units:</span>
-                  <p class="text-lg font-semibold text-gray-800">
-                    {{ currentItem.quantityAvailable }} units
-                  </p>
-                </div>
-              </div>
+            <div class="mb-5">
+              <PriceBlock
+                :original-price="currentItem.originalPrice"
+                :selling-price="currentItem.sellingPrice"
+              />
             </div>
 
             <!-- Expiry Information -->
-            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-              <div class="flex justify-between items-center">
-                <div>
-                  <span class="text-sm text-gray-600 font-semibold">Expires:</span>
-                  <p class="text-lg text-green-700 font-semibold">
-                    {{ formatDate(currentItem.expiryDate) }}
-                  </p>
-                </div>
-                <div class="flex items-center gap-3">
-                  <span class="bg-green-700 text-white text-sm px-3 py-1.5 rounded font-semibold">
-                    {{ calculateDaysUntil(currentItem.expiryDate) }}
-                  </span>
-                  <div
-                    class="text-sm px-4 py-2 rounded-full font-semibold"
-                    :class="{
-                      'bg-green-700 text-white': getAvailability(currentItem) === 'available',
-                      'bg-yellow-500 text-black': getAvailability(currentItem) === 'limited',
-                      'bg-red-600 text-white': getAvailability(currentItem) === 'out of stock',
-                    }"
-                  >
-                    {{ getAvailability(currentItem) }}
-                  </div>
-                </div>
-              </div>
+            <div class="mb-3">
+              <ExpiryBadge :expiry-date="currentItem.expiryDate" size="lg" />
             </div>
 
-            <!-- Other Inventory Items Dropdown (if multiple items exist in same supermarket) -->
-            <div v-if="otherInventoryItems.length > 0" class="mb-4">
+            <!-- Batch selector -->
+            <div v-if="otherInventoryItems.length > 0" class="mb-3">
               <label class="block text-sm font-semibold text-gray-700 mb-2">
-                Other batches of this product at {{ supermarketName }}:
+                Other batches at {{ supermarketName }}:
               </label>
-              <select
+              <DropdownSelect
                 v-model="selectedInventoryItemId"
+                :options="batchOptions"
+                min-width="100%"
                 @change="onInventoryItemChange"
-                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-600 focus:border-green-600"
-              >
-                <option v-for="item in allSupermarketItems" :key="item.id" :value="item.id">
-                  Batch - Expires: {{ formatDate(item.expiryDate) }} -
-                  {{ item.quantityAvailable }} units - {{ formatPrice(item.sellingPrice) }}
-                </option>
-              </select>
+              />
             </div>
 
-            <!-- Add to Cart Button -->
-            <div class="mt-6">
-              <button
-                v-if="
-                  currentItem &&
-                  currentItem.status === 'AVAILABLE' &&
-                  currentItem.quantityAvailable > 0
-                "
-                @click="addToCart"
-                :disabled="isInCart"
-                class="w-full py-3 px-6 rounded-lg font-semibold text-lg transition"
-                :class="
-                  isInCart
-                    ? 'bg-gray-400 text-white cursor-not-allowed'
-                    : 'bg-green-600 text-white hover:bg-green-700 cursor-pointer'
-                "
+            <!-- Units left -->
+            <p class="mb-2.5 text-sm text-gray-600">
+              {{ currentItem.quantityAvailable }} units left
+            </p>
+
+            <!-- Add to cart Button -->
+            <div>
+              <div
+                v-if="getAvailability(currentItem) !== 'out of stock'"
+                class="flex items-stretch gap-3"
               >
-                {{ isInCart ? '✓ Added to Cart' : 'Add to Cart' }}
-              </button>
+                <QuantityCounter v-model="quantity" :max="currentItem.quantityAvailable" />
+                <button
+                  @click="addToCart"
+                  :disabled="isInCart"
+                  class="flex-1 py-3 px-6 rounded-[11px] font-bold transition"
+                  :class="
+                    isInCart
+                      ? 'bg-gray-400 text-white cursor-not-allowed'
+                      : 'bg-green-700 text-white hover:bg-green-800 cursor-pointer'
+                  "
+                >
+                  <span class="flex items-center justify-center gap-2">
+                    <SvgIcon
+                      :name="
+                        isInCart ? 'icon-check-circle-outline' : 'icon-shopping-basket-add-outline'
+                      "
+                      class="w-6 h-6"
+                    />
+                    {{ isInCart ? 'Added to cart' : 'Add to cart' }}
+                  </span>
+                </button>
+              </div>
               <div
                 v-else
-                class="w-full py-3 px-6 rounded-lg font-semibold text-lg bg-gray-300 text-gray-600 text-center"
+                class="w-full py-3 px-6 rounded-[11px] font-semibold bg-gray-300 text-gray-600 text-center"
               >
                 Not Available
               </div>
             </div>
           </div>
+
+          <!-- View all products -->
+          <div class="bg-white rounded-[12px]">
+            <NuxtLink
+              :to="`/supermarkets/${currentItem.supermarketId}`"
+              class="group w-full flex items-center justify-between px-5 py-3 text-sm text-gray-600 hover:text-green-700 transition"
+            >
+              <span
+                >View all products at <span class="font-semibold">{{ supermarketName }}</span></span
+              >
+              <SvgIcon
+                name="icon-chevron-right"
+                class="w-3.5 h-3.5 text-gray-400 group-hover:text-green-700 transition"
+              />
+            </NuxtLink>
+          </div>
         </div>
       </div>
 
-      <!-- Supermarket Information -->
-      <div class="bg-white p-6 rounded-xl shadow mb-6">
-        <h2 class="text-2xl font-bold mb-4">Available at {{ supermarketName }}</h2>
-        <button
-          @click="navigateToSupermarket(currentItem.supermarketId)"
-          class="btn bg-green-600 text-white hover:bg-green-700"
-        >
-          View all products at this supermarket
-        </button>
+      <!-- Description -->
+      <div v-if="productDescription" class="bg-white rounded-lg p-6 mb-6">
+        <h3 class="font-semibold uppercase tracking-wide mb-2">Description</h3>
+        <p class="text-gray-600 text-sm">{{ productDescription }}</p>
       </div>
 
       <!-- Other Locations in the same city (if product available at other supermarkets) -->
-      <div v-if="otherLocations.length > 0" class="bg-white p-6 rounded-xl shadow mb-6">
-        <h2 class="text-2xl font-bold mb-4">
+      <div v-if="otherLocations.length > 0" class="bg-white p-6 rounded-lg mb-6">
+        <h2 class="text-2xl font-semibold mb-4">
           Also available at {{ otherLocationsTotal }} other location(s) in this city
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div
+          <NuxtLink
             v-for="location in otherLocations"
             :key="location.supermarketId"
-            class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer"
-            @click="navigateToProductAtSupermarket(location.supermarketId)"
+            :to="`/supermarkets/${location.supermarketId}/products/${productMasterId}`"
+            class="block border border-gray-200 rounded-lg p-4 hover:shadow-md transition"
           >
             <h3 class="text-lg font-semibold text-gray-800 mb-2">
               {{ location.supermarketName }}
@@ -170,32 +153,27 @@
                 {{ formatDate(location.earliestExpiry) }}
               </p>
             </div>
-          </div>
+          </NuxtLink>
         </div>
 
         <!-- Load more -->
-        <div v-if="otherLocationsHasNext" class="text-center mt-4">
-          <button
+        <div v-if="otherLocationsHasNext">
+          <ShowMoreButton
+            :remaining="otherLocationsTotal - otherLocations.length"
+            :show-remaining="false"
+            :loading="loadingMoreLocations"
+            label="Load more locations"
             @click="loadMoreLocations"
-            :disabled="loadingMoreLocations"
-            class="btn bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-          >
-            {{ loadingMoreLocations ? 'Loading...' : 'Load more locations' }}
-          </button>
-          <p class="text-sm text-gray-500 mt-2">
+          />
+          <p class="text-sm text-gray-500 mt-2 text-center">
             Showing {{ otherLocations.length }} of {{ otherLocationsTotal }}
           </p>
         </div>
       </div>
-
-      <!-- Back Button -->
-      <div class="text-center">
-        <button @click="goBack" class="btn bg-gray-500 text-white hover:bg-gray-600">← Back</button>
-      </div>
     </div>
 
     <!-- No Data State -->
-    <div v-else class="text-center py-12 bg-white rounded-lg shadow">
+    <div v-else class="text-center py-12 bg-white rounded-lg">
       <p class="text-gray-500 text-lg">No product information available</p>
     </div>
   </div>
@@ -205,9 +183,17 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
+import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
+import PriceBlock from '~/components/ui/PriceBlock.vue'
+import DropdownSelect from '~/components/ui/DropdownSelect.vue'
+import ShowMoreButton from '~/components/ui/ShowMoreButton.vue'
+import QuantityCounter from '~/components/ui/QuantityCounter.vue'
 import { useRoute, useRouter } from 'vue-router'
 import ProductInventoryService from '~/services/product-inventory.service'
 import { useSupermarketStore } from '~/stores/supermarket'
+import { formatDate } from '~/utils/date'
+import { formatPrice } from '~/utils/price'
+import { getAvailability } from '~/utils/product'
 import { useCartStore } from '~/stores/cart'
 import { useAuthStore } from '~/stores/auth'
 
@@ -225,6 +211,7 @@ const batchId = route.query.batch
 // Batches of this product at the current supermarket (drives header + batch dropdown)
 const supermarketItems = ref([])
 const selectedInventoryItemId = ref(null)
+const quantity = ref(1)
 const loading = ref(true)
 const error = ref(null)
 
@@ -333,18 +320,17 @@ const supermarketName = computed(() => {
   return currentItem.value?.supermarketName || 'Unknown Supermarket'
 })
 
-// All batches of this product at the current supermarket (already scoped by the API)
-const allSupermarketItems = computed(() => supermarketItems.value)
-
 // Other batches at this supermarket (excluding the selected one)
 const otherInventoryItems = computed(() => {
-  return allSupermarketItems.value.filter((item) => item.id !== selectedInventoryItemId.value)
+  return supermarketItems.value.filter((item) => item.id !== selectedInventoryItemId.value)
 })
 
-// Shared helpers
-import { formatDate, calculateDaysUntil } from '~/utils/date'
-import { calculateDiscount, formatPrice } from '~/utils/price'
-import { getAvailability } from '~/utils/product'
+const batchOptions = computed(() =>
+  supermarketItems.value.map((item) => ({
+    value: item.id,
+    label: `Expires ${formatDate(item.expiryDate)} · ${item.quantityAvailable} units · ${formatPrice(item.sellingPrice)}`,
+  }))
+)
 
 // Event handlers
 const onInventoryItemChange = () => {
@@ -352,19 +338,6 @@ const onInventoryItemChange = () => {
   router.replace({
     query: { batch: selectedInventoryItemId.value },
   })
-}
-
-// Navigation
-const navigateToSupermarket = (supermarketIdParam) => {
-  router.push(`/supermarkets/${supermarketIdParam}`)
-}
-
-const navigateToProductAtSupermarket = (supermarketIdParam) => {
-  router.push(`/supermarkets/${supermarketIdParam}/products/${productMasterId}`)
-}
-
-const goBack = () => {
-  router.back()
 }
 
 // Cart functionality
@@ -394,6 +367,7 @@ const addToCart = () => {
       sellingPrice: currentItem.value.sellingPrice,
       expiryDate: currentItem.value.expiryDate,
       quantityAvailable: currentItem.value.quantityAvailable,
+      quantity: quantity.value,
     })
   }
 }
@@ -405,6 +379,8 @@ watch(
     if (newItem && newItem.supermarketId) {
       supermarketStore.setSelectedSupermarketId(newItem.supermarketId)
     }
+    // Reset the quantity when switching batches (max available changes)
+    quantity.value = 1
   },
   { immediate: true }
 )
@@ -414,10 +390,3 @@ onMounted(() => {
   fetchProductInventory()
 })
 </script>
-
-<style scoped>
-@reference "tailwindcss";
-.btn {
-  @apply px-4 py-2 rounded-lg border transition;
-}
-</style>
