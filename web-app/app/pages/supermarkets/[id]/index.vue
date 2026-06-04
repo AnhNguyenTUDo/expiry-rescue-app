@@ -26,19 +26,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import SupermarketService from '~/services/supermarket.service'
-import ProductCategoryService from '~/services/product-category.service'
-import SupermarketDetailHeader from '~/components/supermarket/product-list/SupermarketDetailHeader.vue'
-import ProductCategorySection from '~/components/supermarket/product-list/ProductCategorySection.vue'
 import CategorySelector from '~/components/supermarket/product-list/product-filter/CategorySelector.vue'
 import ProductListFilters from '~/components/supermarket/product-list/product-filter/ProductListFilters.vue'
-import LoadingState from '~/components/ui/LoadingState.vue'
+import ProductCategorySection from '~/components/supermarket/product-list/ProductCategorySection.vue'
+import SupermarketDetailHeader from '~/components/supermarket/product-list/SupermarketDetailHeader.vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
-
-// Shared helpers
-import { formatDate, calculateDaysUntil } from '~/utils/date'
+import LoadingState from '~/components/ui/LoadingState.vue'
+import ProductCategoryService from '~/services/product-category.service'
+import SupermarketService from '~/services/supermarket.service'
+import { calculateDaysUntil, formatDate } from '~/utils/date'
 import { calculateAvailability, isEndingSoon } from '~/utils/product'
 
 const route = useRoute()

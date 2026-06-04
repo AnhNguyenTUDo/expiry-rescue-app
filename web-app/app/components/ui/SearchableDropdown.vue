@@ -5,7 +5,6 @@
       type="button"
       :aria-disabled="isDisabled"
       :data-tooltip-target="tooltip && isDisabled ? tooltipId : undefined"
-      @click="toggle"
       class="inline-flex items-center justify-between gap-2 rounded-[10px] border px-3 py-1.5 text-sm transition-colors duration-150"
       :class="
         isDisabled
@@ -13,6 +12,7 @@
           : 'cursor-pointer border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:border-green-600 focus:ring-1 focus:ring-green-600 focus:outline-none'
       "
       :style="{ minWidth: minWidth }"
+      @click="toggle"
     >
       <span>{{ selectedLabel }}</span>
       <SvgIcon
@@ -42,8 +42,8 @@
         <div v-if="showSearch" class="rounded-t-lg border-b border-gray-200 bg-white p-2">
           <label for="dropdown-search-input" class="sr-only">Search</label>
           <input
-            ref="searchInputRef"
             id="dropdown-search-input"
+            ref="searchInputRef"
             v-model="query"
             type="text"
             class="block w-full rounded border border-gray-300 bg-gray-50 px-2.5 py-1.5 text-sm text-gray-700 placeholder-gray-400 focus:border-green-600 focus:ring-green-600"
@@ -81,9 +81,9 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick } from 'vue'
-import { useClickOutside } from '~/composables/useClickOutside'
+import { computed, nextTick, ref, watch } from 'vue'
 import Tooltip from '@/components/ui/Tooltip.vue'
+import { useClickOutside } from '~/composables/useClickOutside'
 
 const props = defineProps({
   modelValue: {

@@ -3,9 +3,9 @@
     <!-- Trigger button -->
     <button
       type="button"
-      @click="isOpen = !isOpen"
       class="inline-flex cursor-pointer items-center justify-between gap-2 rounded-[10px] border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 focus:border-green-600 focus:ring-1 focus:ring-green-600 focus:outline-none"
       :style="{ minWidth: minWidth }"
+      @click="isOpen = !isOpen"
     >
       <span>{{ selectedLabel }} </span>
       <SvgIcon
@@ -32,13 +32,13 @@
           <li v-for="option in options" :key="option.value">
             <button
               type="button"
-              @click="select(option.value)"
               class="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-left transition-colors hover:bg-gray-100 hover:text-gray-900"
               :class="
                 modelValue === option.value
                   ? 'bg-green-50 font-semibold text-green-700 hover:bg-green-100'
                   : ''
               "
+              @click="select(option.value)"
             >
               {{ option.label }}
             </button>
@@ -50,7 +50,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useClickOutside } from '~/composables/useClickOutside'
 
 const props = defineProps({

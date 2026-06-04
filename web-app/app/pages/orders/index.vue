@@ -36,8 +36,8 @@
         <!-- Clear Filters -->
         <button
           v-if="searchQuery || statusFilter"
-          @click="clearFilters"
           class="cursor-pointer rounded-lg bg-gray-200 px-4 py-2 text-gray-700 transition hover:bg-gray-300"
+          @click="clearFilters"
         >
           Clear Filters
         </button>
@@ -101,11 +101,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useOrderStore } from '~/stores/order'
-import { useAuthStore } from '~/stores/auth'
-import LoadingState from '~/components/ui/LoadingState.vue'
+import { onMounted, ref } from 'vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
+import LoadingState from '~/components/ui/LoadingState.vue'
+import { useOrderStore } from '~/stores/order'
+import { formatDateTime } from '~/utils/date'
+import { getStatusClass, getStatusLabel } from '~/utils/order'
+import { formatPrice } from '~/utils/price'
 
 const orderStore = useOrderStore()
 
@@ -132,11 +134,6 @@ const clearFilters = async () => {
   statusFilter.value = ''
   await orderStore.fetchUserOrders()
 }
-
-// Shared helpers
-import { formatDateTime } from '~/utils/date'
-import { formatPrice } from '~/utils/price'
-import { getStatusClass, getStatusLabel } from '~/utils/order'
 
 // Use formatDateTime for orders (includes time)
 const formatDate = formatDateTime

@@ -28,8 +28,8 @@
             <!-- City row (toggle) -->
             <button
               type="button"
-              @click="toggle(city.id)"
               class="flex w-full cursor-pointer items-center justify-between rounded-lg px-3 py-2.5 transition-colors duration-150 hover:bg-gray-50"
+              @click="toggle(city.id)"
             >
               <span class="font-medium text-gray-800">{{ city.name }}</span>
               <SvgIcon
@@ -44,13 +44,13 @@
               <button
                 v-if="!searchQuery.trim()"
                 type="button"
-                @click="select(city, 'all', 'All Districts')"
                 :class="
                   isSelected(city.id, 'all')
                     ? 'border-green-500 bg-green-50 font-medium text-green-700'
                     : 'border-gray-300 text-gray-700 hover:border-green-500 hover:bg-green-50'
                 "
                 class="cursor-pointer rounded-[10px] border px-3 py-1.5 text-sm transition-colors duration-150"
+                @click="select(city, 'all', 'All Districts')"
               >
                 All Districts
               </button>
@@ -58,13 +58,13 @@
                 v-for="district in city.filteredDistricts"
                 :key="district.id"
                 type="button"
-                @click="select(city, district.id, district.name)"
                 :class="
                   isSelected(city.id, district.id)
                     ? 'border-green-500 bg-green-50 font-medium text-green-700'
                     : 'border-gray-300 text-gray-700 hover:border-green-500 hover:bg-green-50'
                 "
                 class="cursor-pointer rounded-[10px] border px-3 py-1.5 text-sm transition-colors duration-150"
+                @click="select(city, district.id, district.name)"
               >
                 {{ district.name }}
               </button>
@@ -80,13 +80,13 @@
           <button
             type="button"
             :disabled="!selection"
-            @click="confirm"
             class="rounded-[10px] px-4 py-2 text-sm font-medium text-white transition-colors duration-150"
             :class="
               selection
                 ? 'cursor-pointer bg-green-600 hover:bg-green-700'
                 : 'cursor-not-allowed bg-gray-300'
             "
+            @click="confirm"
           >
             Confirm
           </button>
@@ -97,9 +97,9 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
-import CityService from '@/services/city.service'
+import { computed, ref, watch } from 'vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
+import CityService from '@/services/city.service'
 
 const props = defineProps({
   show: { type: Boolean, required: true },

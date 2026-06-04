@@ -112,8 +112,8 @@
           <h2 class="text-xl font-semibold text-white">Authentication Failed</h2>
           <p class="text-sm text-red-300/80">{{ errorMessage }}</p>
           <button
-            @click="goToLogin"
             class="mt-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-6 py-3 font-medium text-white shadow-lg shadow-emerald-500/30 transition-all duration-300 hover:-translate-y-0.5 hover:from-emerald-400 hover:to-cyan-400"
+            @click="goToLogin"
           >
             Try Again
           </button>
@@ -124,7 +124,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '~/stores/auth'
 

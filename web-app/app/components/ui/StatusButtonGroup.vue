@@ -6,11 +6,11 @@
 
       <button
         type="button"
-        @click="select(option.value)"
         :class="[
           'cursor-pointer rounded-[9px] px-3 py-2 text-sm leading-none transition-all duration-150',
           modelValue === option.value ? 'bg-white text-gray-900 shadow-sm' : 'hover:text-gray-900',
         ]"
+        @click="select(option.value)"
       >
         {{ option.label }}
       </button>

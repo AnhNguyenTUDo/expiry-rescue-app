@@ -45,6 +45,8 @@
 </template>
 
 <script setup>
+import { formatHour, isSupermarketOpen } from '~/utils/supermarket'
+
 const props = defineProps({
   supermarket: {
     type: Object,
@@ -65,8 +67,6 @@ const storeBgClass = (name) => {
   if (!name) return STORE_COLORS[0]
   return STORE_COLORS[name.charCodeAt(0) % STORE_COLORS.length]
 }
-
-import { isSupermarketOpen, formatHour } from '~/utils/supermarket'
 
 const open = computed(() => {
   return isSupermarketOpen(props.supermarket.operatingHoursFrom, props.supermarket.operatingHoursTo)
