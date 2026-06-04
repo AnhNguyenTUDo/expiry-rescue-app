@@ -33,8 +33,8 @@
 
 <script setup>
 import { computed } from 'vue'
-import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
 import AvailabilityTag from '~/components/ui/AvailabilityTag.vue'
+import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
 import PriceTag from '~/components/ui/PriceTag.vue'
 
 const props = defineProps({

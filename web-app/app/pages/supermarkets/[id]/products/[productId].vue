@@ -71,7 +71,6 @@
               >
                 <QuantityCounter v-model="quantity" :max="currentItem.quantityAvailable" />
                 <button
-                  @click="addToCart"
                   :disabled="isInCart"
                   class="flex-1 rounded-[11px] px-6 py-3 font-bold transition"
                   :class="
@@ -79,6 +78,7 @@
                       ? 'cursor-not-allowed bg-gray-400 text-white'
                       : 'cursor-pointer bg-green-700 text-white hover:bg-green-800'
                   "
+                  @click="addToCart"
                 >
                   <span class="flex items-center justify-center gap-2">
                     <SvgIcon
@@ -180,22 +180,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
-import LoadingState from '~/components/ui/LoadingState.vue'
+import { computed, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import DropdownSelect from '~/components/ui/DropdownSelect.vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
+import LoadingState from '~/components/ui/LoadingState.vue'
 import PriceBlock from '~/components/ui/PriceBlock.vue'
-import DropdownSelect from '~/components/ui/DropdownSelect.vue'
-import ShowMoreButton from '~/components/ui/ShowMoreButton.vue'
 import QuantityCounter from '~/components/ui/QuantityCounter.vue'
-import { useRoute, useRouter } from 'vue-router'
+import ShowMoreButton from '~/components/ui/ShowMoreButton.vue'
 import ProductInventoryService from '~/services/product-inventory.service'
+import { useAuthStore } from '~/stores/auth'
+import { useCartStore } from '~/stores/cart'
 import { useSupermarketStore } from '~/stores/supermarket'
 import { formatDate } from '~/utils/date'
 import { formatPrice } from '~/utils/price'
 import { getAvailability } from '~/utils/product'
-import { useCartStore } from '~/stores/cart'
-import { useAuthStore } from '~/stores/auth'
 
 const route = useRoute()
 const router = useRouter()

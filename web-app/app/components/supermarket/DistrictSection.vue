@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import SupermarketCard from '@/components/supermarket/SupermarketCard.vue'
 
 const props = defineProps({

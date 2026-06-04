@@ -5,10 +5,10 @@
 
     <!-- Filters -->
     <SupermarketFilter
-      v-model:cityId="selectedCityId"
-      v-model:districtId="selectedDistrictId"
+      v-model:city-id="selectedCityId"
+      v-model:district-id="selectedDistrictId"
       v-model:status="selectedStatus"
-      v-model:searchQuery="searchQuery"
+      v-model:search-query="searchQuery"
       :city-options="cityOptions"
       :district-options="districtOptions"
       @city-change="onCityChange"
@@ -24,16 +24,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import SupermarketFilter from '@/components/supermarket/SupermarketFilter.vue'
-import LoadingState from '@/components/ui/LoadingState.vue'
-import ErrorAlert from '@/components/ui/ErrorAlert.vue'
-import SupermarketSection from '@/components/supermarket/SupermarketSection.vue'
 import CitySelectionModal from '@/components/home/CitySelectionModal.vue'
-import SupermarketService from '~/services/supermarket.service'
+import SupermarketFilter from '@/components/supermarket/SupermarketFilter.vue'
+import SupermarketSection from '@/components/supermarket/SupermarketSection.vue'
+import ErrorAlert from '@/components/ui/ErrorAlert.vue'
+import LoadingState from '@/components/ui/LoadingState.vue'
 import CityService from '~/services/city.service'
+import SupermarketService from '~/services/supermarket.service'
 import { useSupermarketStore } from '~/stores/supermarket'
+import { isSupermarketOpen } from '~/utils/supermarket'
 
 const route = useRoute()
 const router = useRouter()
@@ -75,9 +76,6 @@ const currentDistrictLabel = computed(() => {
   const d = districts.value.find((d) => d.id === selectedDistrictId.value)
   return d ? d.name : ''
 })
-
-// Helpers
-import { isSupermarketOpen } from '~/utils/supermarket'
 const isOpen = isSupermarketOpen
 
 const passesStatusFilter = (supermarket) => {

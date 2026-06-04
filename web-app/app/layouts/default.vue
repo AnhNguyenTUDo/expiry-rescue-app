@@ -19,14 +19,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useSupermarketStore } from '~/stores/supermarket'
-import { useCartStore } from '~/stores/cart'
-import { useAuthStore } from '~/stores/auth'
-import AppHeader from '~/components/layout/AppHeader.vue'
+import { onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import AppFooter from '~/components/layout/AppFooter.vue'
+import AppHeader from '~/components/layout/AppHeader.vue'
 import ScrollToTopButton from '~/components/ui/ScrollToTopButton.vue'
+import { useAuthStore } from '~/stores/auth'
+import { useCartStore } from '~/stores/cart'
+import { useSupermarketStore } from '~/stores/supermarket'
 
 const router = useRouter()
 const route = useRoute()

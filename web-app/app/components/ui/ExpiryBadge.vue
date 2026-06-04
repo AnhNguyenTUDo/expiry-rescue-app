@@ -19,7 +19,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { formatDate, calculateDaysUntil } from '~/utils/date'
+import { calculateDaysUntil, formatDate } from '~/utils/date'
 
 const props = defineProps({
   expiryDate: {

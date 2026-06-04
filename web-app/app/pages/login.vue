@@ -73,9 +73,9 @@
         <div class="space-y-4">
           <!-- Google Login -->
           <button
-            @click="handleGoogleLogin"
             :disabled="isLoading"
             class="group relative flex w-full cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-xl bg-white px-6 py-4 font-medium text-gray-700 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-gray-50 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+            @click="handleGoogleLogin"
           >
             <div
               class="absolute inset-0 translate-x-[-100%] bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-red-500/0 transition-transform duration-700 group-hover:translate-x-[100%]"
@@ -139,15 +139,15 @@
         </div>
 
         <!-- Email Login Form (Placeholder) -->
-        <form @submit.prevent="handleEmailLogin" class="space-y-4">
+        <form class="space-y-4" @submit.prevent="handleEmailLogin">
           <div>
             <label for="email" class="mb-2 block text-sm font-medium text-emerald-200/80"
               >Email</label
             >
             <input
-              type="email"
               id="email"
               v-model="email"
+              type="email"
               placeholder="Enter your email"
               class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 transition-all duration-300 focus:border-transparent focus:ring-2 focus:ring-emerald-400/50 focus:outline-none"
             />
@@ -157,9 +157,9 @@
               >Password</label
             >
             <input
-              type="password"
               id="password"
               v-model="password"
+              type="password"
               placeholder="Enter your password"
               class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 transition-all duration-300 focus:border-transparent focus:ring-2 focus:ring-emerald-400/50 focus:outline-none"
             />

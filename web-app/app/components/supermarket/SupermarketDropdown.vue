@@ -2,8 +2,8 @@
   <div ref="dropdownRef" class="relative">
     <button
       type="button"
-      @click="isOpen = !isOpen"
       class="flex w-full min-w-full cursor-pointer items-center justify-between rounded-[10px] border border-gray-300 bg-transparent px-4 py-1.5 pr-10 text-gray-700 hover:bg-gray-200 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-none"
+      @click="isOpen = !isOpen"
     >
       <span class="truncate">
         {{ selectedLabel }}
@@ -31,9 +31,9 @@
           <li v-for="supermarket in sortedSupermarkets" :key="supermarket.id">
             <button
               type="button"
-              @click="select(supermarket.id)"
               class="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2.5 text-left transition-colors hover:bg-gray-100"
               :class="modelValue === supermarket.id ? 'bg-green-50 hover:bg-green-100' : ''"
+              @click="select(supermarket.id)"
             >
               <div class="min-w-0 flex-1">
                 <p
@@ -56,7 +56,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useClickOutside } from '~/composables/useClickOutside'
 
 const props = defineProps({

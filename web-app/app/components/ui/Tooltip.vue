@@ -12,8 +12,8 @@
 </template>
 
 <script setup>
-import { nextTick, onMounted, watch } from 'vue'
 import { initTooltips } from 'flowbite'
+import { nextTick, onMounted, watch } from 'vue'
 const props = defineProps({
   id: {
     type: String,

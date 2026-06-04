@@ -10,8 +10,8 @@
       <div class="mb-4 flex items-center justify-between">
         <p class="text-gray-600">Total Items: {{ inventories.length }}</p>
         <button
-          @click="fetchInventories"
           class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          @click="fetchInventories"
         >
           Refresh
         </button>
@@ -80,10 +80,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useProductInventory } from '~/composables/useProductInventory'
-import LoadingState from '~/components/ui/LoadingState.vue'
+import { onMounted, ref } from 'vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
+import LoadingState from '~/components/ui/LoadingState.vue'
+import { useProductInventory } from '~/composables/useProductInventory'
+import { formatDate } from '~/utils/date'
 
 // State
 const inventories = ref([])
@@ -106,7 +107,6 @@ const fetchInventories = async () => {
     // Extract data from API response
     if (response.success && response.data) {
       inventories.value = response.data
-      console.log('Inventories loaded:', inventories.value)
     } else {
       inventories.value = []
     }
@@ -117,9 +117,6 @@ const fetchInventories = async () => {
     loading.value = false
   }
 }
-
-// Shared helpers
-import { formatDate } from '~/utils/date'
 
 // Fetch inventories on component mount
 onMounted(() => {

@@ -43,14 +43,14 @@
         <div class="mt-4 flex gap-3">
           <button
             v-if="order.status === 'CONFIRMED'"
-            @click="handleCancelOrder"
             class="cursor-pointer rounded-lg bg-red-600 px-6 py-2 text-white transition hover:bg-red-700"
+            @click="handleCancelOrder"
           >
             Cancel Order
           </button>
           <button
-            @click="handleDeleteOrder"
             class="cursor-pointer rounded-lg bg-gray-500 px-6 py-2 text-white transition hover:bg-gray-600"
+            @click="handleDeleteOrder"
           >
             Delete Order
           </button>
@@ -95,12 +95,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useOrderStore } from '~/stores/order'
-import { useAuthStore } from '~/stores/auth'
-import LoadingState from '~/components/ui/LoadingState.vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
+import LoadingState from '~/components/ui/LoadingState.vue'
+import { useOrderStore } from '~/stores/order'
+import { formatDateTime } from '~/utils/date'
+import { getStatusClass, getStatusLabel } from '~/utils/order'
+import { formatPrice } from '~/utils/price'
 
 const route = useRoute()
 const router = useRouter()
@@ -140,11 +142,6 @@ const handleDeleteOrder = async () => {
     alert('Failed to delete order')
   }
 }
-
-// Shared helpers
-import { formatDateTime } from '~/utils/date'
-import { formatPrice } from '~/utils/price'
-import { getStatusClass, getStatusLabel } from '~/utils/order'
 
 // Use formatDateTime for orders (includes time)
 const formatDate = formatDateTime

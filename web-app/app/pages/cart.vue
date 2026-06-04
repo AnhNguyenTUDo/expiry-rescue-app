@@ -23,8 +23,8 @@
           <input
             type="checkbox"
             :checked="cartStore.allSelected"
-            @change="cartStore.toggleSelectAll()"
             class="h-5 w-5 rounded border-gray-300 text-green-600 focus:ring-green-500"
+            @change="cartStore.toggleSelectAll()"
           />
           <span class="ml-3 text-lg font-semibold text-gray-700">Select All</span>
         </label>
@@ -54,8 +54,8 @@
                 <input
                   type="checkbox"
                   :checked="item.selected"
-                  @change="cartStore.toggleItemSelection(item.inventoryId)"
                   class="h-5 w-5 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                  @change="cartStore.toggleItemSelection(item.inventoryId)"
                 />
               </div>
 
@@ -92,9 +92,9 @@
                 <div class="flex items-center gap-4">
                   <div class="flex items-center rounded-lg border border-gray-300">
                     <button
-                      @click="cartStore.decreaseQuantity(item.inventoryId)"
                       :disabled="item.quantity <= 1"
                       class="cursor-pointer px-3 py-1 text-lg font-bold hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+                      @click="cartStore.decreaseQuantity(item.inventoryId)"
                     >
                       −
                     </button>
@@ -102,9 +102,9 @@
                       {{ item.quantity }}
                     </span>
                     <button
-                      @click="cartStore.increaseQuantity(item.inventoryId)"
                       :disabled="item.quantity >= item.quantityAvailable"
                       class="cursor-pointer px-3 py-1 text-lg font-bold hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+                      @click="cartStore.increaseQuantity(item.inventoryId)"
                     >
                       +
                     </button>
@@ -121,8 +121,8 @@
                   {{ formatPrice(item.sellingPrice * item.quantity) }}
                 </div>
                 <button
-                  @click="cartStore.removeFromCart(item.inventoryId)"
                   class="cursor-pointer text-sm font-semibold text-red-600 hover:text-red-800"
+                  @click="cartStore.removeFromCart(item.inventoryId)"
                 >
                   Delete
                 </button>
@@ -154,13 +154,12 @@
 
         <div class="flex gap-3">
           <button
-            @click="cartStore.clearCart()"
             class="flex-1 cursor-pointer rounded-lg bg-gray-500 px-6 py-3 text-lg font-semibold text-white transition hover:bg-gray-600"
+            @click="cartStore.clearCart()"
           >
             Clear Cart
           </button>
           <button
-            @click="handleCheckout"
             :disabled="cartStore.selectedItems.length === 0"
             class="flex-1 rounded-lg px-6 py-3 text-lg font-semibold transition"
             :class="
@@ -168,6 +167,7 @@
                 ? 'cursor-not-allowed bg-gray-300 text-gray-500'
                 : 'cursor-pointer bg-green-600 text-white hover:bg-green-700'
             "
+            @click="handleCheckout"
           >
             Checkout ({{ cartStore.selectedItems.length }})
           </button>
@@ -178,9 +178,11 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
 import { useCartStore } from '~/stores/cart'
 import { useOrderStore } from '~/stores/order'
-import { useRouter } from 'vue-router'
+import { calculateDaysUntil, formatDate } from '~/utils/date'
+import { calculateDiscount, formatPrice } from '~/utils/price'
 
 const cartStore = useCartStore()
 const orderStore = useOrderStore()
@@ -220,10 +222,6 @@ const handleCheckout = async () => {
     alert('Failed to create order. Please try again.')
   }
 }
-
-// Shared helpers
-import { formatDate, calculateDaysUntil } from '~/utils/date'
-import { calculateDiscount, formatPrice } from '~/utils/price'
 </script>
 
 <style scoped>

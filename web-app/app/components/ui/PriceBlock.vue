@@ -10,7 +10,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { formatPrice, calculateDiscount } from '~/utils/price'
+import { calculateDiscount, formatPrice } from '~/utils/price'
 
 const props = defineProps({
   originalPrice: {

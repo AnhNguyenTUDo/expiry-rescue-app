@@ -1,9 +1,9 @@
 <template>
-  <div class="relative" ref="dropdownRef">
+  <div ref="dropdownRef" class="relative">
     <button
-      @click="isOpen = !isOpen"
       class="group flex cursor-pointer items-center justify-center rounded-[10px] border border-gray-300 px-2 py-1.5 text-gray-500 transition hover:bg-gray-200"
       title="Account"
+      @click="isOpen = !isOpen"
     >
       <SvgIcon name="icon-user" class="h-6 w-6" />
     </button>
@@ -88,8 +88,8 @@
             </li>
             <li>
               <button
-                @click="handleLogout"
                 class="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-left text-red-600 transition-colors hover:bg-red-50"
+                @click="handleLogout"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -117,8 +117,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useClickOutside } from '~/composables/useClickOutside'
 import { useRouter } from 'vue-router'
+import { useClickOutside } from '~/composables/useClickOutside'
 import { useAuthStore } from '~/stores/auth'
 
 const isOpen = ref(false)

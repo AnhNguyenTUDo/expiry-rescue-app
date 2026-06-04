@@ -6,12 +6,12 @@
         <SvgIcon name="icon-search" class="h-4 w-4 text-gray-500" />
       </div>
       <input
-        :value="modelValue"
-        @input="emit('update:modelValue', $event.target.value)"
-        type="search"
         id="supermarket-search"
+        :value="modelValue"
+        type="search"
         class="block w-full rounded-[10px] border border-gray-300 bg-white px-3 py-1.5 ps-9 text-sm text-gray-900 shadow-xs placeholder:text-gray-400 focus:border-green-600 focus:ring-green-600"
         :placeholder="placeholder"
+        @input="emit('update:modelValue', $event.target.value)"
       />
     </div>
   </form>

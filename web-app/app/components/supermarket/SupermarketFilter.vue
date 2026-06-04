@@ -23,8 +23,8 @@
       <button
         v-if="isFiltered"
         type="button"
-        @click="reset"
         class="flex cursor-pointer items-center gap-1 text-sm text-[#bc4747] transition-all duration-300 hover:scale-104 hover:text-red-700"
+        @click="reset"
       >
         <SvgIcon name="icon-reset" class="h-3.5 w-3.5" />
         Reset Filter
@@ -37,8 +37,8 @@
 import { computed } from 'vue'
 import DropdownSelect from '@/components/ui/DropdownSelect.vue'
 import SearchableDropdown from '@/components/ui/SearchableDropdown.vue'
-import StatusButtonGroup from '@/components/ui/StatusButtonGroup.vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
+import StatusButtonGroup from '@/components/ui/StatusButtonGroup.vue'
 
 defineProps({
   cityOptions: {
@@ -53,10 +53,10 @@ defineProps({
 
 const emit = defineEmits(['city-change', 'district-change'])
 
-const cityId = defineModel('cityId')
-const districtId = defineModel('districtId')
-const status = defineModel('status')
-const searchQuery = defineModel('searchQuery')
+const cityId = defineModel('cityId', { type: String, default: 'all' })
+const districtId = defineModel('districtId', { type: String, default: 'all' })
+const status = defineModel('status', { type: String, default: 'all' })
+const searchQuery = defineModel('searchQuery', { type: String, default: '' })
 
 const isFiltered = computed(
   () =>

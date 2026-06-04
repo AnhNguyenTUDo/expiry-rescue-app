@@ -49,8 +49,8 @@
 </template>
 
 <script setup>
-import SupermarketDropdown from '~/components/supermarket/SupermarketDropdown.vue'
 import ProfileDropdown from '~/components/layout/ProfileDropdown.vue'
+import SupermarketDropdown from '~/components/supermarket/SupermarketDropdown.vue'
 
 defineProps({
   supermarkets: {
@@ -70,7 +70,7 @@ defineProps({
 const emit = defineEmits(['supermarket-change'])
 
 // Two-way binding for the dropdown selection
-const selectedSupermarket = defineModel('selectedSupermarket')
+const selectedSupermarket = defineModel('selectedSupermarket', { type: Object, default: null })
 
 // Controlled by pages that want to transfer the shadow (e.g. supermarket details)
 const headerShadow = useHeaderShadow()
