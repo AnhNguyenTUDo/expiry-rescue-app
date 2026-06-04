@@ -102,9 +102,9 @@
 
           <!-- View all products -->
           <div class="bg-white rounded-[12px]">
-            <button
-              @click="navigateToSupermarket(currentItem.supermarketId)"
-              class="group w-full flex items-center justify-between px-5 py-3 text-sm text-gray-600 hover:text-green-700 transition cursor-pointer"
+            <NuxtLink
+              :to="`/supermarkets/${currentItem.supermarketId}`"
+              class="group w-full flex items-center justify-between px-5 py-3 text-sm text-gray-600 hover:text-green-700 transition"
             >
               <span
                 >View all products at <span class="font-semibold">{{ supermarketName }}</span></span
@@ -113,7 +113,7 @@
                 name="icon-chevron-right"
                 class="w-3.5 h-3.5 text-gray-400 group-hover:text-green-700 transition"
               />
-            </button>
+            </NuxtLink>
           </div>
         </div>
       </div>
@@ -340,11 +340,6 @@ const onInventoryItemChange = () => {
   router.replace({
     query: { batch: selectedInventoryItemId.value },
   })
-}
-
-// Navigation
-const navigateToSupermarket = (supermarketIdParam) => {
-  router.push(`/supermarkets/${supermarketIdParam}`)
 }
 
 // Cart functionality
