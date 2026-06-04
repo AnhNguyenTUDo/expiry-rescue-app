@@ -1,9 +1,9 @@
 <template>
   <div
-    class="rounded-[7px] font-semibold flex items-center gap-1.5"
-    :class="[config.class, size === 'lg' ? 'text-sm px-2.5 py-1.5' : 'text-xs px-2.5 py-1.5']"
+    class="flex items-center gap-1.5 rounded-[7px] font-semibold"
+    :class="[config.class, size === 'lg' ? 'px-2.5 py-1.5 text-sm' : 'px-2.5 py-1.5 text-xs']"
   >
-    <SvgIcon :name="config.icon" :class="size === 'lg' ? 'w-4 h-4' : 'w-3 h-3'" />
+    <SvgIcon :name="config.icon" :class="size === 'lg' ? 'h-4 w-4' : 'h-3 w-3'" />
     {{ label }}
   </div>
 </template>

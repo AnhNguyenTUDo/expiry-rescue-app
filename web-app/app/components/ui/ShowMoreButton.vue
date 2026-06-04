@@ -1,9 +1,9 @@
 <template>
-  <div class="text-center mt-4">
+  <div class="mt-4 text-center">
     <button
       type="button"
       :disabled="loading"
-      class="px-6 py-2 rounded-xl border-2 border-gray-600 text-gray-600 font-medium transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-md cursor-pointer active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0"
+      class="cursor-pointer rounded-xl border-2 border-gray-600 px-6 py-2 font-medium text-gray-600 transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60"
       @click="emit('click')"
     >
       {{ loading ? 'Loading...' : label }}

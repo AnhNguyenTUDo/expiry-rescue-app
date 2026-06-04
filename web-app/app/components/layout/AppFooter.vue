@@ -1,28 +1,28 @@
 <template>
-  <footer class="bg-gray-900 text-white py-7 mt-10">
-    <div class="max-w-7xl mx-auto px-4 flex flex-wrap justify-between items-center gap-6">
+  <footer class="mt-10 bg-gray-900 py-7 text-white">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-6 px-4">
       <div>
-        <h3 class="text-xl font-semibold mb-2">Expiry Rescue</h3>
+        <h3 class="mb-2 text-xl font-semibold">Expiry Rescue</h3>
         <p>Reducing food waste, saving money</p>
       </div>
-      <div class="flex gap-3 flex-wrap items-center">
+      <div class="flex flex-wrap items-center gap-3">
         <button
-          class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20"
+          class="flex items-center rounded-lg border border-white/40 px-4 py-1.5 text-white transition hover:bg-white/20"
         >
           Contact Us
         </button>
         <button
-          class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20"
+          class="flex items-center rounded-lg border border-white/40 px-4 py-1.5 text-white transition hover:bg-white/20"
         >
           Help Center
         </button>
         <button
-          class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20"
+          class="flex items-center rounded-lg border border-white/40 px-4 py-1.5 text-white transition hover:bg-white/20"
         >
           Terms of Service
         </button>
         <button
-          class="px-4 py-1.5 flex items-center rounded-lg border transition border-white/40 text-white hover:bg-white/20"
+          class="flex items-center rounded-lg border border-white/40 px-4 py-1.5 text-white transition hover:bg-white/20"
         >
           Privacy Policy
         </button>

@@ -3,13 +3,13 @@
     class="flex items-center gap-1.5"
     :class="size === 'lg' ? 'text-base text-gray-700' : 'text-sm text-gray-600'"
   >
-    <SvgIcon :name="tier.icon" :class="[tier.iconClass, size === 'lg' ? 'w-7 h-7' : 'w-6 h-6']" />
+    <SvgIcon :name="tier.icon" :class="[tier.iconClass, size === 'lg' ? 'h-7 w-7' : 'h-6 w-6']" />
     <span>Expires {{ dateLabel }}</span>
     <span
-      class="rounded-sm font-semibold border"
+      class="rounded-sm border font-semibold"
       :class="[
         tier.pillClass,
-        size === 'lg' ? 'text-sm px-2.5 py-0.5' : 'text-xs px-2 pt-px pb-0.75',
+        size === 'lg' ? 'px-2.5 py-0.5 text-sm' : 'px-2 pt-px pb-0.75 text-xs',
       ]"
     >
       {{ daysLabel }}

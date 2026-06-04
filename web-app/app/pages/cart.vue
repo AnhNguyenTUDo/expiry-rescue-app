@@ -1,15 +1,15 @@
 <template>
-  <div class="max-w-7xl mx-auto">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">Shopping Cart</h1>
+  <div class="mx-auto max-w-7xl">
+    <h1 class="mb-6 text-3xl font-bold text-gray-800">Shopping Cart</h1>
 
     <!-- Empty Cart State -->
     <div
       v-if="cartStore.cartItems.length === 0"
-      class="bg-white rounded-xl shadow p-12 text-center"
+      class="rounded-xl bg-white p-12 text-center shadow"
     >
-      <div class="text-6xl mb-4">🛒</div>
-      <h2 class="text-2xl font-semibold text-gray-700 mb-2">Your cart is empty</h2>
-      <p class="text-gray-500 mb-6">Add products to your cart to get started!</p>
+      <div class="mb-4 text-6xl">🛒</div>
+      <h2 class="mb-2 text-2xl font-semibold text-gray-700">Your cart is empty</h2>
+      <p class="mb-6 text-gray-500">Add products to your cart to get started!</p>
       <NuxtLink to="/" class="btn bg-green-600 text-white hover:bg-green-700">
         Browse Products
       </NuxtLink>
@@ -18,13 +18,13 @@
     <!-- Cart Items -->
     <div v-else class="space-y-6">
       <!-- Select All -->
-      <div class="bg-white rounded-xl shadow p-4">
-        <label class="flex items-center cursor-pointer">
+      <div class="rounded-xl bg-white p-4 shadow">
+        <label class="flex cursor-pointer items-center">
           <input
             type="checkbox"
             :checked="cartStore.allSelected"
             @change="cartStore.toggleSelectAll()"
-            class="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500"
+            class="h-5 w-5 rounded border-gray-300 text-green-600 focus:ring-green-500"
           />
           <span class="ml-3 text-lg font-semibold text-gray-700">Select All</span>
         </label>
@@ -34,10 +34,10 @@
       <div
         v-for="group in cartStore.itemsBySupermarket"
         :key="group.supermarketId"
-        class="bg-white rounded-xl shadow"
+        class="rounded-xl bg-white shadow"
       >
         <!-- Supermarket Header -->
-        <div class="bg-green-600 text-white p-4 rounded-t-xl">
+        <div class="rounded-t-xl bg-green-600 p-4 text-white">
           <h2 class="text-xl font-bold">{{ group.supermarketName }}</h2>
         </div>
 
@@ -46,7 +46,7 @@
           <div
             v-for="item in group.items"
             :key="item.inventoryId"
-            class="p-4 hover:bg-gray-50 transition"
+            class="p-4 transition hover:bg-gray-50"
           >
             <div class="flex items-start gap-4">
               <!-- Checkbox -->
@@ -55,56 +55,56 @@
                   type="checkbox"
                   :checked="item.selected"
                   @change="cartStore.toggleItemSelection(item.inventoryId)"
-                  class="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                  class="h-5 w-5 rounded border-gray-300 text-green-600 focus:ring-green-500"
                 />
               </div>
 
               <!-- Product Info -->
               <div class="flex-1">
                 <h3 class="text-lg font-semibold text-gray-800">{{ item.productName }}</h3>
-                <p class="text-sm text-gray-500 mb-2">{{ item.categoryName }}</p>
+                <p class="mb-2 text-sm text-gray-500">{{ item.categoryName }}</p>
 
                 <!-- Expiry Info -->
-                <div class="flex items-center gap-2 text-sm mb-2">
+                <div class="mb-2 flex items-center gap-2 text-sm">
                   <span class="text-gray-600">Expires:</span>
-                  <span class="text-green-700 font-semibold">
+                  <span class="font-semibold text-green-700">
                     {{ formatDate(item.expiryDate) }}
                   </span>
-                  <span class="bg-green-700 text-white text-xs px-2 py-0.5 rounded">
+                  <span class="rounded bg-green-700 px-2 py-0.5 text-xs text-white">
                     {{ calculateDaysUntil(item.expiryDate) }}
                   </span>
                 </div>
 
                 <!-- Price -->
-                <div class="flex items-center gap-3 mb-3">
+                <div class="mb-3 flex items-center gap-3">
                   <span class="text-2xl font-bold text-green-700">
                     {{ formatPrice(item.sellingPrice) }}
                   </span>
-                  <span class="text-sm line-through text-gray-400">
+                  <span class="text-sm text-gray-400 line-through">
                     {{ formatPrice(item.originalPrice) }}
                   </span>
-                  <span class="bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">
+                  <span class="rounded bg-red-600 px-2 py-1 text-xs font-semibold text-white">
                     {{ calculateDiscount(item.originalPrice, item.sellingPrice) }}
                   </span>
                 </div>
 
                 <!-- Quantity Controls -->
                 <div class="flex items-center gap-4">
-                  <div class="flex items-center border border-gray-300 rounded-lg">
+                  <div class="flex items-center rounded-lg border border-gray-300">
                     <button
                       @click="cartStore.decreaseQuantity(item.inventoryId)"
                       :disabled="item.quantity <= 1"
-                      class="px-3 py-1 text-lg font-bold hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      class="cursor-pointer px-3 py-1 text-lg font-bold hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       −
                     </button>
-                    <span class="px-4 py-1 font-semibold min-w-[50px] text-center">
+                    <span class="min-w-[50px] px-4 py-1 text-center font-semibold">
                       {{ item.quantity }}
                     </span>
                     <button
                       @click="cartStore.increaseQuantity(item.inventoryId)"
                       :disabled="item.quantity >= item.quantityAvailable"
-                      class="px-3 py-1 text-lg font-bold hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      class="cursor-pointer px-3 py-1 text-lg font-bold hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       +
                     </button>
@@ -116,13 +116,13 @@
               </div>
 
               <!-- Subtotal and Delete -->
-              <div class="text-right space-y-2">
+              <div class="space-y-2 text-right">
                 <div class="text-xl font-bold text-gray-800">
                   {{ formatPrice(item.sellingPrice * item.quantity) }}
                 </div>
                 <button
                   @click="cartStore.removeFromCart(item.inventoryId)"
-                  class="text-red-600 hover:text-red-800 text-sm font-semibold cursor-pointer"
+                  class="cursor-pointer text-sm font-semibold text-red-600 hover:text-red-800"
                 >
                   Delete
                 </button>
@@ -133,8 +133,8 @@
       </div>
 
       <!-- Cart Summary -->
-      <div class="bg-white rounded-xl shadow p-6 sticky bottom-4">
-        <div class="flex justify-between items-center mb-4">
+      <div class="sticky bottom-4 rounded-xl bg-white p-6 shadow">
+        <div class="mb-4 flex items-center justify-between">
           <div>
             <div class="text-sm text-gray-600">
               Total Items: <span class="font-semibold">{{ cartStore.totalSelectedItems }}</span>
@@ -145,7 +145,7 @@
             </div>
           </div>
           <div class="text-right">
-            <div class="text-sm text-gray-600 mb-1">Total Price:</div>
+            <div class="mb-1 text-sm text-gray-600">Total Price:</div>
             <div class="text-3xl font-bold text-green-700">
               {{ formatPrice(cartStore.totalPrice) }}
             </div>
@@ -155,18 +155,18 @@
         <div class="flex gap-3">
           <button
             @click="cartStore.clearCart()"
-            class="flex-1 py-3 px-6 rounded-lg font-semibold text-lg bg-gray-500 text-white hover:bg-gray-600 transition cursor-pointer"
+            class="flex-1 cursor-pointer rounded-lg bg-gray-500 px-6 py-3 text-lg font-semibold text-white transition hover:bg-gray-600"
           >
             Clear Cart
           </button>
           <button
             @click="handleCheckout"
             :disabled="cartStore.selectedItems.length === 0"
-            class="flex-1 py-3 px-6 rounded-lg font-semibold text-lg transition"
+            class="flex-1 rounded-lg px-6 py-3 text-lg font-semibold transition"
             :class="
               cartStore.selectedItems.length === 0
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-green-600 text-white hover:bg-green-700 cursor-pointer'
+                ? 'cursor-not-allowed bg-gray-300 text-gray-500'
+                : 'cursor-pointer bg-green-600 text-white hover:bg-green-700'
             "
           >
             Checkout ({{ cartStore.selectedItems.length }})
@@ -229,6 +229,6 @@ import { calculateDiscount, formatPrice } from '~/utils/price'
 <style scoped>
 @reference "tailwindcss";
 .btn {
-  @apply px-6 py-3 rounded-lg font-semibold transition;
+  @apply rounded-lg px-6 py-3 font-semibold transition;
 }
 </style>

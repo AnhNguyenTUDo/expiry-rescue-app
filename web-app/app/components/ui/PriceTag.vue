@@ -1,10 +1,10 @@
 <template>
-  <div class="flex justify-between items-center">
+  <div class="flex items-center justify-between">
     <div class="flex flex-col">
-      <span class="line-through text-gray-400 text-sm">{{ formatPrice(originalPrice) }}</span>
-      <span class="text-green-700 font-bold text-2xl">{{ formatPrice(sellingPrice) }}</span>
+      <span class="text-sm text-gray-400 line-through">{{ formatPrice(originalPrice) }}</span>
+      <span class="text-2xl font-bold text-green-700">{{ formatPrice(sellingPrice) }}</span>
     </div>
-    <span class="bg-green-700 text-white text-sm font-semibold px-3 py-1 rounded-md">
+    <span class="rounded-md bg-green-700 px-3 py-1 text-sm font-semibold text-white">
       {{ discount }}
     </span>
   </div>

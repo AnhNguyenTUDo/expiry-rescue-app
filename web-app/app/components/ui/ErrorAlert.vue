@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+  <div class="rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
     <p><strong>Error:</strong> {{ error }}</p>
     <button v-if="hasRetry" @click="emit('retry')" class="mt-2 text-sm underline">Retry</button>
     <slot />

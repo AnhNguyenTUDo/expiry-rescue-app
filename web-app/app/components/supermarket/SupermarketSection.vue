@@ -5,7 +5,7 @@
       <!-- City heading -->
       <h2
         v-if="section.type === 'city-heading'"
-        class="text-2xl font-bold mb-4 pb-2 border-b-2 border-emerald-500 inline-block"
+        class="mb-4 inline-block border-b-2 border-emerald-500 pb-2 text-2xl font-bold"
         :class="section.isFirst ? '' : 'mt-8'"
       >
         {{ section.label }}

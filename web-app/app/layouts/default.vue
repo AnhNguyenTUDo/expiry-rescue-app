@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-gray-100 text-gray-800 overflow-x-clip">
+  <div class="flex min-h-screen flex-col overflow-x-clip bg-gray-100 text-gray-800">
     <AppHeader
       v-model:selected-supermarket="selectedSupermarket"
       :supermarkets="supermarketStore.supermarkets"
@@ -9,7 +9,7 @@
     />
 
     <!-- Page Content -->
-    <div class="max-w-7xl mx-auto mt-5 px-4 flex-grow w-full">
+    <div class="mx-auto mt-5 w-full max-w-7xl flex-grow px-4">
       <slot />
     </div>
 

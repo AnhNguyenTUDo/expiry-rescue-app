@@ -2,14 +2,14 @@
   <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center">
     <div class="absolute inset-0 bg-gray-900/50"></div>
 
-    <div class="relative p-4 w-full max-w-lg max-h-[90vh] flex flex-col">
+    <div class="relative flex max-h-[90vh] w-full max-w-lg flex-col p-4">
       <div
-        class="relative bg-white border border-gray-200 rounded-lg shadow-sm p-4 md:p-6 flex flex-col min-h-0"
+        class="relative flex min-h-0 flex-col rounded-lg border border-gray-200 bg-white p-4 shadow-sm md:p-6"
       >
         <!-- Header -->
-        <div class="border-b border-gray-200 pb-4 mb-4 shrink-0">
+        <div class="mb-4 shrink-0 border-b border-gray-200 pb-4">
           <h3 class="text-lg font-semibold text-gray-900">Welcome to Expiry Rescue</h3>
-          <p class="text-sm text-gray-500 mt-1">
+          <p class="mt-1 text-sm text-gray-500">
             Please select the area you'd like to browse stores in.
           </p>
         </div>
@@ -20,37 +20,37 @@
         </div>
 
         <!-- City + district list -->
-        <div v-if="loading" class="h-64 flex items-center justify-center text-gray-500 text-sm">
+        <div v-if="loading" class="flex h-64 items-center justify-center text-sm text-gray-500">
           Loading...
         </div>
-        <div v-else class="overflow-y-auto space-y-1 h-64">
+        <div v-else class="h-64 space-y-1 overflow-y-auto">
           <template v-for="city in filteredCities" :key="city.id">
             <!-- City row (toggle) -->
             <button
               type="button"
               @click="toggle(city.id)"
-              class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
+              class="flex w-full cursor-pointer items-center justify-between rounded-lg px-3 py-2.5 transition-colors duration-150 hover:bg-gray-50"
             >
               <span class="font-medium text-gray-800">{{ city.name }}</span>
               <SvgIcon
                 name="icon-chevron-down"
-                class="w-3 h-3 text-gray-500 transition-transform duration-200"
+                class="h-3 w-3 text-gray-500 transition-transform duration-200"
                 :class="isExpanded(city.id) ? 'rotate-180' : ''"
               />
             </button>
 
             <!-- Districts -->
-            <div v-show="isExpanded(city.id)" class="px-3 pb-3 pt-1 flex flex-wrap gap-2">
+            <div v-show="isExpanded(city.id)" class="flex flex-wrap gap-2 px-3 pt-1 pb-3">
               <button
                 v-if="!searchQuery.trim()"
                 type="button"
                 @click="select(city, 'all', 'All Districts')"
                 :class="
                   isSelected(city.id, 'all')
-                    ? 'border-green-500 bg-green-50 text-green-700 font-medium'
+                    ? 'border-green-500 bg-green-50 font-medium text-green-700'
                     : 'border-gray-300 text-gray-700 hover:border-green-500 hover:bg-green-50'
                 "
-                class="px-3 py-1.5 rounded-[10px] border text-sm transition-colors duration-150 cursor-pointer"
+                class="cursor-pointer rounded-[10px] border px-3 py-1.5 text-sm transition-colors duration-150"
               >
                 All Districts
               </button>
@@ -61,31 +61,31 @@
                 @click="select(city, district.id, district.name)"
                 :class="
                   isSelected(city.id, district.id)
-                    ? 'border-green-500 bg-green-50 text-green-700 font-medium'
+                    ? 'border-green-500 bg-green-50 font-medium text-green-700'
                     : 'border-gray-300 text-gray-700 hover:border-green-500 hover:bg-green-50'
                 "
-                class="px-3 py-1.5 rounded-[10px] border text-sm transition-colors duration-150 cursor-pointer"
+                class="cursor-pointer rounded-[10px] border px-3 py-1.5 text-sm transition-colors duration-150"
               >
                 {{ district.name }}
               </button>
             </div>
           </template>
-          <p v-if="filteredCities.length === 0" class="text-center text-gray-400 text-sm py-6">
+          <p v-if="filteredCities.length === 0" class="py-6 text-center text-sm text-gray-400">
             No results found.
           </p>
         </div>
 
         <!-- Footer -->
-        <div class="flex justify-end border-t border-gray-200 pt-4 mt-4 shrink-0">
+        <div class="mt-4 flex shrink-0 justify-end border-t border-gray-200 pt-4">
           <button
             type="button"
             :disabled="!selection"
             @click="confirm"
-            class="px-4 py-2 rounded-[10px] text-sm font-medium text-white transition-colors duration-150"
+            class="rounded-[10px] px-4 py-2 text-sm font-medium text-white transition-colors duration-150"
             :class="
               selection
-                ? 'bg-green-600 hover:bg-green-700 cursor-pointer'
-                : 'bg-gray-300 cursor-not-allowed'
+                ? 'cursor-pointer bg-green-600 hover:bg-green-700'
+                : 'cursor-not-allowed bg-gray-300'
             "
           >
             Confirm

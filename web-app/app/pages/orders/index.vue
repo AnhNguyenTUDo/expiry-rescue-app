@@ -1,31 +1,31 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-6">
+    <div class="mb-6 flex items-center justify-between">
       <h1 class="text-3xl font-bold text-gray-800">My Orders</h1>
       <NuxtLink
         to="/"
-        class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition cursor-pointer"
+        class="cursor-pointer rounded-lg bg-green-600 px-6 py-3 text-white transition hover:bg-green-700"
       >
         + New Order
       </NuxtLink>
     </div>
 
     <!-- Search & Filters -->
-    <div class="bg-white p-4 rounded-lg shadow mb-6">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="mb-6 rounded-lg bg-white p-4 shadow">
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
         <!-- Search -->
         <input
           v-model="searchQuery"
           type="text"
           placeholder="🔍 Search order number, product, or supermarket..."
-          class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+          class="rounded-lg border border-gray-300 px-4 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500"
           @input="handleSearch"
         />
 
         <!-- Status Filter -->
         <select
           v-model="statusFilter"
-          class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 cursor-pointer"
+          class="cursor-pointer rounded-lg border border-gray-300 px-4 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500"
           @change="handleSearch"
         >
           <option value="">All Statuses</option>
@@ -37,7 +37,7 @@
         <button
           v-if="searchQuery || statusFilter"
           @click="clearFilters"
-          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition cursor-pointer"
+          class="cursor-pointer rounded-lg bg-gray-200 px-4 py-2 text-gray-700 transition hover:bg-gray-300"
         >
           Clear Filters
         </button>
@@ -52,23 +52,23 @@
       <div
         v-for="order in orderStore.orders"
         :key="order.id"
-        class="bg-white p-6 rounded-lg shadow hover:shadow-md transition cursor-pointer"
+        class="cursor-pointer rounded-lg bg-white p-6 shadow transition hover:shadow-md"
         @click="navigateTo(`/orders/${order.id}`)"
       >
-        <div class="flex justify-between items-start mb-2">
+        <div class="mb-2 flex items-start justify-between">
           <div>
             <h3 class="text-lg font-semibold text-gray-800">Order #{{ order.orderNumber }}</h3>
-            <p class="text-gray-600 text-sm">{{ formatDate(order.createdAt) }}</p>
+            <p class="text-sm text-gray-600">{{ formatDate(order.createdAt) }}</p>
           </div>
           <span
-            class="px-3 py-1 rounded-full text-sm font-semibold"
+            class="rounded-full px-3 py-1 text-sm font-semibold"
             :class="getStatusClass(order.status)"
           >
             {{ getStatusLabel(order.status) }}
           </span>
         </div>
 
-        <div class="flex justify-between items-center text-sm text-gray-600 mb-2">
+        <div class="mb-2 flex items-center justify-between text-sm text-gray-600">
           <span>{{ order.itemCount }} {{ order.itemCount === 1 ? 'item' : 'items' }}</span>
         </div>
 
@@ -79,20 +79,20 @@
     </div>
 
     <!-- Empty State -->
-    <div v-else class="text-center py-12 bg-white rounded-lg shadow">
-      <p class="text-gray-500 text-lg mb-4">
+    <div v-else class="rounded-lg bg-white py-12 text-center shadow">
+      <p class="mb-4 text-lg text-gray-500">
         {{
           searchQuery || statusFilter
             ? 'No orders found matching your filters'
             : "You haven't placed any orders yet"
         }}
       </p>
-      <p v-if="!searchQuery && !statusFilter" class="text-sm text-gray-400 mb-6">
+      <p v-if="!searchQuery && !statusFilter" class="mb-6 text-sm text-gray-400">
         Browse expiring products at discounted prices!
       </p>
       <NuxtLink
         to="/"
-        class="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition cursor-pointer"
+        class="inline-block cursor-pointer rounded-lg bg-green-600 px-6 py-3 text-white transition hover:bg-green-700"
       >
         🛒 Start Shopping
       </NuxtLink>

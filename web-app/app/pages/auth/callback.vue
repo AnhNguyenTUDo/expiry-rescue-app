@@ -1,25 +1,25 @@
 <template>
   <div
-    class="min-h-screen bg-gradient-to-br from-emerald-900 via-teal-800 to-cyan-900 flex items-center justify-center p-4"
+    class="flex min-h-screen items-center justify-center bg-gradient-to-br from-emerald-900 via-teal-800 to-cyan-900 p-4"
   >
     <!-- Background decorations -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="pointer-events-none absolute inset-0 overflow-hidden">
       <div
-        class="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl"
+        class="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-emerald-500/20 blur-3xl"
       ></div>
       <div
-        class="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500/20 rounded-full blur-3xl"
+        class="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-cyan-500/20 blur-3xl"
       ></div>
     </div>
 
     <!-- Callback Processing Card -->
     <div class="relative w-full max-w-md">
       <div
-        class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 text-center"
+        class="rounded-3xl border border-white/20 bg-white/10 p-8 text-center shadow-2xl backdrop-blur-xl"
       >
         <!-- Logo -->
         <div
-          class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-400 to-cyan-400 rounded-2xl mb-6 shadow-lg shadow-emerald-500/30"
+          class="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-cyan-400 shadow-lg shadow-emerald-500/30"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -41,7 +41,7 @@
         <div v-if="isProcessing" class="space-y-4">
           <div class="flex justify-center">
             <svg
-              class="animate-spin h-10 w-10 text-emerald-400"
+              class="h-10 w-10 animate-spin text-emerald-400"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -62,13 +62,13 @@
             </svg>
           </div>
           <h2 class="text-xl font-semibold text-white">Completing sign in...</h2>
-          <p class="text-emerald-200/70 text-sm">Please wait while we verify your account</p>
+          <p class="text-sm text-emerald-200/70">Please wait while we verify your account</p>
         </div>
 
         <!-- Success State -->
         <div v-else-if="isSuccess" class="space-y-4">
           <div class="flex justify-center">
-            <div class="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center">
+            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-8 w-8 text-emerald-400"
@@ -86,13 +86,13 @@
             </div>
           </div>
           <h2 class="text-xl font-semibold text-white">Welcome back!</h2>
-          <p class="text-emerald-200/70 text-sm">Redirecting you to the app...</p>
+          <p class="text-sm text-emerald-200/70">Redirecting you to the app...</p>
         </div>
 
         <!-- Error State -->
         <div v-else-if="errorMessage" class="space-y-4">
           <div class="flex justify-center">
-            <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center">
+            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-red-500/20">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-8 w-8 text-red-400"
@@ -110,10 +110,10 @@
             </div>
           </div>
           <h2 class="text-xl font-semibold text-white">Authentication Failed</h2>
-          <p class="text-red-300/80 text-sm">{{ errorMessage }}</p>
+          <p class="text-sm text-red-300/80">{{ errorMessage }}</p>
           <button
             @click="goToLogin"
-            class="mt-4 px-6 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 rounded-xl text-white font-medium shadow-lg shadow-emerald-500/30 transition-all duration-300 hover:-translate-y-0.5"
+            class="mt-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-6 py-3 font-medium text-white shadow-lg shadow-emerald-500/30 transition-all duration-300 hover:-translate-y-0.5 hover:from-emerald-400 hover:to-cyan-400"
           >
             Try Again
           </button>

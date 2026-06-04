@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center mb-4 gap-3">
+  <div class="mb-4 flex items-center gap-3">
     <ProductSortDropdown v-model="sortModel" />
   </div>
 </template>

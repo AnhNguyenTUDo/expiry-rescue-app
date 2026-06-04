@@ -4,17 +4,17 @@
     <button
       type="button"
       :disabled="model <= min"
-      class="px-3 flex items-center justify-center border border-r-0 border-gray-300 rounded-l-[11px] text-gray-600 hover:bg-gray-100 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition"
+      class="flex cursor-pointer items-center justify-center rounded-l-[11px] border border-r-0 border-gray-300 px-3 text-gray-600 transition hover:bg-gray-100 focus:outline-none disabled:cursor-not-allowed disabled:opacity-40"
       @click="decrement"
     >
-      <SvgIcon name="icon-minus" class="w-5 h-5" />
+      <SvgIcon name="icon-minus" class="h-5 w-5" />
     </button>
 
     <input
       type="text"
       inputmode="numeric"
       :value="model"
-      class="w-12 text-center font-semibold text-gray-700 bg-transparent border border-gray-300 focus:outline-none"
+      class="w-12 border border-gray-300 bg-transparent text-center font-semibold text-gray-700 focus:outline-none"
       @input="onInput"
       @blur="onBlur"
     />
@@ -23,10 +23,10 @@
     <button
       type="button"
       :disabled="model >= max"
-      class="px-3 flex items-center justify-center border border-l-0 border-gray-300 rounded-r-[11px] text-gray-600 hover:bg-gray-100 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition"
+      class="flex cursor-pointer items-center justify-center rounded-r-[11px] border border-l-0 border-gray-300 px-3 text-gray-600 transition hover:bg-gray-100 focus:outline-none disabled:cursor-not-allowed disabled:opacity-40"
       @click="increment"
     >
-      <SvgIcon name="icon-plus" class="w-5 h-5" />
+      <SvgIcon name="icon-plus" class="h-5 w-5" />
     </button>
   </div>
 </template>

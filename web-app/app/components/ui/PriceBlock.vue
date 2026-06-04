@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col gap-1">
-    <span class="text-green-700 font-bold text-2xl">{{ formatPrice(sellingPrice) }}</span>
+    <span class="text-2xl font-bold text-green-700">{{ formatPrice(sellingPrice) }}</span>
     <div class="flex items-center gap-2">
-      <span class="line-through text-gray-400 text-base">{{ formatPrice(originalPrice) }}</span>
-      <span class="text-green-700 text-sm font-semibold">({{ discount }})</span>
+      <span class="text-base text-gray-400 line-through">{{ formatPrice(originalPrice) }}</span>
+      <span class="text-sm font-semibold text-green-700">({{ discount }})</span>
     </div>
   </div>
 </template>

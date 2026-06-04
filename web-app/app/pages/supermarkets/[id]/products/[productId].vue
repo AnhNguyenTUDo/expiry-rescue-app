@@ -4,33 +4,33 @@
     <ErrorAlert v-else-if="error" :error="error" />
 
     <!-- Product Details -->
-    <div v-else-if="currentItem" class="max-w-4xl mx-auto">
+    <div v-else-if="currentItem" class="mx-auto max-w-4xl">
       <!-- Breadcrumb navigation-->
-      <nav class="flex items-center gap-1.5 text-sm text-gray-500 mb-4">
-        <NuxtLink to="/" class="hover:text-green-700 transition">Home</NuxtLink>
+      <nav class="mb-4 flex items-center gap-1.5 text-sm text-gray-500">
+        <NuxtLink to="/" class="transition hover:text-green-700">Home</NuxtLink>
         <span>/</span>
         <NuxtLink
           :to="`/supermarkets/${currentItem.supermarketId}`"
-          class="hover:text-green-700 transition"
+          class="transition hover:text-green-700"
           >{{ supermarketName }}</NuxtLink
         >
         <span>/</span>
-        <span class="text-gray-800 font-medium truncate">{{ productName }}</span>
+        <span class="truncate font-medium text-gray-800">{{ productName }}</span>
       </nav>
 
       <!-- Product Header with Image-->
-      <div class="flex gap-4 mb-6">
+      <div class="mb-6 flex gap-4">
         <!-- Product image-->
-        <div class="w-1/2 h-114 bg-white rounded-lg flex items-center justify-center p-8">
-          <SvgIcon name="icon-products" class="text-gray-400 w-full h-full object-contain" />
+        <div class="flex h-114 w-1/2 items-center justify-center rounded-lg bg-white p-8">
+          <SvgIcon name="icon-products" class="h-full w-full object-contain text-gray-400" />
         </div>
 
         <!-- Right column -->
-        <div class="w-1/2 flex flex-col gap-4">
+        <div class="flex w-1/2 flex-col gap-4">
           <!-- Product Info -->
-          <div class="bg-white rounded-lg p-5">
-            <h1 class="text-2xl font-semibold text-gray-800 mb-1">{{ productName }}</h1>
-            <p class="text-lg text-gray-500 mb-5">{{ categoryName }}</p>
+          <div class="rounded-lg bg-white p-5">
+            <h1 class="mb-1 text-2xl font-semibold text-gray-800">{{ productName }}</h1>
+            <p class="mb-5 text-lg text-gray-500">{{ categoryName }}</p>
 
             <!-- Pricing Information -->
             <div class="mb-5">
@@ -47,7 +47,7 @@
 
             <!-- Batch selector -->
             <div v-if="otherInventoryItems.length > 0" class="mb-3">
-              <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <label class="mb-2 block text-sm font-semibold text-gray-700">
                 Other batches at {{ supermarketName }}:
               </label>
               <DropdownSelect
@@ -73,11 +73,11 @@
                 <button
                   @click="addToCart"
                   :disabled="isInCart"
-                  class="flex-1 py-3 px-6 rounded-[11px] font-bold transition"
+                  class="flex-1 rounded-[11px] px-6 py-3 font-bold transition"
                   :class="
                     isInCart
-                      ? 'bg-gray-400 text-white cursor-not-allowed'
-                      : 'bg-green-700 text-white hover:bg-green-800 cursor-pointer'
+                      ? 'cursor-not-allowed bg-gray-400 text-white'
+                      : 'cursor-pointer bg-green-700 text-white hover:bg-green-800'
                   "
                 >
                   <span class="flex items-center justify-center gap-2">
@@ -85,7 +85,7 @@
                       :name="
                         isInCart ? 'icon-check-circle-outline' : 'icon-shopping-basket-add-outline'
                       "
-                      class="w-6 h-6"
+                      class="h-6 w-6"
                     />
                     {{ isInCart ? 'Added to cart' : 'Add to cart' }}
                   </span>
@@ -93,7 +93,7 @@
               </div>
               <div
                 v-else
-                class="w-full py-3 px-6 rounded-[11px] font-semibold bg-gray-300 text-gray-600 text-center"
+                class="w-full rounded-[11px] bg-gray-300 px-6 py-3 text-center font-semibold text-gray-600"
               >
                 Not Available
               </div>
@@ -101,17 +101,17 @@
           </div>
 
           <!-- View all products -->
-          <div class="bg-white rounded-[12px]">
+          <div class="rounded-[12px] bg-white">
             <NuxtLink
               :to="`/supermarkets/${currentItem.supermarketId}`"
-              class="group w-full flex items-center justify-between px-5 py-3 text-sm text-gray-600 hover:text-green-700 transition"
+              class="group flex w-full items-center justify-between px-5 py-3 text-sm text-gray-600 transition hover:text-green-700"
             >
               <span
                 >View all products at <span class="font-semibold">{{ supermarketName }}</span></span
               >
               <SvgIcon
                 name="icon-chevron-right"
-                class="w-3.5 h-3.5 text-gray-400 group-hover:text-green-700 transition"
+                class="h-3.5 w-3.5 text-gray-400 transition group-hover:text-green-700"
               />
             </NuxtLink>
           </div>
@@ -119,25 +119,25 @@
       </div>
 
       <!-- Description -->
-      <div v-if="productDescription" class="bg-white rounded-lg p-6 mb-6">
-        <h3 class="font-semibold uppercase tracking-wide mb-2">Description</h3>
-        <p class="text-gray-600 text-sm">{{ productDescription }}</p>
+      <div v-if="productDescription" class="mb-6 rounded-lg bg-white p-6">
+        <h3 class="mb-2 font-semibold tracking-wide uppercase">Description</h3>
+        <p class="text-sm text-gray-600">{{ productDescription }}</p>
       </div>
 
       <!-- Other Locations in the same city (if product available at other supermarkets) -->
-      <div v-if="otherLocations.length > 0" class="bg-white p-6 rounded-lg mb-6">
-        <h2 class="text-2xl font-semibold mb-4">
+      <div v-if="otherLocations.length > 0" class="mb-6 rounded-lg bg-white p-6">
+        <h2 class="mb-4 text-2xl font-semibold">
           Also available at {{ otherLocationsTotal }} other location(s) in this city
         </h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <NuxtLink
             v-for="location in otherLocations"
             :key="location.supermarketId"
             :to="`/supermarkets/${location.supermarketId}/products/${productMasterId}`"
-            class="block border border-gray-200 rounded-lg p-4 hover:shadow-md transition"
+            class="block rounded-lg border border-gray-200 p-4 transition hover:shadow-md"
           >
-            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+            <h3 class="mb-2 text-lg font-semibold text-gray-800">
               {{ location.supermarketName }}
             </h3>
             <div class="space-y-1 text-sm">
@@ -165,7 +165,7 @@
             label="Load more locations"
             @click="loadMoreLocations"
           />
-          <p class="text-sm text-gray-500 mt-2 text-center">
+          <p class="mt-2 text-center text-sm text-gray-500">
             Showing {{ otherLocations.length }} of {{ otherLocationsTotal }}
           </p>
         </div>
@@ -173,8 +173,8 @@
     </div>
 
     <!-- No Data State -->
-    <div v-else class="text-center py-12 bg-white rounded-lg">
-      <p class="text-gray-500 text-lg">No product information available</p>
+    <div v-else class="rounded-lg bg-white py-12 text-center">
+      <p class="text-lg text-gray-500">No product information available</p>
     </div>
   </div>
 </template>

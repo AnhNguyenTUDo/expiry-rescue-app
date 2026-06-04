@@ -1,17 +1,17 @@
 <template>
   <div>
-    <h1 class="text-3xl font-bold mb-6">Product Inventory</h1>
+    <h1 class="mb-6 text-3xl font-bold">Product Inventory</h1>
 
     <LoadingState v-if="loading" message="Loading inventories..." />
     <ErrorAlert v-else-if="error" :error="error" class="mb-4" />
 
     <!-- Success State - Display Inventories -->
     <div v-else>
-      <div class="mb-4 flex justify-between items-center">
+      <div class="mb-4 flex items-center justify-between">
         <p class="text-gray-600">Total Items: {{ inventories.length }}</p>
         <button
           @click="fetchInventories"
-          class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+          class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
         >
           Refresh
         </button>
@@ -20,18 +20,18 @@
       <!-- Inventory Grid -->
       <div
         v-if="inventories.length > 0"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+        class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
       >
         <div
           v-for="item in inventories"
           :key="item.id"
-          class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow"
+          class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
         >
-          <div class="flex justify-between items-start mb-2">
+          <div class="mb-2 flex items-start justify-between">
             <h3 class="text-lg font-semibold text-gray-800">{{ item.productName }}</h3>
             <span
               :class="[
-                'px-2 py-1 text-xs rounded-full',
+                'rounded-full px-2 py-1 text-xs',
                 item.status === 'AVAILABLE'
                   ? 'bg-green-100 text-green-800'
                   : 'bg-red-100 text-red-800',
@@ -41,11 +41,11 @@
             </span>
           </div>
 
-          <p class="text-sm text-gray-600 mb-2">
+          <p class="mb-2 text-sm text-gray-600">
             <strong>Supermarket:</strong> {{ item.supermarketName }}
           </p>
 
-          <div class="space-y-1 mb-3">
+          <div class="mb-3 space-y-1">
             <p class="text-sm">
               <span class="text-gray-600">Original Price:</span>
               <span class="font-medium">${{ item.originalPrice }}</span>
@@ -64,7 +64,7 @@
             </p>
           </div>
 
-          <div class="text-xs text-gray-500 pt-2 border-t">
+          <div class="border-t pt-2 text-xs text-gray-500">
             <p>Created: {{ formatDate(item.createdAt) }}</p>
             <p v-if="item.createdByName">By: {{ item.createdByName }}</p>
           </div>
@@ -72,8 +72,8 @@
       </div>
 
       <!-- Empty State -->
-      <div v-else class="text-center py-12 bg-gray-50 rounded-lg">
-        <p class="text-gray-500 text-lg">No inventories found</p>
+      <div v-else class="rounded-lg bg-gray-50 py-12 text-center">
+        <p class="text-lg text-gray-500">No inventories found</p>
       </div>
     </div>
   </div>
