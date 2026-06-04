@@ -13,7 +13,7 @@
     "prettier:check": "prettier --check .",
     "prettier:write": "prettier --write .",
     "format:check": "prettier --check . & eslint .",
-    "prepare": "husky"
+    "prepare": "cd .. && husky web-app/.husky"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.5",
