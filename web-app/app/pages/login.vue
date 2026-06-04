@@ -1,17 +1,17 @@
 <template>
   <div
-    class="min-h-screen bg-gradient-to-br from-emerald-900 via-teal-800 to-cyan-900 flex items-center justify-center p-4"
+    class="flex min-h-screen items-center justify-center bg-gradient-to-br from-emerald-900 via-teal-800 to-cyan-900 p-4"
   >
     <!-- Background decorations -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="pointer-events-none absolute inset-0 overflow-hidden">
       <div
-        class="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl"
+        class="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-emerald-500/20 blur-3xl"
       ></div>
       <div
-        class="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500/20 rounded-full blur-3xl"
+        class="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-cyan-500/20 blur-3xl"
       ></div>
       <div
-        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl"
+        class="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-teal-500/10 blur-3xl"
       ></div>
     </div>
 
@@ -19,12 +19,12 @@
     <div class="relative w-full max-w-md">
       <!-- Glassmorphism card -->
       <div
-        class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 transition-all duration-500 hover:bg-white/15"
+        class="rounded-3xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-xl transition-all duration-500 hover:bg-white/15"
       >
         <!-- Logo and Title -->
-        <div class="text-center mb-8">
+        <div class="mb-8 text-center">
           <div
-            class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-emerald-400 to-cyan-400 rounded-2xl mb-4 shadow-lg shadow-emerald-500/30"
+            class="mb-4 inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-cyan-400 shadow-lg shadow-emerald-500/30"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -41,19 +41,19 @@
               />
             </svg>
           </div>
-          <h1 class="text-3xl font-bold text-white mb-2">Expiry Rescue</h1>
-          <p class="text-emerald-200/80 text-sm">Save food, save money, save the planet</p>
+          <h1 class="mb-2 text-3xl font-bold text-white">Expiry Rescue</h1>
+          <p class="text-sm text-emerald-200/80">Save food, save money, save the planet</p>
         </div>
 
         <!-- Error Message -->
         <div
           v-if="authStore.error"
-          class="mb-6 p-4 bg-red-500/20 border border-red-400/30 rounded-xl backdrop-blur-sm"
+          class="mb-6 rounded-xl border border-red-400/30 bg-red-500/20 p-4 backdrop-blur-sm"
         >
           <div class="flex items-center gap-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 text-red-400 flex-shrink-0"
+              class="h-5 w-5 flex-shrink-0 text-red-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -65,7 +65,7 @@
                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span class="text-red-200 text-sm">{{ authStore.error }}</span>
+            <span class="text-sm text-red-200">{{ authStore.error }}</span>
           </div>
         </div>
 
@@ -75,13 +75,13 @@
           <button
             @click="handleGoogleLogin"
             :disabled="isLoading"
-            class="cursor-pointer group relative w-full flex items-center justify-center gap-3 px-6 py-4 bg-white hover:bg-gray-50 rounded-xl text-gray-700 font-medium transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
+            class="group relative flex w-full cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-xl bg-white px-6 py-4 font-medium text-gray-700 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-gray-50 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
           >
             <div
-              class="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-red-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
+              class="absolute inset-0 translate-x-[-100%] bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-red-500/0 transition-transform duration-700 group-hover:translate-x-[100%]"
             ></div>
             <svg
-              class="w-5 h-5 relative z-10"
+              class="relative z-10 h-5 w-5"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -105,7 +105,7 @@
             <span class="relative z-10">Continue with Google</span>
             <div v-if="isLoading && loginProvider === 'google'" class="absolute right-4">
               <svg
-                class="animate-spin h-5 w-5 text-gray-500"
+                class="h-5 w-5 animate-spin text-gray-500"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -134,14 +134,14 @@
             <div class="w-full border-t border-white/20"></div>
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-4 text-emerald-200/60 bg-transparent">or</span>
+            <span class="bg-transparent px-4 text-emerald-200/60">or</span>
           </div>
         </div>
 
         <!-- Email Login Form (Placeholder) -->
         <form @submit.prevent="handleEmailLogin" class="space-y-4">
           <div>
-            <label for="email" class="block text-sm font-medium text-emerald-200/80 mb-2"
+            <label for="email" class="mb-2 block text-sm font-medium text-emerald-200/80"
               >Email</label
             >
             <input
@@ -149,11 +149,11 @@
               id="email"
               v-model="email"
               placeholder="Enter your email"
-              class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:border-transparent transition-all duration-300"
+              class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 transition-all duration-300 focus:border-transparent focus:ring-2 focus:ring-emerald-400/50 focus:outline-none"
             />
           </div>
           <div>
-            <label for="password" class="block text-sm font-medium text-emerald-200/80 mb-2"
+            <label for="password" class="mb-2 block text-sm font-medium text-emerald-200/80"
               >Password</label
             >
             <input
@@ -161,13 +161,13 @@
               id="password"
               v-model="password"
               placeholder="Enter your password"
-              class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:border-transparent transition-all duration-300"
+              class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 transition-all duration-300 focus:border-transparent focus:ring-2 focus:ring-emerald-400/50 focus:outline-none"
             />
           </div>
           <button
             type="submit"
             disabled
-            class="w-full py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 rounded-xl text-white font-semibold shadow-lg shadow-emerald-500/30 transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 py-4 font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all duration-300 hover:-translate-y-0.5 hover:from-emerald-400 hover:to-cyan-400 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Sign In
           </button>
@@ -175,11 +175,11 @@
 
         <!-- Footer Links -->
         <div class="mt-8 text-center">
-          <p class="text-emerald-200/60 text-sm">
+          <p class="text-sm text-emerald-200/60">
             Don't have an account?
             <a
               href="#"
-              class="text-emerald-400 hover:text-emerald-300 transition-colors duration-300"
+              class="text-emerald-400 transition-colors duration-300 hover:text-emerald-300"
               >Sign up</a
             >
           </p>
@@ -187,7 +187,7 @@
       </div>
 
       <!-- Trust badges -->
-      <div class="mt-6 flex items-center justify-center gap-6 text-emerald-300/50 text-xs">
+      <div class="mt-6 flex items-center justify-center gap-6 text-xs text-emerald-300/50">
         <span class="flex items-center gap-1">
           <svg
             xmlns="http://www.w3.org/2000/svg"

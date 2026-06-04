@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-white -mt-5 w-screen relative left-[calc(50%-50vw)]">
-    <div class="max-w-7xl mx-auto px-4 py-6">
+  <div class="relative left-[calc(50%-50vw)] -mt-5 w-screen bg-white">
+    <div class="mx-auto max-w-7xl px-4 py-6">
       <h1 class="text-3xl font-bold text-gray-800">{{ supermarket.name }}</h1>
       <div class="mt-4 space-y-2">
         <p class="text-gray-600">

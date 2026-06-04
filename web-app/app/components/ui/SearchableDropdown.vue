@@ -6,18 +6,18 @@
       :aria-disabled="isDisabled"
       :data-tooltip-target="tooltip && isDisabled ? tooltipId : undefined"
       @click="toggle"
-      class="inline-flex items-center justify-between gap-2 border rounded-[10px] px-3 py-1.5 text-sm transition-colors duration-150"
+      class="inline-flex items-center justify-between gap-2 rounded-[10px] border px-3 py-1.5 text-sm transition-colors duration-150"
       :class="
         isDisabled
-          ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
-          : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-green-600 focus:border-green-600 cursor-pointer'
+          ? 'cursor-not-allowed border-gray-200 bg-gray-50 text-gray-400'
+          : 'cursor-pointer border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:border-green-600 focus:ring-1 focus:ring-green-600 focus:outline-none'
       "
       :style="{ minWidth: minWidth }"
     >
       <span>{{ selectedLabel }}</span>
       <SvgIcon
         name="icon-chevron-down"
-        class="w-3 h-3 text-gray-500 transition-transform duration-200"
+        class="h-3 w-3 text-gray-500 transition-transform duration-200"
         :class="isOpen ? 'rotate-180' : ''"
       />
     </button>
@@ -36,36 +36,36 @@
     >
       <div
         v-show="isOpen"
-        class="absolute z-20 mt-1 bg-white border border-gray-200 rounded-[15px] shadow-lg w-full"
+        class="absolute z-20 mt-1 w-full rounded-[15px] border border-gray-200 bg-white shadow-lg"
       >
         <!-- Search input -->
-        <div v-if="showSearch" class="bg-white border-b border-gray-200 p-2 rounded-t-lg">
+        <div v-if="showSearch" class="rounded-t-lg border-b border-gray-200 bg-white p-2">
           <label for="dropdown-search-input" class="sr-only">Search</label>
           <input
             ref="searchInputRef"
             id="dropdown-search-input"
             v-model="query"
             type="text"
-            class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded focus:ring-green-600 focus:border-green-600 block w-full px-2.5 py-1.5 placeholder-gray-400"
+            class="block w-full rounded border border-gray-300 bg-gray-50 px-2.5 py-1.5 text-sm text-gray-700 placeholder-gray-400 focus:border-green-600 focus:ring-green-600"
             placeholder="Search..."
           />
         </div>
 
         <!-- Options list -->
-        <ul class="max-h-48 p-2 text-sm text-gray-700 font-medium overflow-y-auto" role="listbox">
+        <ul class="max-h-48 overflow-y-auto p-2 text-sm font-medium text-gray-700" role="listbox">
           <li
             v-if="filteredOptions.length === 0"
-            class="w-full flex items-center p-2 text-gray-400"
+            class="flex w-full items-center p-2 text-gray-400"
           >
             No results found
           </li>
           <li
             v-for="option in filteredOptions"
             :key="option.value"
-            class="w-full flex items-center p-2 hover:bg-gray-100 hover:text-gray-900 rounded cursor-pointer"
+            class="flex w-full cursor-pointer items-center rounded p-2 hover:bg-gray-100 hover:text-gray-900"
             :class="
               modelValue === option.value
-                ? 'font-semibold text-green-700 bg-green-50 hover:bg-green-100'
+                ? 'bg-green-50 font-semibold text-green-700 hover:bg-green-100'
                 : ''
             "
             role="option"

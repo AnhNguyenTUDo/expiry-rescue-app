@@ -1,27 +1,27 @@
 <template>
   <NuxtLink
     :to="detailLink"
-    class="flex flex-col h-full cursor-pointer bg-white rounded-xl hover:shadow-md transition p-5"
+    class="flex h-full cursor-pointer flex-col rounded-xl bg-white p-5 transition hover:shadow-md"
   >
     <!-- Status and Category Header -->
-    <div class="flex justify-between items-start mb-3">
+    <div class="mb-3 flex items-start justify-between">
       <AvailabilityTag :availability="product.availability" />
       <span
         v-if="showCategory"
-        class="py-1.5 text-xs px-3 py-1 font-semibold text-gray-700 rounded-[7px] border border-gray-400"
+        class="rounded-[7px] border border-gray-400 px-3 py-1 py-1.5 text-xs font-semibold text-gray-700"
         >{{ product.category }}</span
       >
     </div>
 
     <!-- Product image  -->
-    <div class="flex justify-center mb-3 py-10">
-      <SvgIcon name="icon-products" class="text-gray-400 w-30 h-30" />
+    <div class="mb-3 flex justify-center py-10">
+      <SvgIcon name="icon-products" class="h-30 w-30 text-gray-400" />
     </div>
 
-    <h3 class="text-lg font-semibold line-clamp-2 min-h-14">
+    <h3 class="line-clamp-2 min-h-14 text-lg font-semibold">
       {{ product.name }}
     </h3>
-    <p v-if="showLocation" class="text-gray-500 text-sm mb-3 mt-1">{{ product.location }}</p>
+    <p v-if="showLocation" class="mt-1 mb-3 text-sm text-gray-500">{{ product.location }}</p>
 
     <ExpiryBadge :expiry-date="product.earliestExpiryDate" />
 

@@ -2,7 +2,7 @@
   <div class="container mx-auto px-4 py-8">
     <LoadingState v-if="orderStore.loading" message="Loading order details..." />
     <ErrorAlert v-else-if="orderStore.error" :error="orderStore.error" class="mb-4">
-      <NuxtLink to="/orders" class="text-red-800 underline mt-2 inline-block">
+      <NuxtLink to="/orders" class="mt-2 inline-block text-red-800 underline">
         ← Back to Orders
       </NuxtLink>
     </ErrorAlert>
@@ -10,14 +10,14 @@
     <!-- Order Details -->
     <div v-else-if="order" class="space-y-6">
       <!-- Header -->
-      <div class="bg-white p-6 rounded-lg shadow">
-        <div class="flex justify-between items-start mb-4">
+      <div class="rounded-lg bg-white p-6 shadow">
+        <div class="mb-4 flex items-start justify-between">
           <div>
             <h1 class="text-3xl font-bold text-gray-800">Order #{{ order.orderNumber }}</h1>
             <p class="text-gray-600">Placed on {{ formatDate(order.createdAt) }}</p>
           </div>
           <span
-            class="px-4 py-2 rounded-full text-sm font-semibold"
+            class="rounded-full px-4 py-2 text-sm font-semibold"
             :class="getStatusClass(order.status)"
           >
             {{ getStatusLabel(order.status) }}
@@ -40,17 +40,17 @@
         </div>
 
         <!-- Actions -->
-        <div class="flex gap-3 mt-4">
+        <div class="mt-4 flex gap-3">
           <button
             v-if="order.status === 'CONFIRMED'"
             @click="handleCancelOrder"
-            class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition cursor-pointer"
+            class="cursor-pointer rounded-lg bg-red-600 px-6 py-2 text-white transition hover:bg-red-700"
           >
             Cancel Order
           </button>
           <button
             @click="handleDeleteOrder"
-            class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition cursor-pointer"
+            class="cursor-pointer rounded-lg bg-gray-500 px-6 py-2 text-white transition hover:bg-gray-600"
           >
             Delete Order
           </button>
@@ -58,11 +58,11 @@
       </div>
 
       <!-- Order Items -->
-      <div class="bg-white p-6 rounded-lg shadow">
-        <h2 class="text-2xl font-bold mb-4">Order Items</h2>
+      <div class="rounded-lg bg-white p-6 shadow">
+        <h2 class="mb-4 text-2xl font-bold">Order Items</h2>
         <div class="space-y-4">
           <div v-for="item in order.items" :key="item.id" class="border-b pb-4 last:border-b-0">
-            <div class="flex justify-between items-start">
+            <div class="flex items-start justify-between">
               <div class="flex-1">
                 <h3 class="text-lg font-semibold text-gray-800">{{ item.productName }}</h3>
                 <p class="text-sm text-gray-600">{{ item.supermarketName }}</p>
@@ -85,7 +85,7 @@
       <div class="text-center">
         <NuxtLink
           to="/orders"
-          class="inline-block px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition cursor-pointer"
+          class="inline-block cursor-pointer rounded-lg bg-gray-500 px-6 py-3 text-white transition hover:bg-gray-600"
         >
           ← Back to Orders
         </NuxtLink>

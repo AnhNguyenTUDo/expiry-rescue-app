@@ -2,7 +2,7 @@
   <div class="relative" ref="dropdownRef">
     <button
       @click="isOpen = !isOpen"
-      class="px-2 py-1.5 rounded-[10px] border border-gray-300 text-gray-500 hover:bg-gray-200 transition group cursor-pointer flex items-center justify-center"
+      class="group flex cursor-pointer items-center justify-center rounded-[10px] border border-gray-300 px-2 py-1.5 text-gray-500 transition hover:bg-gray-200"
       title="Account"
     >
       <SvgIcon name="icon-user" class="h-6 w-6" />
@@ -18,15 +18,15 @@
     >
       <div
         v-show="isOpen"
-        class="absolute right-0 z-50 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden"
+        class="absolute right-0 z-50 mt-2 w-48 overflow-hidden rounded-lg border border-gray-100 bg-white shadow-xl"
       >
         <!-- When not authenticated -->
         <template v-if="!authStore.isAuthenticated">
-          <ul class="p-2 text-sm text-gray-700 space-y-1">
+          <ul class="space-y-1 p-2 text-sm text-gray-700">
             <li>
               <NuxtLink
                 to="/login"
-                class="w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer flex items-center gap-2 transition-colors"
+                class="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-left transition-colors hover:bg-gray-100"
                 @click="isOpen = false"
               >
                 <svg
@@ -53,20 +53,20 @@
         <template v-else>
           <!-- User Info -->
           <div
-            class="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-cyan-50"
+            class="border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-cyan-50 px-4 py-3"
           >
             <p class="text-sm font-semibold text-gray-900">
               {{ authStore.user?.fullName || authStore.user?.email }}
             </p>
-            <p class="text-xs text-gray-600 truncate">{{ authStore.user?.email }}</p>
+            <p class="truncate text-xs text-gray-600">{{ authStore.user?.email }}</p>
           </div>
 
-          <ul class="p-2 text-sm text-gray-700 space-y-1">
+          <ul class="space-y-1 p-2 text-sm text-gray-700">
             <li>
               <!-- My Orders Link -->
               <NuxtLink
                 to="/orders"
-                class="w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer flex items-center gap-2 transition-colors"
+                class="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-left transition-colors hover:bg-gray-100"
                 @click="isOpen = false"
               >
                 <svg
@@ -89,7 +89,7 @@
             <li>
               <button
                 @click="handleLogout"
-                class="w-full text-left px-3 py-2 rounded-md hover:bg-red-50 text-red-600 cursor-pointer flex items-center gap-2 transition-colors"
+                class="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-left text-red-600 transition-colors hover:bg-red-50"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

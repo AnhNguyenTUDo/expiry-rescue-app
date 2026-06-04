@@ -1,14 +1,14 @@
 <template>
-  <div class="inline-flex items-center bg-gray-200 rounded-[10px] p-0.5" role="group">
+  <div class="inline-flex items-center rounded-[10px] bg-gray-200 p-0.5" role="group">
     <template v-for="(option, idx) in options" :key="option.value">
       <!-- Divider between buttons -->
-      <div v-if="idx > 0" class="w-px h-5 bg-gray-400/60 mx-0.5 shrink-0"></div>
+      <div v-if="idx > 0" class="mx-0.5 h-5 w-px shrink-0 bg-gray-400/60"></div>
 
       <button
         type="button"
         @click="select(option.value)"
         :class="[
-          'px-3 py-2 text-sm rounded-[9px] cursor-pointer transition-all duration-150 leading-none',
+          'cursor-pointer rounded-[9px] px-3 py-2 text-sm leading-none transition-all duration-150',
           modelValue === option.value ? 'bg-white text-gray-900 shadow-sm' : 'hover:text-gray-900',
         ]"
       >

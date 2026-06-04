@@ -1,6 +1,6 @@
 <template>
   <div class="relative mb-6 pb-4">
-    <div class="flex items-center gap-3 mb-2 flex-wrap">
+    <div class="mb-2 flex flex-wrap items-center gap-3">
       <!-- Search bar -->
       <SearchBar v-model="searchQuery" placeholder="Search supermarkets..." />
 
@@ -24,9 +24,9 @@
         v-if="isFiltered"
         type="button"
         @click="reset"
-        class="flex items-center gap-1 text-sm text-[#bc4747] hover:text-red-700 hover:scale-104 transition-all duration-300 cursor-pointer"
+        class="flex cursor-pointer items-center gap-1 text-sm text-[#bc4747] transition-all duration-300 hover:scale-104 hover:text-red-700"
       >
-        <SvgIcon name="icon-reset" class="w-3.5 h-3.5" />
+        <SvgIcon name="icon-reset" class="h-3.5 w-3.5" />
         Reset Filter
       </button>
     </div>

@@ -2,22 +2,22 @@
   <div class="mb-8">
     <hr
       v-if="showDivider"
-      class="w-60 border-t-8 border-dotted border-gray-300 mx-auto mb-7 mt-2"
+      class="mx-auto mt-2 mb-7 w-60 border-t-8 border-dotted border-gray-300"
     />
-    <h3 class="text-xl font-semibold mb-2 pb-2">{{ districtName }} ({{ stores.length }})</h3>
+    <h3 class="mb-2 pb-2 text-xl font-semibold">{{ districtName }} ({{ stores.length }})</h3>
     <!-- Empty state -->
     <div
       v-if="stores.length === 0"
       class="flex flex-col items-center justify-center py-10 text-center"
     >
-      <SvgIcon name="icon-store-lookup" class="w-20 h-20" />
-      <p class="text-gray-500 text-sm">
+      <SvgIcon name="icon-store-lookup" class="h-20 w-20" />
+      <p class="text-sm text-gray-500">
         No supermarkets found in <span class="font-semibold">{{ districtName }}</span
         >.
       </p>
     </div>
 
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div v-else class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
       <SupermarketCard
         v-for="supermarket in visibleStores"
         :key="supermarket.id"

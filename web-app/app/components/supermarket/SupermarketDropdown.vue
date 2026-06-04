@@ -3,14 +3,14 @@
     <button
       type="button"
       @click="isOpen = !isOpen"
-      class="bg-transparent border border-gray-300 text-gray-700 rounded-[10px] px-4 py-1.5 pr-10 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 cursor-pointer hover:bg-gray-200 flex items-center justify-between min-w-full w-full"
+      class="flex w-full min-w-full cursor-pointer items-center justify-between rounded-[10px] border border-gray-300 bg-transparent px-4 py-1.5 pr-10 text-gray-700 hover:bg-gray-200 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-none"
     >
       <span class="truncate">
         {{ selectedLabel }}
       </span>
       <SvgIcon
         name="icon-chevron-down"
-        class="w-3 h-3 text-gray-500 transition-transform duration-200 absolute right-4"
+        class="absolute right-4 h-3 w-3 text-gray-500 transition-transform duration-200"
         :class="isOpen ? 'rotate-180' : ''"
       />
     </button>
@@ -25,24 +25,24 @@
     >
       <div
         v-show="isOpen"
-        class="absolute left-0 z-50 mt-2 bg-white rounded-lg shadow-lg border border-gray-100 w-full min-w-max max-h-80 overflow-y-auto"
+        class="absolute left-0 z-50 mt-2 max-h-80 w-full min-w-max overflow-y-auto rounded-lg border border-gray-100 bg-white shadow-lg"
       >
         <ul class="p-2 text-sm text-gray-700">
           <li v-for="supermarket in sortedSupermarkets" :key="supermarket.id">
             <button
               type="button"
               @click="select(supermarket.id)"
-              class="w-full text-left px-3 py-2.5 rounded-md hover:bg-gray-100 cursor-pointer flex items-center gap-2 transition-colors"
+              class="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2.5 text-left transition-colors hover:bg-gray-100"
               :class="modelValue === supermarket.id ? 'bg-green-50 hover:bg-green-100' : ''"
             >
-              <div class="flex-1 min-w-0">
+              <div class="min-w-0 flex-1">
                 <p
-                  class="font-medium text-gray-900 truncate"
+                  class="truncate font-medium text-gray-900"
                   :class="modelValue === supermarket.id ? 'text-green-700' : ''"
                 >
                   {{ supermarket.name }}
                 </p>
-                <p class="text-xs text-gray-500 truncate mt-0.5">
+                <p class="mt-0.5 truncate text-xs text-gray-500">
                   {{ supermarket.districtName
                   }}<span v-if="supermarket.cityName">, {{ supermarket.cityName }}</span>
                 </p>

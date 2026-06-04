@@ -1,6 +1,6 @@
 <template>
   <div class="mb-8">
-    <div class="flex items-center mb-4">
+    <div class="mb-4 flex items-center">
       <h3 class="text-xl font-semibold text-green-700">
         {{ category.name }} ({{ category.products.length }})
       </h3>
@@ -10,11 +10,11 @@
       <slot name="filters" />
     </div>
 
-    <div v-if="category.products.length === 0" class="text-center py-8 bg-gray-50 rounded-lg">
+    <div v-if="category.products.length === 0" class="rounded-lg bg-gray-50 py-8 text-center">
       <p class="text-gray-500">No available products in this category</p>
     </div>
 
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div v-else class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <ProductCard
         v-for="product in visibleProducts"
         :key="product.id"

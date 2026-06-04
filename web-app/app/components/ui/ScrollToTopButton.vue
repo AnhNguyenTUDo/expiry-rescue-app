@@ -11,10 +11,10 @@
       v-if="visible"
       type="button"
       @click="scrollToTop"
-      class="fixed bottom-6 right-6 z-50 p-3 border-2 border-green-700 text-green-700 rounded-full shadow-lg cursor-pointer transition-all duration-300 hover:-translate-y-0.5 active:scale-85 hover:shadow-xl"
+      class="fixed right-6 bottom-6 z-50 cursor-pointer rounded-full border-2 border-green-700 p-3 text-green-700 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl active:scale-85"
       aria-label="Scroll to top"
     >
-      <SvgIcon name="icon-chevron-up" class="w-5 h-5" />
+      <SvgIcon name="icon-chevron-up" class="h-5 w-5" />
     </button>
   </Transition>
 </template>

@@ -1,6 +1,6 @@
 <template>
-  <div class="text-center py-12">
-    <p class="text-gray-600 text-lg">{{ message }}</p>
+  <div class="py-12 text-center">
+    <p class="text-lg text-gray-600">{{ message }}</p>
   </div>
 </template>
 

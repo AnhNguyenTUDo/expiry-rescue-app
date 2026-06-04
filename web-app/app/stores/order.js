@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import OrderService from '~/services/order.service'
 
 export const useOrderStore = defineStore('order', () => {
