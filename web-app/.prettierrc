@@ -1,5 +1,5 @@
 {
-  "plugins": ["@prettier/plugin-xml"],
+  "plugins": ["@prettier/plugin-xml", "prettier-plugin-tailwindcss"],
   "bracketSpacing": true,
   "semi": false,
   "singleQuote": true,
@@ -8,5 +8,6 @@
   "printWidth": 100,
   "trailingComma": "es5",
   "bracketSameLine": false,
-  "vueIndentScriptAndStyle": false
+  "vueIndentScriptAndStyle": false,
+  "tailwindStylesheet": "./app/assets/css/main.css"
 }
