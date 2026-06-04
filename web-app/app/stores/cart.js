@@ -45,11 +45,16 @@ export const useCartStore = defineStore('cart', () => {
 
   // Actions
   function addToCart(product) {
+    // Default to 1 for callers that don't specify a quantity
+    const requestedQty = product.quantity || 1
     const existingItem = cartItems.value.find((item) => item.inventoryId === product.inventoryId)
 
     if (existingItem) {
-      // Increase quantity if item already exists
-      existingItem.quantity += 1
+      // Increase quantity if item already exists, capped at available stock
+      existingItem.quantity = Math.min(
+        existingItem.quantity + requestedQty,
+        existingItem.quantityAvailable
+      )
     } else {
       // Add new item to cart
       cartItems.value.push({
@@ -64,7 +69,7 @@ export const useCartStore = defineStore('cart', () => {
         sellingPrice: product.sellingPrice,
         expiryDate: product.expiryDate,
         quantityAvailable: product.quantityAvailable,
-        quantity: 1,
+        quantity: Math.min(requestedQty, product.quantityAvailable),
         selected: true,
       })
     }

@@ -65,27 +65,32 @@
 
             <!-- Add to cart Button -->
             <div>
-              <button
+              <div
                 v-if="currentItem && getAvailability(currentItem) !== 'out of stock'"
-                @click="addToCart"
-                :disabled="isInCart"
-                class="w-full py-3 px-6 rounded-[11px] font-bold transition"
-                :class="
-                  isInCart
-                    ? 'bg-gray-400 text-white cursor-not-allowed'
-                    : 'bg-green-700 text-white hover:bg-green-800 cursor-pointer'
-                "
+                class="flex items-stretch gap-3"
               >
-                <span class="flex items-center justify-center gap-2">
-                  <SvgIcon
-                    :name="
-                      isInCart ? 'icon-check-circle-outline' : 'icon-shopping-basket-add-outline'
-                    "
-                    class="w-6 h-6"
-                  />
-                  {{ isInCart ? 'Added to cart' : 'Add to cart' }}
-                </span>
-              </button>
+                <QuantityCounter v-model="quantity" :max="currentItem.quantityAvailable" />
+                <button
+                  @click="addToCart"
+                  :disabled="isInCart"
+                  class="flex-1 py-3 px-6 rounded-[11px] font-bold transition"
+                  :class="
+                    isInCart
+                      ? 'bg-gray-400 text-white cursor-not-allowed'
+                      : 'bg-green-700 text-white hover:bg-green-800 cursor-pointer'
+                  "
+                >
+                  <span class="flex items-center justify-center gap-2">
+                    <SvgIcon
+                      :name="
+                        isInCart ? 'icon-check-circle-outline' : 'icon-shopping-basket-add-outline'
+                      "
+                      class="w-6 h-6"
+                    />
+                    {{ isInCart ? 'Added to cart' : 'Add to cart' }}
+                  </span>
+                </button>
+              </div>
               <div
                 v-else
                 class="w-full py-3 px-6 rounded-[11px] font-semibold bg-gray-300 text-gray-600 text-center"
@@ -182,6 +187,7 @@ import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
 import PriceBlock from '~/components/ui/PriceBlock.vue'
 import DropdownSelect from '~/components/ui/DropdownSelect.vue'
 import ShowMoreButton from '~/components/ui/ShowMoreButton.vue'
+import QuantityCounter from '~/components/ui/QuantityCounter.vue'
 import { useRoute, useRouter } from 'vue-router'
 import ProductInventoryService from '~/services/product-inventory.service'
 import { useSupermarketStore } from '~/stores/supermarket'
@@ -202,6 +208,7 @@ const batchId = route.query.batch
 // Batches of this product at the current supermarket (drives header + batch dropdown)
 const supermarketItems = ref([])
 const selectedInventoryItemId = ref(null)
+const quantity = ref(1)
 const loading = ref(true)
 const error = ref(null)
 
@@ -370,6 +377,7 @@ const addToCart = () => {
       sellingPrice: currentItem.value.sellingPrice,
       expiryDate: currentItem.value.expiryDate,
       quantityAvailable: currentItem.value.quantityAvailable,
+      quantity: quantity.value,
     })
   }
 }
@@ -381,6 +389,8 @@ watch(
     if (newItem && newItem.supermarketId) {
       supermarketStore.setSelectedSupermarketId(newItem.supermarketId)
     }
+    // Reset the quantity when switching batches (max available changes)
+    quantity.value = 1
   },
   { immediate: true }
 )
