@@ -66,7 +66,7 @@
             <!-- Add to cart Button -->
             <div>
               <div
-                v-if="currentItem && getAvailability(currentItem) !== 'out of stock'"
+                v-if="getAvailability(currentItem) !== 'out of stock'"
                 class="flex items-stretch gap-3"
               >
                 <QuantityCounter v-model="quantity" :max="currentItem.quantityAvailable" />
@@ -317,16 +317,13 @@ const supermarketName = computed(() => {
   return currentItem.value?.supermarketName || 'Unknown Supermarket'
 })
 
-// All batches of this product at the current supermarket (already scoped by the API)
-const allSupermarketItems = computed(() => supermarketItems.value)
-
 // Other batches at this supermarket (excluding the selected one)
 const otherInventoryItems = computed(() => {
-  return allSupermarketItems.value.filter((item) => item.id !== selectedInventoryItemId.value)
+  return supermarketItems.value.filter((item) => item.id !== selectedInventoryItemId.value)
 })
 
 const batchOptions = computed(() =>
-  allSupermarketItems.value.map((item) => ({
+  supermarketItems.value.map((item) => ({
     value: item.id,
     label: `Expires ${formatDate(item.expiryDate)} · ${item.quantityAvailable} units · ${formatPrice(item.sellingPrice)}`,
   }))
@@ -400,10 +397,3 @@ onMounted(() => {
   fetchProductInventory()
 })
 </script>
-
-<style scoped>
-@reference "tailwindcss";
-.btn {
-  @apply px-4 py-2 rounded-lg border transition;
-}
-</style>
