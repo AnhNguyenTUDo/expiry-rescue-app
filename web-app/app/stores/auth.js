@@ -167,5 +167,55 @@ export const useAuthStore = defineStore('auth', {
       }
       this.setError(errorMessages[error] || 'An error occurred during login.')
     },
+
+    /**
+     * Request a one-time passcode (OTP) to be sent to the given email.
+     * Throws an Error (with a user-facing message) on failure.
+     */
+    async requestOtp(email) {
+      const runtimeConfig = useRuntimeConfig()
+      const endpoint = `${runtimeConfig.public.apiBase}/auth/passwordless/request`
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}))
+        throw new Error(data.message || 'Could not send the code. Please try again.')
+      }
+    },
+
+    /**
+     * Verify an OTP code and, on success, authenticate the user.
+     * Throws an Error (with a user-facing message) on failure.
+     */
+    async verifyOtp(email, code) {
+      const runtimeConfig = useRuntimeConfig()
+      const endpoint = `${runtimeConfig.public.apiBase}/auth/passwordless/verify`
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code }),
+      })
+
+      const data = await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Incorrect or expired code. Please try again.')
+      }
+
+      const token = data.data?.token
+      if (!token) {
+        throw new Error('Login failed. Please try again.')
+      }
+
+      this.setAuth(token)
+      await this.fetchUser()
+      return true
+    },
   },
 })
