@@ -58,6 +58,11 @@ public class SecurityConfig {
                                                                 "/oauth2/**")
                                                 .permitAll()
 
+                                                // Passwordless OTP endpoints (public)
+                                                .requestMatchers(org.springframework.http.HttpMethod.POST,
+                                                                "/api/v1/auth/passwordless/**")
+                                                .permitAll()
+
                                                 // Public API endpoints - explicitly allow GET requests for browsing
                                                 .requestMatchers(org.springframework.http.HttpMethod.GET,
                                                                 "/api/v1/supermarkets",
