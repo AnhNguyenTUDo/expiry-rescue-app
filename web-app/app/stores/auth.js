@@ -5,7 +5,6 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: null,
     user: null,
-    isLoading: false,
     error: null,
   }),
 
@@ -82,13 +81,6 @@ export const useAuthStore = defineStore('auth', {
     },
 
     /**
-     * Set loading state
-     */
-    setLoading(loading) {
-      this.isLoading = loading
-    },
-
-    /**
      * Redirect to Google OAuth2 login
      */
     loginWithGoogle() {
@@ -96,15 +88,6 @@ export const useAuthStore = defineStore('auth', {
       // Backend OAuth2 authorization endpoint
       const backendUrl = runtimeConfig.public.apiBase.replace('/api/v1', '')
       window.location.href = `${backendUrl}/oauth2/authorization/google`
-    },
-
-    /**
-     * Redirect to Facebook OAuth2 login
-     */
-    loginWithFacebook() {
-      const runtimeConfig = useRuntimeConfig()
-      const backendUrl = runtimeConfig.public.apiBase.replace('/api/v1', '')
-      window.location.href = `${backendUrl}/oauth2/authorization/facebook`
     },
 
     /**
