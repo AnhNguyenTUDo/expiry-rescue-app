@@ -77,7 +77,8 @@ public class PasswordlessAuthServiceImpl implements PasswordlessAuthService {
     }
 
     @Override
-    @Transactional
+    // Do not roll back on a failed verification: the attempt-count increment must persist
+    @Transactional(noRollbackFor = InvalidCredentialsException.class)
     public OtpTokenResponse verifyOtp(String email, String code) {
         String normalizedEmail = normalize(email);
 
