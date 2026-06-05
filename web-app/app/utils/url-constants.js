@@ -1,5 +1,10 @@
 export default {
   endpoints: {
+    auth: {
+      GET_CURRENT_USER: '/auth/me',
+      PASSWORDLESS_REQUEST: '/auth/passwordless/request',
+      PASSWORDLESS_VERIFY: '/auth/passwordless/verify',
+    },
     product_inventory: {
       GET_INVENTORY_BY_SUPERMARKET: (supermarketId) =>
         `/products/inventory/supermarket/${supermarketId}`,

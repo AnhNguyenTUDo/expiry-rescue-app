@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import AuthService from '~/services/auth.service'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -112,30 +113,16 @@ export const useAuthStore = defineStore('auth', {
     async fetchUser() {
       if (!this.token) return
 
-      try {
-        const runtimeConfig = useRuntimeConfig()
-        const endpoint = `${runtimeConfig.public.apiBase}/auth/me`
+      const body = await AuthService.getCurrentUser((err) => {
+        console.error('Error fetching user data:', err)
+      })
 
-        const response = await fetch(endpoint, {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
+      if (body && body.data) {
+        this.user = body.data
 
-        if (response.ok) {
-          const userData = await response.json()
-          this.user = userData.data
-
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('auth_user', JSON.stringify(userData.data))
-          }
-        } else {
-          console.error('❌ Failed to fetch user data, status:', response.status)
-          const errorText = await response.text()
-          console.error('Error response:', errorText)
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('auth_user', JSON.stringify(body.data))
         }
-      } catch (error) {
-        console.error('❌ Error fetching user data:', error)
       }
     },
 
@@ -173,18 +160,12 @@ export const useAuthStore = defineStore('auth', {
      * Throws an Error (with a user-facing message) on failure.
      */
     async requestOtp(email) {
-      const runtimeConfig = useRuntimeConfig()
-      const endpoint = `${runtimeConfig.public.apiBase}/auth/passwordless/request`
-
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      })
-
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}))
-        throw new Error(data.message || 'Could not send the code. Please try again.')
+      try {
+        await AuthService.requestOtp(email)
+      } catch (error) {
+        throw new Error(
+          error.response?.data?.message || 'Could not send the code. Please try again.'
+        )
       }
     },
 
@@ -193,22 +174,16 @@ export const useAuthStore = defineStore('auth', {
      * Throws an Error (with a user-facing message) on failure.
      */
     async verifyOtp(email, code) {
-      const runtimeConfig = useRuntimeConfig()
-      const endpoint = `${runtimeConfig.public.apiBase}/auth/passwordless/verify`
-
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code }),
-      })
-
-      const data = await response.json().catch(() => ({}))
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Incorrect or expired code. Please try again.')
+      let response
+      try {
+        response = await AuthService.verifyOtp(email, code)
+      } catch (error) {
+        throw new Error(
+          error.response?.data?.message || 'Incorrect or expired code. Please try again.'
+        )
       }
 
-      const token = data.data?.token
+      const token = response.data.data?.token
       if (!token) {
         throw new Error('Login failed. Please try again.')
       }
