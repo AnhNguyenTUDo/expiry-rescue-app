@@ -72,17 +72,45 @@ const startResendCooldown = () => {
   }, 1000)
 }
 
-const handleEmailSubmit = (emailValue) => {
+const handleEmailSubmit = async (emailValue) => {
   otpEmail.value = emailValue
   otpError.value = ''
-  step.value = 'code'
-  startResendCooldown()
+  otpLoading.value = true
+  try {
+    await authStore.requestOtp(emailValue)
+    step.value = 'code'
+    startResendCooldown()
+  } catch (err) {
+    otpError.value = err.message
+  } finally {
+    otpLoading.value = false
+  }
 }
 
-const handleVerify = () => {}
+const handleVerify = async (code) => {
+  otpError.value = ''
+  otpLoading.value = true
+  try {
+    await authStore.verifyOtp(otpEmail.value, code)
+    navigateTo('/')
+  } catch (err) {
+    otpError.value = err.message
+  } finally {
+    otpLoading.value = false
+  }
+}
 
-const handleResend = () => {
-  startResendCooldown()
+const handleResend = async () => {
+  otpError.value = ''
+  otpLoading.value = true
+  try {
+    await authStore.requestOtp(otpEmail.value)
+    startResendCooldown()
+  } catch (err) {
+    otpError.value = err.message
+  } finally {
+    otpLoading.value = false
+  }
 }
 
 const handleBack = () => {
