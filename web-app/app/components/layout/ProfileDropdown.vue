@@ -29,20 +29,7 @@
                 class="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-left transition-colors hover:bg-gray-100"
                 @click="isOpen = false"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-emerald-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                  />
-                </svg>
+                <SvgIcon name="icon-login" class="h-5.5 w-5.5 text-emerald-600" />
                 Login
               </NuxtLink>
             </li>
@@ -69,42 +56,17 @@
                 class="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-left transition-colors hover:bg-gray-100"
                 @click="isOpen = false"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-emerald-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                  />
-                </svg>
+                <SvgIcon name="icon-my-order" class="h-6 w-6 text-emerald-600" />
+
                 My Orders
               </NuxtLink>
             </li>
             <li>
               <button
-                class="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-left text-red-600 transition-colors hover:bg-red-50"
+                class="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-left text-orange-600 transition-colors hover:bg-red-50"
                 @click="handleLogout"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                  />
-                </svg>
+                <SvgIcon name="icon-smiley-grumpy" class="h-5.5 w-5.5 text-orange-600" />
                 Logout
               </button>
             </li>
