@@ -30,6 +30,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
+import ShowMoreButton from '../ui/ShowMoreButton.vue'
 import SupermarketCard from '@/components/supermarket/SupermarketCard.vue'
 
 const props = defineProps({
