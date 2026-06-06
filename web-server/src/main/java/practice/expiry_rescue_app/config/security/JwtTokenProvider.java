@@ -22,7 +22,15 @@ public class JwtTokenProvider {
     public String generateToken(Authentication authentication) {
         OAuth2User principal = (OAuth2User) authentication.getPrincipal();
         String email = principal.getAttribute("email");
+        return generateToken(email);
+    }
 
+    /**
+     * Issues a JWT directly from an email (used by passwordless OTP login). Produces a
+     * token in the same shape as the OAuth2 flow (subject = email), so it is accepted by
+     * {@code JwtAuthenticationFilter} and works with all protected endpoints.
+     */
+    public String generateToken(String email) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
 

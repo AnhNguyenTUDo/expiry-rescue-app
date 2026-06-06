@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
+import AuthService from '~/services/auth.service'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: null,
     user: null,
-    isLoading: false,
     error: null,
   }),
 
@@ -81,13 +81,6 @@ export const useAuthStore = defineStore('auth', {
     },
 
     /**
-     * Set loading state
-     */
-    setLoading(loading) {
-      this.isLoading = loading
-    },
-
-    /**
      * Redirect to Google OAuth2 login
      */
     loginWithGoogle() {
@@ -98,44 +91,21 @@ export const useAuthStore = defineStore('auth', {
     },
 
     /**
-     * Redirect to Facebook OAuth2 login
-     */
-    loginWithFacebook() {
-      const runtimeConfig = useRuntimeConfig()
-      const backendUrl = runtimeConfig.public.apiBase.replace('/api/v1', '')
-      window.location.href = `${backendUrl}/oauth2/authorization/facebook`
-    },
-
-    /**
      * Fetch user profile data from backend
      */
     async fetchUser() {
       if (!this.token) return
 
-      try {
-        const runtimeConfig = useRuntimeConfig()
-        const endpoint = `${runtimeConfig.public.apiBase}/auth/me`
+      const body = await AuthService.getCurrentUser((err) => {
+        console.error('Error fetching user data:', err)
+      })
 
-        const response = await fetch(endpoint, {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
+      if (body && body.data) {
+        this.user = body.data
 
-        if (response.ok) {
-          const userData = await response.json()
-          this.user = userData.data
-
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('auth_user', JSON.stringify(userData.data))
-          }
-        } else {
-          console.error('❌ Failed to fetch user data, status:', response.status)
-          const errorText = await response.text()
-          console.error('Error response:', errorText)
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('auth_user', JSON.stringify(body.data))
         }
-      } catch (error) {
-        console.error('❌ Error fetching user data:', error)
       }
     },
 
@@ -166,6 +136,44 @@ export const useAuthStore = defineStore('auth', {
         authentication_failed: 'Authentication failed. Please try again.',
       }
       this.setError(errorMessages[error] || 'An error occurred during login.')
+    },
+
+    /**
+     * Request a one-time passcode (OTP) to be sent to the given email.
+     * Throws an Error (with a user-facing message) on failure.
+     */
+    async requestOtp(email) {
+      try {
+        await AuthService.requestOtp(email)
+      } catch (error) {
+        throw new Error(
+          error.response?.data?.message || 'Could not send the code. Please try again.'
+        )
+      }
+    },
+
+    /**
+     * Verify an OTP code and, on success, authenticate the user.
+     * Throws an Error (with a user-facing message) on failure.
+     */
+    async verifyOtp(email, code) {
+      let response
+      try {
+        response = await AuthService.verifyOtp(email, code)
+      } catch (error) {
+        throw new Error(
+          error.response?.data?.message || 'Incorrect or expired code. Please try again.'
+        )
+      }
+
+      const token = response.data.data?.token
+      if (!token) {
+        throw new Error('Login failed. Please try again.')
+      }
+
+      this.setAuth(token)
+      await this.fetchUser()
+      return true
     },
   },
 })
