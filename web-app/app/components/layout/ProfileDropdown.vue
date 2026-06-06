@@ -29,7 +29,8 @@
                 class="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-left transition-colors hover:bg-gray-100"
                 @click="isOpen = false"
               >
-                <SvgIcon name="icon-login" class="h-5.5 w-5.5 text-emerald-600" />
+                <SvgIcon name="icon-login" class="h-5.5 w-5.5 text-green-700" />
+
                 Login
               </NuxtLink>
             </li>
@@ -56,8 +57,7 @@
                 class="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-left transition-colors hover:bg-gray-100"
                 @click="isOpen = false"
               >
-                <SvgIcon name="icon-my-order" class="h-6 w-6 text-emerald-600" />
-
+                <SvgIcon name="icon-clipboard" class="h-6 w-6 text-green-700" />
                 My Orders
               </NuxtLink>
             </li>
@@ -66,7 +66,7 @@
                 class="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-left text-orange-600 transition-colors hover:bg-red-50"
                 @click="handleLogout"
               >
-                <SvgIcon name="icon-smiley-grumpy" class="h-5.5 w-5.5 text-orange-600" />
+                <SvgIcon name="icon-sly-face" class="h-6 w-6 text-orange-600" />
                 Logout
               </button>
             </li>
