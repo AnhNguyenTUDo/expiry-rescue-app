@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+
+const STORAGE_KEY = 'cart_items'
 
 export const useCartStore = defineStore('cart', () => {
   // State
@@ -137,6 +139,34 @@ export const useCartStore = defineStore('cart', () => {
     return item ? item.quantity : 0
   }
 
+  /**
+   * Hydrate the cart from localStorage and keep it in sync on every change.
+   * Call once on app mount (client-only).
+   */
+  function initCart() {
+    if (typeof window === 'undefined') return
+
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        if (Array.isArray(parsed)) {
+          cartItems.value = parsed
+        }
+      } catch (e) {
+        console.error('Error parsing cart data:', e)
+      }
+    }
+
+    watch(
+      cartItems,
+      (items) => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
+      },
+      { deep: true }
+    )
+  }
+
   return {
     // State
     cartItems,
@@ -159,5 +189,6 @@ export const useCartStore = defineStore('cart', () => {
     clearCart,
     isInCart,
     getCartItemQuantity,
+    initCart,
   }
 })
