@@ -3,17 +3,7 @@
     <h1 class="mb-6 text-3xl font-bold text-gray-800">Shopping Cart</h1>
 
     <!-- Empty Cart State -->
-    <div
-      v-if="cartStore.cartItems.length === 0"
-      class="rounded-xl bg-white p-12 text-center shadow"
-    >
-      <div class="mb-4 text-6xl">🛒</div>
-      <h2 class="mb-2 text-2xl font-semibold text-gray-700">Your cart is empty</h2>
-      <p class="mb-6 text-gray-500">Add products to your cart to get started!</p>
-      <NuxtLink to="/" class="btn bg-green-600 text-white hover:bg-green-700">
-        Browse Products
-      </NuxtLink>
-    </div>
+    <EmptyCart v-if="cartStore.cartItems.length === 0" />
 
     <!-- Cart Items -->
     <div v-else class="space-y-6">
@@ -156,6 +146,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import EmptyCart from '~/components/cart/EmptyCart.vue'
 import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
 import PriceBlock from '~/components/ui/PriceBlock.vue'
 import QuantityCounter from '~/components/ui/QuantityCounter.vue'
@@ -202,10 +193,3 @@ const handleCheckout = async () => {
   }
 }
 </script>
-
-<style scoped>
-@reference "tailwindcss";
-.btn {
-  @apply rounded-lg px-6 py-3 font-semibold transition;
-}
-</style>
