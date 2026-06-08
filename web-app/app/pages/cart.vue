@@ -21,28 +21,14 @@
       </div>
 
       <!-- Products Grouped by Supermarket -->
-      <div
+      <CartStoreGroup
         v-for="group in cartStore.itemsBySupermarket"
         :key="group.supermarketId"
-        class="rounded-xl bg-white shadow"
-      >
-        <!-- Supermarket Header -->
-        <div class="rounded-t-xl bg-green-600 p-4 text-white">
-          <h2 class="text-xl font-bold">{{ group.supermarketName }}</h2>
-        </div>
-
-        <!-- Products List -->
-        <div class="divide-y divide-gray-200">
-          <CartItemRow
-            v-for="item in group.items"
-            :key="item.inventoryId"
-            :item="item"
-            @toggle-selection="cartStore.toggleItemSelection($event)"
-            @update-quantity="cartStore.updateQuantity($event.inventoryId, $event.quantity)"
-            @remove="cartStore.removeFromCart($event)"
-          />
-        </div>
-      </div>
+        :group="group"
+        @toggle-selection="cartStore.toggleItemSelection($event)"
+        @update-quantity="cartStore.updateQuantity($event.inventoryId, $event.quantity)"
+        @remove="cartStore.removeFromCart($event)"
+      />
 
       <!-- Cart Summary -->
       <div class="sticky bottom-4 rounded-xl bg-white p-6 shadow">
@@ -91,7 +77,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import CartItemRow from '~/components/cart/CartItemRow.vue'
+import CartStoreGroup from '~/components/cart/CartStoreGroup.vue'
 import EmptyCart from '~/components/cart/EmptyCart.vue'
 import { useCartStore } from '~/stores/cart'
 import { useOrderStore } from '~/stores/order'
