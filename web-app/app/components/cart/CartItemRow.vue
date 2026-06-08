@@ -10,11 +10,12 @@
     />
 
     <!-- Image -->
-    <div
+    <NuxtLink
+      :to="productLink"
       class="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-gray-100 sm:h-25 sm:w-25"
     >
       <SvgIcon name="icon-products" class="h-7 w-7 text-gray-300" />
-    </div>
+    </NuxtLink>
 
     <!-- Body: details + price + controls (stacked until xl, row from xl) -->
     <div class="flex min-w-0 flex-1 flex-col gap-3 xl:flex-row xl:items-center xl:gap-4">
@@ -22,7 +23,12 @@
       <div class="flex items-start justify-between gap-3 xl:contents">
         <!-- Products: name + category + expiry -->
         <div class="min-w-0 xl:flex-1">
-          <h3 class="line-clamp-2 font-semibold text-gray-800">{{ item.productName }}</h3>
+          <NuxtLink
+            :to="productLink"
+            class="line-clamp-2 font-semibold text-gray-800 hover:text-green-700"
+          >
+            {{ item.productName }}
+          </NuxtLink>
           <p class="truncate text-sm text-gray-600">{{ item.categoryName }}</p>
           <div class="mt-1">
             <ExpiryBadge :expiry-date="item.expiryDate" />
@@ -69,12 +75,13 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
 import PriceBlock from '~/components/ui/PriceBlock.vue'
 import QuantityCounter from '~/components/ui/QuantityCounter.vue'
 import { formatPrice } from '~/utils/price'
 
-defineProps({
+const props = defineProps({
   item: {
     type: Object,
     required: true,
@@ -82,4 +89,8 @@ defineProps({
 })
 
 const emit = defineEmits(['toggle-selection', 'update-quantity', 'remove'])
+
+const productLink = computed(
+  () => `/supermarkets/${props.item.supermarketId}/products/${props.item.productMasterId}`
+)
 </script>
