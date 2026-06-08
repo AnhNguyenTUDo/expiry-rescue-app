@@ -65,14 +65,8 @@
                 <p class="mb-2 text-sm text-gray-500">{{ item.categoryName }}</p>
 
                 <!-- Expiry Info -->
-                <div class="mb-2 flex items-center gap-2 text-sm">
-                  <span class="text-gray-600">Expires:</span>
-                  <span class="font-semibold text-green-700">
-                    {{ formatDate(item.expiryDate) }}
-                  </span>
-                  <span class="rounded bg-green-700 px-2 py-0.5 text-xs text-white">
-                    {{ calculateDaysUntil(item.expiryDate) }}
-                  </span>
+                <div class="mb-2">
+                  <ExpiryBadge :expiry-date="item.expiryDate" />
                 </div>
 
                 <!-- Price -->
@@ -179,9 +173,9 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
 import { useCartStore } from '~/stores/cart'
 import { useOrderStore } from '~/stores/order'
-import { calculateDaysUntil, formatDate } from '~/utils/date'
 import { calculateDiscount, formatPrice } from '~/utils/price'
 
 const cartStore = useCartStore()
