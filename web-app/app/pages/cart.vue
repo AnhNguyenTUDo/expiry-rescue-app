@@ -7,10 +7,22 @@
 
     <!-- Cart Items -->
     <div v-else class="flex flex-col gap-6 lg:flex-row lg:items-start">
-      <!-- Left: column headers + grouped items -->
+      <!-- Left: select all + grouped items -->
       <div class="min-w-0 flex-1 rounded-xl bg-white p-4">
+        <!-- Select all -->
+        <label class="flex cursor-pointer items-center gap-3 px-2">
+          <input
+            type="checkbox"
+            :checked="cartStore.allSelected"
+            aria-label="Select all items"
+            class="h-4.5 w-4.5 rounded-sm border-gray-300 text-green-700 focus:ring-green-600"
+            @change="cartStore.toggleSelectAll()"
+          />
+          <span class="font-semibold text-gray-700">Select all</span>
+        </label>
+
         <!-- Products Grouped by Supermarket -->
-        <div class="space-y-6">
+        <div class="mt-2 space-y-6">
           <CartStoreGroup
             v-for="group in cartStore.itemsBySupermarket"
             :key="group.supermarketId"
