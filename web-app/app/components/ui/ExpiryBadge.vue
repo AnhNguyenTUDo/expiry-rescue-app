@@ -59,6 +59,6 @@ const tier = computed(() => {
   }
 })
 
-const dateLabel = computed(() => formatDate(props.expiryDate))
+const dateLabel = computed(() => formatDate(props.expiryDate, { year: undefined }))
 const daysLabel = computed(() => calculateDaysUntil(props.expiryDate))
 </script>
