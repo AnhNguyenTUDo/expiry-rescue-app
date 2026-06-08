@@ -70,16 +70,11 @@
                 </div>
 
                 <!-- Price -->
-                <div class="mb-3 flex items-center gap-3">
-                  <span class="text-2xl font-bold text-green-700">
-                    {{ formatPrice(item.sellingPrice) }}
-                  </span>
-                  <span class="text-sm text-gray-400 line-through">
-                    {{ formatPrice(item.originalPrice) }}
-                  </span>
-                  <span class="rounded bg-red-600 px-2 py-1 text-xs font-semibold text-white">
-                    {{ calculateDiscount(item.originalPrice, item.sellingPrice) }}
-                  </span>
+                <div class="mb-3">
+                  <PriceBlock
+                    :original-price="item.originalPrice"
+                    :selling-price="item.sellingPrice"
+                  />
                 </div>
 
                 <!-- Quantity Controls -->
@@ -174,9 +169,10 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
+import PriceBlock from '~/components/ui/PriceBlock.vue'
 import { useCartStore } from '~/stores/cart'
 import { useOrderStore } from '~/stores/order'
-import { calculateDiscount, formatPrice } from '~/utils/price'
+import { formatPrice } from '~/utils/price'
 
 const cartStore = useCartStore()
 const orderStore = useOrderStore()
