@@ -24,6 +24,12 @@ export const useCartStore = defineStore('cart', () => {
     }, 0)
   })
 
+  const totalSavings = computed(() => {
+    return selectedItems.value.reduce((total, item) => {
+      return total + (item.originalPrice - item.sellingPrice) * item.quantity
+    }, 0)
+  })
+
   const itemsBySupermarket = computed(() => {
     const grouped = {}
     cartItems.value.forEach((item) => {
@@ -139,6 +145,7 @@ export const useCartStore = defineStore('cart', () => {
     selectedItems,
     totalSelectedItems,
     totalPrice,
+    totalSavings,
     itemsBySupermarket,
     allSelected,
     // Actions
