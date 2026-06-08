@@ -59,7 +59,7 @@
                 />
               </div>
 
-              <!-- Product Info -->
+              <!-- Column 1: Product Info -->
               <div class="flex-1">
                 <h3 class="text-lg font-semibold text-gray-800">{{ item.productName }}</h3>
                 <p class="mb-2 text-sm text-gray-500">{{ item.categoryName }}</p>
@@ -70,44 +70,25 @@
                 </div>
 
                 <!-- Price -->
-                <div class="mb-3">
+                <div>
                   <PriceBlock
                     :original-price="item.originalPrice"
                     :selling-price="item.sellingPrice"
                   />
                 </div>
+              </div>
 
-                <!-- Quantity Controls -->
-                <div class="flex items-center gap-4">
-                  <div class="flex items-center rounded-lg border border-gray-300">
-                    <button
-                      :disabled="item.quantity <= 1"
-                      class="cursor-pointer px-3 py-1 text-lg font-bold hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
-                      @click="cartStore.decreaseQuantity(item.inventoryId)"
-                    >
-                      −
-                    </button>
-                    <span class="min-w-[50px] px-4 py-1 text-center font-semibold">
-                      {{ item.quantity }}
-                    </span>
-                    <button
-                      :disabled="item.quantity >= item.quantityAvailable"
-                      class="cursor-pointer px-3 py-1 text-lg font-bold hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
-                      @click="cartStore.increaseQuantity(item.inventoryId)"
-                    >
-                      +
-                    </button>
-                  </div>
+              <!-- Column 2: Quantity + Delete -->
+              <div class="flex items-center gap-3">
+                <div class="flex flex-col items-center gap-1">
+                  <QuantityCounter
+                    :model-value="item.quantity"
+                    :max="item.quantityAvailable"
+                    @update:model-value="cartStore.updateQuantity(item.inventoryId, $event)"
+                  />
                   <span class="text-sm text-gray-500">
                     ({{ item.quantityAvailable }} available)
                   </span>
-                </div>
-              </div>
-
-              <!-- Subtotal and Delete -->
-              <div class="space-y-2 text-right">
-                <div class="text-xl font-bold text-gray-800">
-                  {{ formatPrice(item.sellingPrice * item.quantity) }}
                 </div>
                 <button
                   class="cursor-pointer text-sm font-semibold text-red-600 hover:text-red-800"
@@ -115,6 +96,13 @@
                 >
                   Delete
                 </button>
+              </div>
+
+              <!-- Column 3: Subtotal -->
+              <div class="text-right">
+                <div class="text-xl font-bold text-gray-800">
+                  {{ formatPrice(item.sellingPrice * item.quantity) }}
+                </div>
               </div>
             </div>
           </div>
@@ -170,6 +158,7 @@
 import { useRouter } from 'vue-router'
 import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
 import PriceBlock from '~/components/ui/PriceBlock.vue'
+import QuantityCounter from '~/components/ui/QuantityCounter.vue'
 import { useCartStore } from '~/stores/cart'
 import { useOrderStore } from '~/stores/order'
 import { formatPrice } from '~/utils/price'
