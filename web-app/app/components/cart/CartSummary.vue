@@ -1,5 +1,5 @@
 <template>
-  <div class="sticky top-6 rounded-xl bg-white p-6 shadow">
+  <div class="sticky top-6 rounded-xl bg-white p-6">
     <h2 class="mb-4 text-lg font-semibold text-gray-800">Summary</h2>
 
     <div class="mb-6 space-y-2">
@@ -17,7 +17,7 @@
       <div class="border-t border-gray-200 pt-2">
         <div class="flex items-center justify-between">
           <span class="font-semibold text-gray-700">Total</span>
-          <span class="text-2xl font-bold text-green-700">{{ formatPrice(totalPrice) }}</span>
+          <span class="text-xl font-bold text-green-700">{{ formatPrice(totalPrice) }}</span>
         </div>
       </div>
     </div>

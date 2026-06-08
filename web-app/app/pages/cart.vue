@@ -6,9 +6,9 @@
     <EmptyCart v-if="cartStore.cartItems.length === 0" />
 
     <!-- Cart Items -->
-    <div v-else class="flex items-start gap-6">
+    <div v-else class="flex flex-col gap-6 lg:flex-row lg:items-start">
       <!-- Left: column headers + grouped items -->
-      <div class="min-w-0 flex-1 rounded-xl bg-white p-4 shadow">
+      <div class="min-w-0 flex-1 rounded-xl bg-white p-4">
         <!-- Products Grouped by Supermarket -->
         <div class="space-y-6">
           <CartStoreGroup
@@ -23,7 +23,7 @@
       </div>
 
       <!-- Right: summary -->
-      <div class="w-80 shrink-0">
+      <div class="w-full lg:w-80 lg:shrink-0">
         <CartSummary
           :total-items="cartStore.totalSelectedItems"
           :total-price="cartStore.totalPrice"
