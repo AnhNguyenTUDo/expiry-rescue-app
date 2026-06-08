@@ -1,13 +1,17 @@
 <template>
   <div class="rounded-xl bg-white shadow">
     <!-- Supermarket Header -->
-    <div class="rounded-t-xl bg-green-600 p-4 text-white">
-      <div class="flex items-center justify-between">
-        <h2 class="text-xl font-bold">{{ group.supermarketName }}</h2>
-        <span v-if="groupSubtotal > 0" class="text-sm font-semibold opacity-90">
-          {{ formatPrice(groupSubtotal) }}
-        </span>
+    <div
+      class="flex items-center justify-between rounded-t-xl border-b border-gray-200 bg-gray-50 p-4"
+    >
+      <div class="flex items-center gap-2">
+        <SvgIcon name="icon-store" class="h-5 w-5 text-gray-500" />
+
+        <h2 class="text-lg font-semibold text-gray-800">{{ group.supermarketName }}</h2>
       </div>
+      <span v-if="groupSubtotal > 0" class="text-sm font-semibold text-gray-600">
+        {{ formatPrice(groupSubtotal) }}
+      </span>
     </div>
 
     <!-- Products List -->
