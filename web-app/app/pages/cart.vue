@@ -78,7 +78,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import CartStoreGroup from '~/components/cart/CartStoreGroup.vue'
 import CartSummary from '~/components/cart/CartSummary.vue'
@@ -90,6 +90,13 @@ import { useOrderStore } from '~/stores/order'
 const cartStore = useCartStore()
 const orderStore = useOrderStore()
 const router = useRouter()
+
+// Reconcile the persisted cart against live inventory when the page opens.
+// initCart is idempotent, so this safely hydrates even though the page mounts before the layout.
+onMounted(() => {
+  cartStore.initCart()
+  cartStore.refreshAvailability()
+})
 
 // Item pending removal confirmation (inventoryId, or null when no prompt)
 const pendingRemoveId = ref(null)

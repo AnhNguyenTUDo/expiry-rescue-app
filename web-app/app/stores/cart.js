@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
+import ProductInventoryService from '~/services/product-inventory.service'
 
 const STORAGE_KEY = 'cart_items'
 
 export const useCartStore = defineStore('cart', () => {
   // State
   const cartItems = ref([])
+  let hydrated = false
 
   // Getters
   const totalItems = computed(() => {
@@ -134,7 +136,8 @@ export const useCartStore = defineStore('cart', () => {
    * Call once on app mount (client-only).
    */
   function initCart() {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined' || hydrated) return
+    hydrated = true
 
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
@@ -155,6 +158,60 @@ export const useCartStore = defineStore('cart', () => {
       },
       { deep: true }
     )
+  }
+
+  /**
+   * Reconcile the persisted cart against live inventory: refresh price/availability,
+   * clamp quantities to current stock, and drop items that are gone or out of stock.
+   * Items whose inventory fetch fails are left untouched (avoids wiping the cart on a
+   * transient network error).
+   */
+  async function refreshAvailability() {
+    if (cartItems.value.length === 0) return
+
+    // Dedupe fetches by supermarket + product master (one request can cover many batches)
+    const groups = new Map()
+    cartItems.value.forEach((item) => {
+      const key = `${item.supermarketId}:${item.productMasterId}`
+      if (!groups.has(key)) {
+        groups.set(key, {
+          supermarketId: item.supermarketId,
+          productMasterId: item.productMasterId,
+        })
+      }
+    })
+
+    // key -> Map(inventoryId -> live batch); only set for successful fetches
+    const liveByKey = new Map()
+    await Promise.all(
+      [...groups.entries()].map(async ([key, { supermarketId, productMasterId }]) => {
+        const response = await ProductInventoryService.getInventoryBySupermarketAndProductMaster(
+          supermarketId,
+          productMasterId,
+          () => {}
+        )
+        if (response && Array.isArray(response.data)) {
+          liveByKey.set(key, new Map(response.data.map((batch) => [batch.id, batch])))
+        }
+      })
+    )
+
+    cartItems.value = cartItems.value
+      .map((item) => {
+        const byId = liveByKey.get(`${item.supermarketId}:${item.productMasterId}`)
+        if (!byId) return item // fetch failed for this group — keep the item as-is
+        const live = byId.get(item.inventoryId)
+        if (!live || live.quantityAvailable <= 0) return null // gone or out of stock
+        return {
+          ...item,
+          quantityAvailable: live.quantityAvailable,
+          sellingPrice: live.sellingPrice,
+          originalPrice: live.originalPrice,
+          expiryDate: live.expiryDate,
+          quantity: Math.min(item.quantity, live.quantityAvailable),
+        }
+      })
+      .filter(Boolean)
   }
 
   return {
@@ -179,5 +236,6 @@ export const useCartStore = defineStore('cart', () => {
     isInCart,
     getCartItemQuantity,
     initCart,
+    refreshAvailability,
   }
 })
