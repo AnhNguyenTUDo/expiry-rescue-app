@@ -30,16 +30,10 @@
         <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-gray-300 text-gray-700 hover:bg-gray-200">About</button> -->
         <NuxtLink
           to="/cart"
-          class="relative flex items-center rounded-[10px] border border-gray-300 px-4 py-1.5 text-gray-700 transition hover:bg-gray-200"
+          class="flex items-center rounded-[10px] border border-gray-300 px-4 py-1.5 text-gray-700 transition hover:bg-gray-200"
         >
           Cart
           <span v-if="cartTotal > 0" class="ml-1">({{ cartTotal }})</span>
-          <span
-            v-if="cartTotal > 0"
-            class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white"
-          >
-            {{ cartTotal > 99 ? '99+' : cartTotal }}
-          </span>
         </NuxtLink>
         <!-- Profile Dropdown -->
         <ProfileDropdown />
