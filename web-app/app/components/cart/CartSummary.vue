@@ -23,16 +23,16 @@
     </div>
 
     <button
-      :disabled="checkoutDisabled"
+      :disabled="checkoutDisabled || checkingOut"
       class="w-full rounded-[11px] px-6 py-3 text-lg font-semibold transition"
       :class="
-        checkoutDisabled
+        checkoutDisabled || checkingOut
           ? 'cursor-not-allowed bg-gray-300 text-gray-500'
           : 'cursor-pointer bg-green-700 text-white hover:bg-green-800'
       "
       @click="emit('checkout')"
     >
-      Checkout
+      {{ checkingOut ? 'Placing order…' : 'Checkout' }}
     </button>
   </div>
 </template>
@@ -45,6 +45,7 @@ defineProps({
   totalPrice: { type: Number, required: true },
   totalSavings: { type: Number, default: 0 },
   checkoutDisabled: { type: Boolean, default: false },
+  checkingOut: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['checkout'])

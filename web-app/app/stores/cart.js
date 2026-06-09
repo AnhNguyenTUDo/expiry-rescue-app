@@ -98,18 +98,8 @@ export const useCartStore = defineStore('cart', () => {
     }
   }
 
-  function increaseQuantity(inventoryId) {
-    const item = cartItems.value.find((item) => item.inventoryId === inventoryId)
-    if (item && item.quantity < item.quantityAvailable) {
-      item.quantity += 1
-    }
-  }
-
-  function decreaseQuantity(inventoryId) {
-    const item = cartItems.value.find((item) => item.inventoryId === inventoryId)
-    if (item && item.quantity > 1) {
-      item.quantity -= 1
-    }
+  function removeSelectedItems() {
+    cartItems.value = cartItems.value.filter((item) => !item.selected)
   }
 
   function toggleItemSelection(inventoryId) {
@@ -181,9 +171,8 @@ export const useCartStore = defineStore('cart', () => {
     // Actions
     addToCart,
     removeFromCart,
+    removeSelectedItems,
     updateQuantity,
-    increaseQuantity,
-    decreaseQuantity,
     toggleItemSelection,
     toggleSelectAll,
     clearCart,

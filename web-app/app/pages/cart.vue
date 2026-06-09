@@ -46,6 +46,7 @@
           :total-price="cartStore.totalPrice"
           :total-savings="cartStore.totalSavings"
           :checkout-disabled="cartStore.selectedItems.length === 0"
+          :checking-out="isCheckingOut"
           @checkout="handleCheckout"
         />
       </div>
@@ -95,12 +96,17 @@ const cancelRemove = () => {
 }
 
 // Checkout handler
+const isCheckingOut = ref(false)
+
 const handleCheckout = async () => {
+  // Guard against double-submit while a request is in flight
+  if (isCheckingOut.value) return
   if (cartStore.selectedItems.length === 0) {
     alert('Please select items to checkout')
     return
   }
 
+  isCheckingOut.value = true
   try {
     // Prepare order data
     const orderData = {
@@ -114,10 +120,8 @@ const handleCheckout = async () => {
     const order = await orderStore.createOrder(orderData)
 
     if (order) {
-      // Remove checked out items from cart
-      cartStore.selectedItems.forEach((item) => {
-        cartStore.removeFromCart(item.inventoryId)
-      })
+      // Remove checked out items from cart in a single pass
+      cartStore.removeSelectedItems()
 
       // Redirect to order detail page
       alert(`Order #${order.orderNumber} created successfully!`)
@@ -126,6 +130,8 @@ const handleCheckout = async () => {
   } catch (error) {
     console.error('Checkout failed:', error)
     alert('Failed to create order. Please try again.')
+  } finally {
+    isCheckingOut.value = false
   }
 }
 </script>
