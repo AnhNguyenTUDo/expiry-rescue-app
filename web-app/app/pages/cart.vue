@@ -29,7 +29,7 @@
             :group="group"
             @toggle-selection="cartStore.toggleItemSelection($event)"
             @update-quantity="cartStore.updateQuantity($event.inventoryId, $event.quantity)"
-            @remove="cartStore.removeFromCart($event)"
+            @remove="requestRemove($event)"
           />
         </div>
       </div>
@@ -45,20 +45,49 @@
         />
       </div>
     </div>
+
+    <!-- Confirm removal of a single item -->
+    <ConfirmModal
+      :show="pendingRemoveId !== null"
+      title="Remove item?"
+      message="This item will be removed from your cart."
+      confirm-label="Remove"
+      variant="danger"
+      @confirm="confirmRemove"
+      @cancel="cancelRemove"
+    />
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import CartStoreGroup from '~/components/cart/CartStoreGroup.vue'
 import CartSummary from '~/components/cart/CartSummary.vue'
 import EmptyCart from '~/components/cart/EmptyCart.vue'
+import ConfirmModal from '~/components/ui/ConfirmModal.vue'
 import { useCartStore } from '~/stores/cart'
 import { useOrderStore } from '~/stores/order'
 
 const cartStore = useCartStore()
 const orderStore = useOrderStore()
 const router = useRouter()
+
+// Item pending removal confirmation (inventoryId, or null when no prompt)
+const pendingRemoveId = ref(null)
+
+const requestRemove = (inventoryId) => {
+  pendingRemoveId.value = inventoryId
+}
+
+const confirmRemove = () => {
+  cartStore.removeFromCart(pendingRemoveId.value)
+  pendingRemoveId.value = null
+}
+
+const cancelRemove = () => {
+  pendingRemoveId.value = null
+}
 
 // Checkout handler
 const handleCheckout = async () => {
