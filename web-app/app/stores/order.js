@@ -32,9 +32,9 @@ export const useOrderStore = defineStore('order', () => {
         error.value = err.response?.data?.message || 'Failed to create order'
       })
 
-      if (response && response.data) {
-        orders.value.unshift(response.data)
-        return response.data
+      if (response) {
+        orders.value.unshift(response)
+        return response
       }
     } catch (err) {
       error.value = err.message

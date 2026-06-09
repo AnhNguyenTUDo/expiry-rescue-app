@@ -22,6 +22,8 @@
       </div>
     </div>
 
+    <ErrorAlert v-if="error" :error="error" class="mb-3 text-sm" />
+
     <button
       :disabled="checkoutDisabled || checkingOut"
       class="w-full rounded-[11px] px-6 py-3 text-lg font-semibold transition"
@@ -38,6 +40,7 @@
 </template>
 
 <script setup>
+import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 import { formatPrice } from '~/utils/price'
 
 defineProps({
@@ -46,6 +49,7 @@ defineProps({
   totalSavings: { type: Number, default: 0 },
   checkoutDisabled: { type: Boolean, default: false },
   checkingOut: { type: Boolean, default: false },
+  error: { type: String, default: '' },
 })
 
 const emit = defineEmits(['checkout'])
