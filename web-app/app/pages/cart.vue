@@ -1,6 +1,11 @@
 <template>
   <div class="mx-auto max-w-7xl">
-    <h1 class="mb-6 text-2xl font-bold text-gray-800">Cart</h1>
+    <h1 class="mb-6 text-2xl font-bold text-gray-800">
+      Cart
+      <span v-if="cartStore.cartItems.length" class="text-base font-medium text-gray-500">
+        ({{ cartStore.totalItems }} items)
+      </span>
+    </h1>
 
     <!-- Empty Cart State -->
     <EmptyCart v-if="cartStore.cartItems.length === 0" />
