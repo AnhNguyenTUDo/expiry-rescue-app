@@ -71,8 +71,8 @@ export const useOrderStore = defineStore('order', () => {
         error.value = err.response?.data?.message || 'Failed to search orders'
       })
 
-      if (response && response.data) {
-        orders.value = response.data
+      if (response) {
+        orders.value = response
       }
     } catch (err) {
       error.value = err.message
@@ -110,19 +110,19 @@ export const useOrderStore = defineStore('order', () => {
         error.value = err.response?.data?.message || 'Failed to cancel order'
       })
 
-      if (response && response.data) {
+      if (response) {
         // Update order in list
         const index = orders.value.findIndex((o) => o.id === orderId)
         if (index !== -1) {
-          orders.value[index] = response.data
+          orders.value[index] = response
         }
 
         // Update current order if it's the same
         if (currentOrder.value?.id === orderId) {
-          currentOrder.value = response.data
+          currentOrder.value = response
         }
 
-        return response.data
+        return response
       }
     } catch (err) {
       error.value = err.message
