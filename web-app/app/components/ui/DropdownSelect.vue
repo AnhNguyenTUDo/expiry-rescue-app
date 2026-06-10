@@ -7,7 +7,10 @@
       :style="{ minWidth: minWidth }"
       @click="isOpen = !isOpen"
     >
-      <span>{{ selectedLabel }} </span>
+      <span>
+        <span v-if="prefix" class="mr-1 text-gray-500">{{ prefix }}</span
+        >{{ selectedLabel }}
+      </span>
       <SvgIcon
         name="icon-chevron-down"
         class="h-3 w-3 text-gray-500 transition-transform duration-200"
@@ -65,6 +68,11 @@ const props = defineProps({
   minWidth: {
     type: String,
     default: '160px',
+  },
+  // Optional muted label shown before the selected value, e.g. "Status:"
+  prefix: {
+    type: String,
+    default: '',
   },
 })
 

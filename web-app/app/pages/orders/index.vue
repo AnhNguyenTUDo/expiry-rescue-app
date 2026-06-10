@@ -12,35 +12,25 @@
 
     <!-- Search & Filters -->
     <div class="mb-6 rounded-xl bg-white p-4 shadow">
-      <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div class="flex flex-wrap items-center gap-4">
         <!-- Search -->
-        <input
+        <SearchBar
           v-model="searchQuery"
-          type="text"
-          placeholder="🔍 Search order number, product, or supermarket..."
-          class="rounded-lg border border-gray-300 px-4 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500"
-          @input="handleSearch"
+          placeholder="Search order number, product, or supermarket"
+          class="w-64"
+          @update:model-value="handleSearch"
         />
 
         <!-- Status Filter -->
-        <select
+        <DropdownSelect
           v-model="statusFilter"
-          class="cursor-pointer rounded-lg border border-gray-300 px-4 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500"
-          @change="handleSearch"
-        >
-          <option value="">All Statuses</option>
-          <option value="CONFIRMED">✅ Confirmed</option>
-          <option value="CANCELLED">❌ Cancelled</option>
-        </select>
+          :options="statusOptions"
+          prefix="Status:"
+          @update:model-value="handleSearch"
+        />
 
-        <!-- Clear Filters -->
-        <button
-          v-if="searchQuery || statusFilter"
-          class="cursor-pointer rounded-lg bg-gray-200 px-4 py-2 text-gray-700 transition hover:bg-gray-300"
-          @click="clearFilters"
-        >
-          Clear Filters
-        </button>
+        <!-- Reset Filters -->
+        <ResetFilterButton v-if="searchQuery || statusFilter" @click="clearFilters" />
       </div>
     </div>
 
@@ -97,9 +87,12 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import DropdownSelect from '~/components/ui/DropdownSelect.vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
 import OrderStatusTag from '~/components/ui/OrderStatusTag.vue'
+import ResetFilterButton from '~/components/ui/ResetFilterButton.vue'
+import SearchBar from '~/components/ui/SearchBar.vue'
 import { useOrderStore } from '~/stores/order'
 import { formatDateTime } from '~/utils/date'
 import { formatPrice } from '~/utils/price'
@@ -110,6 +103,12 @@ const orderStore = useOrderStore()
 
 const searchQuery = ref('')
 const statusFilter = ref('')
+
+const statusOptions = [
+  { value: '', label: 'All' },
+  { value: 'CONFIRMED', label: 'Confirmed' },
+  { value: 'CANCELLED', label: 'Cancelled' },
+]
 
 // Fetch orders on mount
 onMounted(async () => {

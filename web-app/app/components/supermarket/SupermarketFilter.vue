@@ -20,15 +20,7 @@
       <StatusButtonGroup v-model="status" />
 
       <!-- Reset filters -->
-      <button
-        v-if="isFiltered"
-        type="button"
-        class="flex cursor-pointer items-center gap-1 text-sm text-[#bc4747] transition-all duration-300 hover:scale-104 hover:text-red-700"
-        @click="reset"
-      >
-        <SvgIcon name="icon-reset" class="h-3.5 w-3.5" />
-        Reset Filter
-      </button>
+      <ResetFilterButton v-if="isFiltered" @click="reset" />
     </div>
   </div>
 </template>
@@ -36,6 +28,7 @@
 <script setup>
 import { computed } from 'vue'
 import DropdownSelect from '@/components/ui/DropdownSelect.vue'
+import ResetFilterButton from '@/components/ui/ResetFilterButton.vue'
 import SearchableDropdown from '@/components/ui/SearchableDropdown.vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
 import StatusButtonGroup from '@/components/ui/StatusButtonGroup.vue'
