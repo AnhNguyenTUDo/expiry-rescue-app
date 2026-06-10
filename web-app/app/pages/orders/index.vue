@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
+  <div class="mx-auto max-w-7xl">
     <div class="mb-6 flex items-center justify-between">
       <h1 class="text-3xl font-bold text-gray-800">My Orders</h1>
       <NuxtLink
@@ -11,7 +11,7 @@
     </div>
 
     <!-- Search & Filters -->
-    <div class="mb-6 rounded-lg bg-white p-4 shadow">
+    <div class="mb-6 rounded-xl bg-white p-4 shadow">
       <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
         <!-- Search -->
         <input
@@ -52,7 +52,7 @@
       <div
         v-for="order in orderStore.orders"
         :key="order.id"
-        class="cursor-pointer rounded-lg bg-white p-6 shadow transition hover:shadow-md"
+        class="cursor-pointer rounded-xl bg-white p-6 shadow transition hover:shadow-md"
         @click="navigateTo(`/orders/${order.id}`)"
       >
         <div class="mb-2 flex items-start justify-between">
@@ -79,7 +79,7 @@
     </div>
 
     <!-- Empty State -->
-    <div v-else class="rounded-lg bg-white py-12 text-center shadow">
+    <div v-else class="rounded-xl bg-white py-12 text-center shadow">
       <p class="mb-4 text-lg text-gray-500">
         {{
           searchQuery || statusFilter

@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
+  <div class="mx-auto max-w-4xl">
     <LoadingState v-if="orderStore.loading" message="Loading order details..." />
     <ErrorAlert v-else-if="orderStore.error" :error="orderStore.error" class="mb-4">
       <NuxtLink to="/orders" class="mt-2 inline-block text-red-800 underline">
@@ -10,7 +10,7 @@
     <!-- Order Details -->
     <div v-else-if="order" class="space-y-6">
       <!-- Header -->
-      <div class="rounded-lg bg-white p-6 shadow">
+      <div class="rounded-xl bg-white p-6 shadow">
         <div class="mb-4 flex items-start justify-between">
           <div>
             <h1 class="text-3xl font-bold text-gray-800">Order #{{ order.orderNumber }}</h1>
@@ -58,7 +58,7 @@
       </div>
 
       <!-- Order Items -->
-      <div class="rounded-lg bg-white p-6 shadow">
+      <div class="rounded-xl bg-white p-6 shadow">
         <h2 class="mb-4 text-2xl font-bold">Order Items</h2>
         <div class="space-y-4">
           <div v-for="item in order.items" :key="item.id" class="border-b pb-4 last:border-b-0">
