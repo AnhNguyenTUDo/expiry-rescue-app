@@ -60,12 +60,7 @@
             <h3 class="text-lg font-semibold text-gray-800">Order #{{ order.orderNumber }}</h3>
             <p class="text-sm text-gray-600">{{ formatDate(order.createdAt) }}</p>
           </div>
-          <span
-            class="rounded-full px-3 py-1 text-sm font-semibold"
-            :class="getStatusClass(order.status)"
-          >
-            {{ getStatusLabel(order.status) }}
-          </span>
+          <OrderStatusTag :status="order.status" />
         </div>
 
         <div class="mb-2 flex items-center justify-between text-sm text-gray-600">
@@ -104,9 +99,9 @@
 import { onMounted, ref } from 'vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
+import OrderStatusTag from '~/components/ui/OrderStatusTag.vue'
 import { useOrderStore } from '~/stores/order'
 import { formatDateTime } from '~/utils/date'
-import { getStatusClass, getStatusLabel } from '~/utils/order'
 import { formatPrice } from '~/utils/price'
 
 definePageMeta({ middleware: 'auth' })
