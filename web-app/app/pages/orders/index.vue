@@ -109,6 +109,8 @@ import { formatDateTime } from '~/utils/date'
 import { getStatusClass, getStatusLabel } from '~/utils/order'
 import { formatPrice } from '~/utils/price'
 
+definePageMeta({ middleware: 'auth' })
+
 const orderStore = useOrderStore()
 
 const searchQuery = ref('')

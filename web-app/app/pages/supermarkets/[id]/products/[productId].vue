@@ -348,8 +348,8 @@ const isInCart = computed(() => {
 const addToCart = () => {
   // Check if user is authenticated
   if (!authStore.isAuthenticated) {
-    // Redirect to login page
-    navigateTo('/login')
+    // Send to login, remembering this page so they come back after logging in
+    navigateTo(`/login?redirect=${encodeURIComponent(route.fullPath)}`)
     return
   }
 

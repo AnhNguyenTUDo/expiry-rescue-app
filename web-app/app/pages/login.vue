@@ -41,6 +41,17 @@ import OtpEmailForm from '~/components/auth/OtpEmailForm.vue'
 import { useAuthStore } from '~/stores/auth'
 
 const authStore = useAuthStore()
+const route = useRoute()
+
+// Where to send the user after a successful login: the page the auth middleware
+// bounced them from (?redirect=...), or home. Only allow same-origin relative
+// paths so the query param can't be used as an open redirect.
+const redirectTarget = () => {
+  const target = route.query.redirect
+  return typeof target === 'string' && target.startsWith('/') && !target.startsWith('//')
+    ? target
+    : '/'
+}
 
 // Which step of the login flow is showing: 'email' (choose method) or 'code' (enter OTP)
 const step = ref('email')
@@ -92,7 +103,7 @@ const handleVerify = async (code) => {
   otpLoading.value = true
   try {
     await authStore.verifyOtp(otpEmail.value, code)
-    navigateTo('/')
+    navigateTo(redirectTarget())
   } catch (err) {
     otpError.value = err.message
   } finally {
@@ -125,7 +136,7 @@ onMounted(() => {
   authStore.clearError()
 
   if (authStore.isAuthenticated) {
-    navigateTo('/')
+    navigateTo(redirectTarget())
   }
 })
 </script>
