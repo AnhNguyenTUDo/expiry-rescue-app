@@ -96,7 +96,7 @@ import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
 import OrderStatusTag from '~/components/ui/OrderStatusTag.vue'
 import { useOrderStore } from '~/stores/order'
-import { formatDateTime } from '~/utils/date'
+import { formatDate } from '~/utils/date'
 import { formatPrice } from '~/utils/price'
 
 definePageMeta({ middleware: 'auth' })
@@ -139,7 +139,4 @@ const handleDeleteOrder = async () => {
     alert('Failed to delete order')
   }
 }
-
-// Use formatDateTime for orders (includes time)
-const formatDate = formatDateTime
 </script>
