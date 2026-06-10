@@ -40,9 +40,11 @@ export const useAxios = () => {
           localStorage.removeItem('auth_user')
 
           // Guard against redirect loops if we're already on the login page (e.g. a
-          // failed OTP verify also returns 401).
+          // failed OTP verify also returns 401). Otherwise preserve the current path
+          // so login can send the user back after re-authenticating.
           if (!window.location.pathname.startsWith('/login')) {
-            window.location.href = '/login'
+            const redirect = encodeURIComponent(window.location.pathname + window.location.search)
+            window.location.href = `/login?redirect=${redirect}`
           }
         }
         return Promise.reject(error)
