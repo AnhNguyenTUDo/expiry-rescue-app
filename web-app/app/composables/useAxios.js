@@ -34,13 +34,15 @@ export const useAxios = () => {
       },
       function (error) {
         // Handle 401 Unauthorized errors
-        if (error.response && error.response.status === 401) {
+        if (error.response && error.response.status === 401 && typeof window !== 'undefined') {
           // Clear auth data
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem('auth_token')
-            localStorage.removeItem('auth_user')
-            // Redirect to login page
-            // window.location.href = '/login'
+          localStorage.removeItem('auth_token')
+          localStorage.removeItem('auth_user')
+
+          // Guard against redirect loops if we're already on the login page (e.g. a
+          // failed OTP verify also returns 401).
+          if (!window.location.pathname.startsWith('/login')) {
+            window.location.href = '/login'
           }
         }
         return Promise.reject(error)
