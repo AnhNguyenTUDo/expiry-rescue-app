@@ -82,5 +82,6 @@ watch(
 onMounted(() => {
   updateSelectedSupermarket()
   authStore.initAuth()
+  cartStore.initCart()
 })
 </script>

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import AuthService from '~/services/auth.service'
+import { useCartStore } from '~/stores/cart'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -59,6 +60,9 @@ export const useAuthStore = defineStore('auth', {
       this.token = null
       this.user = null
       this.error = null
+
+      // Clear the cart so it doesn't carry over to the next user on a shared device
+      useCartStore().clearCart()
 
       if (typeof window !== 'undefined') {
         localStorage.removeItem('auth_token')

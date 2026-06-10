@@ -1,9 +1,13 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import ProductInventoryService from '~/services/product-inventory.service'
+
+const STORAGE_KEY = 'cart_items'
 
 export const useCartStore = defineStore('cart', () => {
   // State
   const cartItems = ref([])
+  let hydrated = false
 
   // Getters
   const totalItems = computed(() => {
@@ -21,6 +25,12 @@ export const useCartStore = defineStore('cart', () => {
   const totalPrice = computed(() => {
     return selectedItems.value.reduce((total, item) => {
       return total + item.sellingPrice * item.quantity
+    }, 0)
+  })
+
+  const totalSavings = computed(() => {
+    return selectedItems.value.reduce((total, item) => {
+      return total + (item.originalPrice - item.sellingPrice) * item.quantity
     }, 0)
   })
 
@@ -90,18 +100,8 @@ export const useCartStore = defineStore('cart', () => {
     }
   }
 
-  function increaseQuantity(inventoryId) {
-    const item = cartItems.value.find((item) => item.inventoryId === inventoryId)
-    if (item && item.quantity < item.quantityAvailable) {
-      item.quantity += 1
-    }
-  }
-
-  function decreaseQuantity(inventoryId) {
-    const item = cartItems.value.find((item) => item.inventoryId === inventoryId)
-    if (item && item.quantity > 1) {
-      item.quantity -= 1
-    }
+  function removeSelectedItems() {
+    cartItems.value = cartItems.value.filter((item) => !item.selected)
   }
 
   function toggleItemSelection(inventoryId) {
@@ -131,6 +131,89 @@ export const useCartStore = defineStore('cart', () => {
     return item ? item.quantity : 0
   }
 
+  /**
+   * Hydrate the cart from localStorage and keep it in sync on every change.
+   * Call once on app mount (client-only).
+   */
+  function initCart() {
+    if (typeof window === 'undefined' || hydrated) return
+    hydrated = true
+
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        if (Array.isArray(parsed)) {
+          cartItems.value = parsed
+        }
+      } catch (e) {
+        console.error('Error parsing cart data:', e)
+      }
+    }
+
+    watch(
+      cartItems,
+      (items) => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
+      },
+      { deep: true }
+    )
+  }
+
+  /**
+   * Reconcile the persisted cart against live inventory: refresh price/availability,
+   * clamp quantities to current stock, and drop items that are gone or out of stock.
+   * Items whose inventory fetch fails are left untouched (avoids wiping the cart on a
+   * transient network error).
+   */
+  async function refreshAvailability() {
+    if (cartItems.value.length === 0) return
+
+    // Dedupe fetches by supermarket + product master (one request can cover many batches)
+    const groups = new Map()
+    cartItems.value.forEach((item) => {
+      const key = `${item.supermarketId}:${item.productMasterId}`
+      if (!groups.has(key)) {
+        groups.set(key, {
+          supermarketId: item.supermarketId,
+          productMasterId: item.productMasterId,
+        })
+      }
+    })
+
+    // key -> Map(inventoryId -> live batch); only set for successful fetches
+    const liveByKey = new Map()
+    await Promise.all(
+      [...groups.entries()].map(async ([key, { supermarketId, productMasterId }]) => {
+        const response = await ProductInventoryService.getInventoryBySupermarketAndProductMaster(
+          supermarketId,
+          productMasterId,
+          () => {}
+        )
+        if (response && Array.isArray(response.data)) {
+          liveByKey.set(key, new Map(response.data.map((batch) => [batch.id, batch])))
+        }
+      })
+    )
+
+    cartItems.value = cartItems.value
+      .map((item) => {
+        const byId = liveByKey.get(`${item.supermarketId}:${item.productMasterId}`)
+        if (!byId) return item // fetch failed for this group — keep the item as-is
+        const live = byId.get(item.inventoryId)
+        if (!live || live.quantityAvailable <= 0) return null // gone or out of stock
+        return {
+          ...item,
+          quantityAvailable: live.quantityAvailable,
+          sellingPrice: live.sellingPrice,
+          originalPrice: live.originalPrice,
+          expiryDate: live.expiryDate,
+          quantity: Math.min(item.quantity, live.quantityAvailable),
+        }
+      })
+      .filter(Boolean)
+  }
+
   return {
     // State
     cartItems,
@@ -139,18 +222,20 @@ export const useCartStore = defineStore('cart', () => {
     selectedItems,
     totalSelectedItems,
     totalPrice,
+    totalSavings,
     itemsBySupermarket,
     allSelected,
     // Actions
     addToCart,
     removeFromCart,
+    removeSelectedItems,
     updateQuantity,
-    increaseQuantity,
-    decreaseQuantity,
     toggleItemSelection,
     toggleSelectAll,
     clearCart,
     isInCart,
     getCartItemQuantity,
+    initCart,
+    refreshAvailability,
   }
 })

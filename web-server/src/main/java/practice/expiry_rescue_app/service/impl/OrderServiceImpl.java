@@ -9,6 +9,8 @@ import practice.expiry_rescue_app.entity.OrderItem;
 import practice.expiry_rescue_app.entity.ProductInventory;
 import practice.expiry_rescue_app.entity.User;
 import practice.expiry_rescue_app.enums.OrderStatus;
+import practice.expiry_rescue_app.exception.InsufficientStockException;
+import practice.expiry_rescue_app.exception.ResourceNotFoundException;
 import practice.expiry_rescue_app.model.order.CreateOrderRequest;
 import practice.expiry_rescue_app.model.order.OrderItemResponse;
 import practice.expiry_rescue_app.model.order.OrderResponse;
@@ -35,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
         public OrderResponse createOrder(CreateOrderRequest request, String userEmail) {
                 // Find user
                 User user = userRepository.findByEmail(userEmail)
-                                .orElseThrow(() -> new RuntimeException("User not found"));
+                                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
                 // Create order
                 Order order = new Order();
@@ -51,13 +53,13 @@ public class OrderServiceImpl implements OrderService {
                         // throw OptimisticLockingFailureException at save time.
                         ProductInventory inventory = productInventoryRepository
                                         .findById(itemRequest.getInventoryId())
-                                        .orElseThrow(() -> new RuntimeException(
+                                        .orElseThrow(() -> new ResourceNotFoundException(
                                                         "Product inventory not found: "
                                                                         + itemRequest.getInventoryId()));
 
                         // Check stock availability
                         if (inventory.getQuantityAvailable() < itemRequest.getQuantity()) {
-                                throw new RuntimeException(
+                                throw new InsufficientStockException(
                                                 "Insufficient stock for product: "
                                                                 + inventory.getProductMaster().getName()
                                                                 + ". Available: " + inventory.getQuantityAvailable()
@@ -98,16 +100,16 @@ public class OrderServiceImpl implements OrderService {
                         Order savedOrder = orderRepository.save(order);
                         return mapToOrderResponse(savedOrder);
                 } catch (OptimisticLockingFailureException e) {
-                        throw new RuntimeException(
+                        throw new InsufficientStockException(
                                 "Order could not be placed because stock was updated by another request. "
-                                + "Please try again.", e);
+                                + "Please try again.");
                 }
         }
 
         @Override
         public List<OrderResponse> getUserOrders(String userEmail) {
                 User user = userRepository.findByEmail(userEmail)
-                                .orElseThrow(() -> new RuntimeException("User not found"));
+                                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
                 List<Order> orders = orderRepository.findByUserIdAndStatusNotOrderByCreatedAtDesc(
                                 user.getId(), OrderStatus.DELETED);
@@ -120,7 +122,7 @@ public class OrderServiceImpl implements OrderService {
         @Override
         public List<OrderResponse> searchOrders(String userEmail, OrderStatus status, String searchQuery) {
                 User user = userRepository.findByEmail(userEmail)
-                                .orElseThrow(() -> new RuntimeException("User not found"));
+                                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
                 List<Order> orders = orderRepository.searchOrders(user.getId(), status, searchQuery);
 
@@ -134,7 +136,7 @@ public class OrderServiceImpl implements OrderService {
         @Override
         public OrderResponse getOrderById(UUID orderId, String userEmail) {
                 User user = userRepository.findByEmail(userEmail)
-                                .orElseThrow(() -> new RuntimeException("User not found"));
+                                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
                 Order order = orderRepository.findByIdAndUserId(orderId, user.getId())
                                 .orElseThrow(() -> new RuntimeException("Order not found"));
@@ -150,7 +152,7 @@ public class OrderServiceImpl implements OrderService {
         @Transactional
         public OrderResponse cancelOrder(UUID orderId, String userEmail) {
                 User user = userRepository.findByEmail(userEmail)
-                                .orElseThrow(() -> new RuntimeException("User not found"));
+                                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
                 Order order = orderRepository.findByIdAndUserId(orderId, user.getId())
                                 .orElseThrow(() -> new RuntimeException("Order not found"));
@@ -169,7 +171,7 @@ public class OrderServiceImpl implements OrderService {
         @Transactional
         public void deleteOrder(UUID orderId, String userEmail) {
                 User user = userRepository.findByEmail(userEmail)
-                                .orElseThrow(() -> new RuntimeException("User not found"));
+                                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
                 Order order = orderRepository.findByIdAndUserId(orderId, user.getId())
                                 .orElseThrow(() -> new RuntimeException("Order not found"));
