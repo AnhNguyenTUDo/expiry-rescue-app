@@ -47,7 +47,6 @@
           :total-savings="cartStore.totalSavings"
           :checkout-disabled="cartStore.selectedItems.length === 0"
           :checking-out="isCheckingOut"
-          :error="checkoutError"
           @checkout="handleCheckout"
         />
       </div>
@@ -125,7 +124,6 @@ const cancelRemove = () => {
 
 // Checkout handler
 const isCheckingOut = ref(false)
-const checkoutError = ref('')
 
 // Strip the backend's generic 500 prefix for a cleaner message (see deferred backend follow-up)
 const formatCheckoutError = (msg) =>
@@ -142,7 +140,6 @@ const handleCheckout = async () => {
   if (cartStore.selectedItems.length === 0) return
 
   isCheckingOut.value = true
-  checkoutError.value = ''
   orderStore.clearError()
   const startedAt = Date.now()
 
@@ -173,8 +170,7 @@ const handleCheckout = async () => {
   }
 
   // Failed: surface the reason and drop the overlay so the user can retry
-  checkoutError.value = formatCheckoutError(orderStore.error)
-  notify.error(checkoutError.value)
+  notify.error(formatCheckoutError(orderStore.error))
   isCheckingOut.value = false
 }
 </script>

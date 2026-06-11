@@ -18,8 +18,6 @@
         <span class="font-medium text-gray-800">Order #{{ order.orderNumber }}</span>
       </nav>
 
-      <ErrorAlert v-if="actionError" :error="actionError" class="mb-4" />
-
       <OrderDetailCard
         :order="order"
         @cancel="showCancelConfirm = true"
@@ -74,7 +72,6 @@ const order = computed(() => orderStore.currentOrder)
 
 const showCancelConfirm = ref(false)
 const showDeleteConfirm = ref(false)
-const actionError = ref('')
 
 onMounted(async () => {
   try {
@@ -86,27 +83,23 @@ onMounted(async () => {
 
 const confirmCancel = async () => {
   showCancelConfirm.value = false
-  actionError.value = ''
 
   try {
     await orderStore.cancelOrder(orderId)
     notify.success('Order cancelled.')
   } catch {
-    actionError.value = 'Could not cancel the order. Please try again.'
     notify.error('Could not cancel the order. Please try again.')
   }
 }
 
 const confirmDelete = async () => {
   showDeleteConfirm.value = false
-  actionError.value = ''
 
   try {
     await orderStore.deleteOrder(orderId)
     notify.success('Order removed from your history.')
     router.push('/orders')
   } catch {
-    actionError.value = 'Could not delete the order. Please try again.'
     notify.error('Could not delete the order. Please try again.')
   }
 }
