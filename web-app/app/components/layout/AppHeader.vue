@@ -10,30 +10,36 @@
         </NuxtLink>
 
         <!-- Supermarket Dropdown -->
-        <div class="relative">
+        <!-- <div class="relative">
           <SupermarketDropdown
             v-model="selectedSupermarket"
             :supermarkets="supermarkets"
             :current-supermarket-name="currentSupermarketName"
             @change="emit('supermarket-change')"
           />
-        </div>
+        </div> -->
       </div>
 
       <nav class="flex gap-3">
-        <NuxtLink
+        <!-- <NuxtLink
           to="/"
           class="flex items-center rounded-[10px] border border-gray-300 px-4 py-1.5 text-gray-700 transition hover:bg-gray-200"
           >Home</NuxtLink
-        >
+        > -->
         <!-- <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-gray-300 text-gray-700 hover:bg-gray-200">Products</button>
         <button class="px-4 py-1.5 flex items-center rounded-lg border transition border-gray-300 text-gray-700 hover:bg-gray-200">About</button> -->
         <NuxtLink
           to="/cart"
-          class="flex items-center rounded-[10px] border border-gray-300 px-4 py-1.5 text-gray-700 transition hover:bg-gray-200"
+          title="Cart"
+          class="relative flex items-center justify-center rounded-[10px] border border-gray-300 px-2 py-1.5 text-gray-500 transition hover:bg-gray-200"
         >
-          Cart
-          <span v-if="cartTotal > 0" class="ml-1">({{ cartTotal }})</span>
+          <SvgIcon name="icon-shopping-cart-outline" class="h-6 w-6 text-gray-500" />
+          <span
+            v-if="cartTotal > 0"
+            class="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-green-700 px-1 text-xs font-semibold text-white"
+          >
+            {{ cartTotal }}
+          </span>
         </NuxtLink>
         <!-- Profile Dropdown -->
         <ProfileDropdown />
