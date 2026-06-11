@@ -65,6 +65,7 @@ import OrderStatusTabs from '~/components/order/OrderStatusTabs.vue'
 import ConfirmModal from '~/components/ui/ConfirmModal.vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
+import { useNotify } from '~/composables/useNotify'
 import { useOrderStore } from '~/stores/order'
 
 definePageMeta({ middleware: 'auth' })
@@ -72,6 +73,7 @@ definePageMeta({ middleware: 'auth' })
 const route = useRoute()
 const router = useRouter()
 const orderStore = useOrderStore()
+const notify = useNotify()
 
 const statusTabs = [
   { value: 'CONFIRMED', label: 'Confirmed' },
@@ -101,6 +103,7 @@ const confirmDelete = async () => {
     await orderStore.deleteOrder(pendingDelete.value.id)
   } catch (error) {
     console.error('Failed to delete order:', error)
+    notify.error('Could not delete the order. Please try again.')
   } finally {
     pendingDelete.value = null
   }

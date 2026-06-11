@@ -34,6 +34,7 @@ import ProductCategorySection from '~/components/supermarket/product-list/Produc
 import SupermarketDetailHeader from '~/components/supermarket/product-list/SupermarketDetailHeader.vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
+import { useNotify } from '~/composables/useNotify'
 import ProductCategoryService from '~/services/product-category.service'
 import SupermarketService from '~/services/supermarket.service'
 import { calculateDaysUntil, formatDate } from '~/utils/date'
@@ -54,6 +55,7 @@ const error = ref(null)
 const expandedCategories = ref({})
 
 const headerShadow = useHeaderShadow()
+const notify = useNotify()
 
 const fetchSupermarketWithProducts = async () => {
   try {
@@ -136,6 +138,7 @@ const fetchCategories = async () => {
   try {
     const response = await ProductCategoryService.getAllCategories((err) => {
       console.error('Error fetching categories:', err)
+      notify.error('Could not load categories.')
     })
     if (response && response.data) {
       allCategories.value = response.data

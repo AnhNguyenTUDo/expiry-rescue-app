@@ -31,6 +31,7 @@ import SupermarketFilter from '@/components/supermarket/SupermarketFilter.vue'
 import SupermarketSection from '@/components/supermarket/SupermarketSection.vue'
 import ErrorAlert from '@/components/ui/ErrorAlert.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
+import { useNotify } from '~/composables/useNotify'
 import CityService from '~/services/city.service'
 import SupermarketService from '~/services/supermarket.service'
 import { useSupermarketStore } from '~/stores/supermarket'
@@ -42,6 +43,7 @@ const router = useRouter()
 const LOCATION_KEY = 'expiry_rescue_location'
 
 const supermarketStore = useSupermarketStore()
+const notify = useNotify()
 
 const showCityModal = ref(false)
 
@@ -88,6 +90,7 @@ const passesStatusFilter = (supermarket) => {
 const loadCities = async () => {
   const response = await CityService.getAllCities((err) => {
     console.error('Error fetching cities:', err)
+    notify.error('Could not load cities.')
   })
   if (response && response.data) cities.value = response.data
 }
@@ -99,6 +102,7 @@ const loadDistricts = async (cityId) => {
   }
   const response = await CityService.getDistrictsByCity(cityId, (err) => {
     console.error('Error fetching districts:', err)
+    notify.error('Could not load districts.')
   })
   if (response && response.data) districts.value = response.data
 }

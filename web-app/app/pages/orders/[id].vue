@@ -58,6 +58,7 @@ import OrderDetailCard from '~/components/order/OrderDetailCard.vue'
 import ConfirmModal from '~/components/ui/ConfirmModal.vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
+import { useNotify } from '~/composables/useNotify'
 import { useOrderStore } from '~/stores/order'
 
 definePageMeta({ middleware: 'auth' })
@@ -65,6 +66,7 @@ definePageMeta({ middleware: 'auth' })
 const route = useRoute()
 const router = useRouter()
 const orderStore = useOrderStore()
+const notify = useNotify()
 
 const orderId = route.params.id
 
@@ -88,8 +90,10 @@ const confirmCancel = async () => {
 
   try {
     await orderStore.cancelOrder(orderId)
+    notify.success('Order cancelled.')
   } catch {
     actionError.value = 'Could not cancel the order. Please try again.'
+    notify.error('Could not cancel the order. Please try again.')
   }
 }
 
@@ -99,9 +103,11 @@ const confirmDelete = async () => {
 
   try {
     await orderStore.deleteOrder(orderId)
+    notify.success('Order removed from your history.')
     router.push('/orders')
   } catch {
     actionError.value = 'Could not delete the order. Please try again.'
+    notify.error('Could not delete the order. Please try again.')
   }
 }
 </script>

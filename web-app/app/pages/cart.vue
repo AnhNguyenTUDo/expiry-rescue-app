@@ -84,18 +84,27 @@ import CartStoreGroup from '~/components/cart/CartStoreGroup.vue'
 import CartSummary from '~/components/cart/CartSummary.vue'
 import EmptyCart from '~/components/cart/EmptyCart.vue'
 import ConfirmModal from '~/components/ui/ConfirmModal.vue'
+import { useNotify } from '~/composables/useNotify'
 import { useCartStore } from '~/stores/cart'
 import { useOrderStore } from '~/stores/order'
 
 const cartStore = useCartStore()
 const orderStore = useOrderStore()
 const router = useRouter()
+const notify = useNotify()
 
 // Reconcile the persisted cart against live inventory when the page opens.
 // initCart is idempotent, so this safely hydrates even though the page mounts before the layout.
-onMounted(() => {
+onMounted(async () => {
   cartStore.initCart()
-  cartStore.refreshAvailability()
+  const { removed } = await cartStore.refreshAvailability()
+  if (removed > 0) {
+    notify.info(
+      `${removed} item${removed > 1 ? 's are' : ' is'} no longer available and ${
+        removed > 1 ? 'were' : 'was'
+      } removed from your cart.`
+    )
+  }
 })
 
 // Item pending removal confirmation (inventoryId, or null when no prompt)
@@ -158,12 +167,14 @@ const handleCheckout = async () => {
     // Success: clear bought items and land on the order page (the confirmation).
     // Keep the overlay up through navigation so the empty cart never flashes.
     cartStore.removeSelectedItems()
+    notify.success('Order placed successfully!')
     await router.push(`/orders/${order.id}`)
     return
   }
 
   // Failed: surface the reason and drop the overlay so the user can retry
   checkoutError.value = formatCheckoutError(orderStore.error)
+  notify.error(checkoutError.value)
   isCheckingOut.value = false
 }
 </script>

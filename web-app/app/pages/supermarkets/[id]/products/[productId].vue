@@ -189,6 +189,7 @@ import LoadingState from '~/components/ui/LoadingState.vue'
 import PriceBlock from '~/components/ui/PriceBlock.vue'
 import QuantityCounter from '~/components/ui/QuantityCounter.vue'
 import ShowMoreButton from '~/components/ui/ShowMoreButton.vue'
+import { useNotify } from '~/composables/useNotify'
 import ProductInventoryService from '~/services/product-inventory.service'
 import { useAuthStore } from '~/stores/auth'
 import { useCartStore } from '~/stores/cart'
@@ -202,6 +203,7 @@ const router = useRouter()
 const supermarketStore = useSupermarketStore()
 const cartStore = useCartStore()
 const authStore = useAuthStore()
+const notify = useNotify()
 
 const supermarketId = route.params.id
 const productMasterId = route.params.productId
@@ -232,7 +234,10 @@ const loadOtherLocations = async (page = 0) => {
       supermarketId,
       page,
       LOCATIONS_PAGE_SIZE,
-      (err) => console.error('Error fetching other locations:', err)
+      (err) => {
+        console.error('Error fetching other locations:', err)
+        notify.error('Could not load other locations.')
+      }
     )
     const paged = res?.data
     if (paged && Array.isArray(paged.content)) {
