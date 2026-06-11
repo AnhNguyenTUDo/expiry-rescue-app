@@ -1,7 +1,7 @@
 <template>
   <div>
     <LoadingState v-if="loading" message="Loading product details..." />
-    <ErrorAlert v-else-if="error" :error="error" />
+    <ErrorState v-else-if="error" :message="errorMessage" @retry="fetchProductInventory" />
 
     <!-- Product Details -->
     <div v-else-if="currentItem" class="mx-auto max-w-4xl">
@@ -183,12 +183,13 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import DropdownSelect from '~/components/ui/DropdownSelect.vue'
-import ErrorAlert from '~/components/ui/ErrorAlert.vue'
+import ErrorState from '~/components/ui/ErrorState.vue'
 import ExpiryBadge from '~/components/ui/ExpiryBadge.vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
 import PriceBlock from '~/components/ui/PriceBlock.vue'
 import QuantityCounter from '~/components/ui/QuantityCounter.vue'
 import ShowMoreButton from '~/components/ui/ShowMoreButton.vue'
+import { useNotify } from '~/composables/useNotify'
 import ProductInventoryService from '~/services/product-inventory.service'
 import { useAuthStore } from '~/stores/auth'
 import { useCartStore } from '~/stores/cart'
@@ -202,6 +203,7 @@ const router = useRouter()
 const supermarketStore = useSupermarketStore()
 const cartStore = useCartStore()
 const authStore = useAuthStore()
+const notify = useNotify()
 
 const supermarketId = route.params.id
 const productMasterId = route.params.productId
@@ -232,7 +234,10 @@ const loadOtherLocations = async (page = 0) => {
       supermarketId,
       page,
       LOCATIONS_PAGE_SIZE,
-      (err) => console.error('Error fetching other locations:', err)
+      (err) => {
+        console.error('Error fetching other locations:', err)
+        notify.error('Could not load other locations.')
+      }
     )
     const paged = res?.data
     if (paged && Array.isArray(paged.content)) {
@@ -255,6 +260,8 @@ const loadMoreLocations = () => {
 
 // Fetch this product's batches at the current supermarket, plus a summary of other locations
 const fetchProductInventory = async () => {
+  loading.value = true
+  error.value = null
   try {
     const response = await ProductInventoryService.getInventoryBySupermarketAndProductMaster(
       supermarketId,
@@ -303,6 +310,12 @@ const fetchProductInventory = async () => {
 const currentItem = computed(() => {
   return supermarketItems.value.find((item) => item.id === selectedInventoryItemId.value)
 })
+
+const errorMessage = computed(() =>
+  error.value === 'Product not found at this supermarket'
+    ? "This product isn't available at this supermarket."
+    : "We couldn't load this product right now. Please try again in a moment."
+)
 
 const productName = computed(() => {
   return currentItem.value?.productName || 'Unknown Product'

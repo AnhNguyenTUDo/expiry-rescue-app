@@ -38,10 +38,12 @@ import AuthDivider from '~/components/auth/AuthDivider.vue'
 import GoogleLoginButton from '~/components/auth/GoogleLoginButton.vue'
 import OtpCodeForm from '~/components/auth/OtpCodeForm.vue'
 import OtpEmailForm from '~/components/auth/OtpEmailForm.vue'
+import { useNotify } from '~/composables/useNotify'
 import { useAuthStore } from '~/stores/auth'
 
 const authStore = useAuthStore()
 const route = useRoute()
+const notify = useNotify()
 
 // Where to send the user after a successful login: the page the auth middleware
 // bounced them from (?redirect=...), or home. Only allow same-origin relative
@@ -91,8 +93,10 @@ const handleEmailSubmit = async (emailValue) => {
     await authStore.requestOtp(emailValue)
     step.value = 'code'
     startResendCooldown()
+    notify.success('Check your email for the verification code.')
   } catch (err) {
     otpError.value = err.message
+    notify.error(err.message)
   } finally {
     otpLoading.value = false
   }
@@ -103,9 +107,11 @@ const handleVerify = async (code) => {
   otpLoading.value = true
   try {
     await authStore.verifyOtp(otpEmail.value, code)
+    notify.success('Logged in successfully.')
     navigateTo(redirectTarget())
   } catch (err) {
     otpError.value = err.message
+    notify.error(err.message)
   } finally {
     otpLoading.value = false
   }
@@ -117,8 +123,10 @@ const handleResend = async () => {
   try {
     await authStore.requestOtp(otpEmail.value)
     startResendCooldown()
+    notify.success('A new code has been sent.')
   } catch (err) {
     otpError.value = err.message
+    notify.error(err.message)
   } finally {
     otpLoading.value = false
   }

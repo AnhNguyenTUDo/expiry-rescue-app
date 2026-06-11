@@ -1,7 +1,11 @@
 ﻿<template>
   <div>
     <LoadingState v-if="loading" message="Loading supermarket details..." />
-    <ErrorAlert v-else-if="error" :error="error" />
+    <ErrorState
+      v-else-if="error"
+      message="We couldn't load this supermarket right now. Please try again in a moment."
+      @retry="fetchSupermarketWithProducts"
+    />
 
     <!-- Supermarket Details -->
     <div v-else-if="supermarket">
@@ -32,8 +36,9 @@ import CategorySelector from '~/components/supermarket/product-list/product-filt
 import ProductListFilters from '~/components/supermarket/product-list/product-filter/ProductListFilters.vue'
 import ProductCategorySection from '~/components/supermarket/product-list/ProductCategorySection.vue'
 import SupermarketDetailHeader from '~/components/supermarket/product-list/SupermarketDetailHeader.vue'
-import ErrorAlert from '~/components/ui/ErrorAlert.vue'
+import ErrorState from '~/components/ui/ErrorState.vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
+import { useNotify } from '~/composables/useNotify'
 import ProductCategoryService from '~/services/product-category.service'
 import SupermarketService from '~/services/supermarket.service'
 import { calculateDaysUntil, formatDate } from '~/utils/date'
@@ -54,8 +59,11 @@ const error = ref(null)
 const expandedCategories = ref({})
 
 const headerShadow = useHeaderShadow()
+const notify = useNotify()
 
 const fetchSupermarketWithProducts = async () => {
+  loading.value = true
+  error.value = null
   try {
     const response = await SupermarketService.getSupermarketWithProducts(supermarketId, (err) => {
       console.error('Error fetching supermarket:', err)
@@ -136,6 +144,7 @@ const fetchCategories = async () => {
   try {
     const response = await ProductCategoryService.getAllCategories((err) => {
       console.error('Error fetching categories:', err)
+      notify.error('Could not load categories.')
     })
     if (response && response.data) {
       allCategories.value = response.data

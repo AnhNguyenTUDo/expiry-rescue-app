@@ -13,7 +13,12 @@
     />
 
     <LoadingState v-if="orderStore.loading" message="Loading orders..." />
-    <ErrorAlert v-else-if="orderStore.error" :error="orderStore.error" class="mb-4" />
+    <ErrorState
+      v-else-if="orderStore.error"
+      message="We couldn't load your orders right now. Please try again in a moment."
+      class="mb-4"
+      @retry="loadOrders"
+    />
 
     <!-- Orders List -->
     <div v-else-if="orderStore.orders.length > 0" class="space-y-4">
@@ -63,8 +68,9 @@ import { useRoute, useRouter } from 'vue-router'
 import OrderCard from '~/components/order/OrderCard.vue'
 import OrderStatusTabs from '~/components/order/OrderStatusTabs.vue'
 import ConfirmModal from '~/components/ui/ConfirmModal.vue'
-import ErrorAlert from '~/components/ui/ErrorAlert.vue'
+import ErrorState from '~/components/ui/ErrorState.vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
+import { useNotify } from '~/composables/useNotify'
 import { useOrderStore } from '~/stores/order'
 
 definePageMeta({ middleware: 'auth' })
@@ -72,6 +78,7 @@ definePageMeta({ middleware: 'auth' })
 const route = useRoute()
 const router = useRouter()
 const orderStore = useOrderStore()
+const notify = useNotify()
 
 const statusTabs = [
   { value: 'CONFIRMED', label: 'Confirmed' },
@@ -101,6 +108,7 @@ const confirmDelete = async () => {
     await orderStore.deleteOrder(pendingDelete.value.id)
   } catch (error) {
     console.error('Failed to delete order:', error)
+    notify.error('Could not delete the order. Please try again.')
   } finally {
     pendingDelete.value = null
   }

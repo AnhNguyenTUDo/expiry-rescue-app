@@ -3,7 +3,12 @@
     <h1 class="mb-6 text-3xl font-bold">Product Inventory</h1>
 
     <LoadingState v-if="loading" message="Loading inventories..." />
-    <ErrorAlert v-else-if="error" :error="error" class="mb-4" />
+    <ErrorState
+      v-else-if="error"
+      message="We couldn't load inventories right now. Please try again in a moment."
+      class="mb-4"
+      @retry="fetchInventories"
+    />
 
     <!-- Success State - Display Inventories -->
     <div v-else>
@@ -81,7 +86,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import ErrorAlert from '~/components/ui/ErrorAlert.vue'
+import ErrorState from '~/components/ui/ErrorState.vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
 import { useProductInventory } from '~/composables/useProductInventory'
 import { formatDate } from '~/utils/date'

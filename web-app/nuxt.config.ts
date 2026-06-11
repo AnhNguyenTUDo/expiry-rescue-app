@@ -4,7 +4,13 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['shadcn-nuxt', '@pinia/nuxt', 'nuxt-svg-sprite-icon', '@nuxt/eslint'],
+  modules: [
+    'shadcn-nuxt',
+    '@pinia/nuxt',
+    'nuxt-svg-sprite-icon',
+    '@nuxt/eslint',
+    'vue-sonner/nuxt',
+  ],
   css: ['./app/assets/css/main.css'],
   shadcn: {
     /**

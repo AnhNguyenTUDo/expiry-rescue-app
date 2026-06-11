@@ -3,8 +3,10 @@
     <!-- City selection modal (first visit) -->
     <CitySelectionModal :show="showCityModal" :cities="cities" @confirm="onLocationConfirmed" />
 
-    <!-- Filters -->
+    <!-- Filters: hidden until the first load succeeds (dropdowns would otherwise show
+         stale UUIDs with no options to map them) and hidden on error -->
     <SupermarketFilter
+      v-if="initialLoadDone && !error"
       v-model:city-id="selectedCityId"
       v-model:district-id="selectedDistrictId"
       v-model:status="selectedStatus"
@@ -15,11 +17,15 @@
       @district-change="onDistrictChange"
     />
 
-    <!-- Supermarkets Section -->
-    <SupermarketSection :district-sections="districtSections" />
-
-    <LoadingState v-if="loading" message="Loading..." />
-    <ErrorAlert v-else-if="error" :error="error" class="mt-8" @retry="loadSupermarkets" />
+    <!-- loading / error / the supermarkets section -->
+    <LoadingState v-if="loading || !initialLoadDone" message="Loading..." />
+    <ErrorState
+      v-else-if="error"
+      message="We couldn't load supermarkets right now. Please try again in a moment."
+      class="mt-8"
+      @retry="reload"
+    />
+    <SupermarketSection v-else :district-sections="districtSections" />
   </div>
 </template>
 
@@ -29,7 +35,7 @@ import { useRoute, useRouter } from 'vue-router'
 import CitySelectionModal from '@/components/home/CitySelectionModal.vue'
 import SupermarketFilter from '@/components/supermarket/SupermarketFilter.vue'
 import SupermarketSection from '@/components/supermarket/SupermarketSection.vue'
-import ErrorAlert from '@/components/ui/ErrorAlert.vue'
+import ErrorState from '@/components/ui/ErrorState.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import CityService from '~/services/city.service'
 import SupermarketService from '~/services/supermarket.service'
@@ -55,6 +61,8 @@ const searchQuery = ref('')
 
 const loading = ref(false)
 const error = ref(null)
+// Hide the filter during the initial load so its dropdowns don't flash stale values.
+const initialLoadDone = ref(false)
 
 // Dropdown options
 const cityOptions = computed(() => [
@@ -116,6 +124,13 @@ const loadSupermarkets = async () => {
   })
   if (response && response.data) supermarketStore.setSupermarkets(response.data)
   loading.value = false
+  initialLoadDone.value = true
+}
+
+const reload = async () => {
+  await loadCities()
+  if (selectedCityId.value !== 'all') await loadDistricts(selectedCityId.value)
+  await loadSupermarkets()
 }
 
 // Filter handlers

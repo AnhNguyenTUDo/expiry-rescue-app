@@ -167,7 +167,7 @@ export const useCartStore = defineStore('cart', () => {
    * transient network error).
    */
   async function refreshAvailability() {
-    if (cartItems.value.length === 0) return
+    if (cartItems.value.length === 0) return { removed: 0 }
 
     // Dedupe fetches by supermarket + product master (one request can cover many batches)
     const groups = new Map()
@@ -196,6 +196,7 @@ export const useCartStore = defineStore('cart', () => {
       })
     )
 
+    const before = cartItems.value.length
     cartItems.value = cartItems.value
       .map((item) => {
         const byId = liveByKey.get(`${item.supermarketId}:${item.productMasterId}`)
@@ -212,6 +213,9 @@ export const useCartStore = defineStore('cart', () => {
         }
       })
       .filter(Boolean)
+
+    // Report how many items were dropped so the page can notify the user
+    return { removed: before - cartItems.value.length }
   }
 
   return {

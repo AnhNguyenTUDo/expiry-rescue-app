@@ -81,17 +81,20 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useClickOutside } from '~/composables/useClickOutside'
+import { useNotify } from '~/composables/useNotify'
 import { useAuthStore } from '~/stores/auth'
 
 const isOpen = ref(false)
 const dropdownRef = ref(null)
 const authStore = useAuthStore()
 const router = useRouter()
+const notify = useNotify()
 
 const handleLogout = () => {
   authStore.logout()
   isOpen.value = false
   router.push('/')
+  notify.success('Logged out.')
 }
 
 useClickOutside(dropdownRef, () => {
