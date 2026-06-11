@@ -1,142 +1,116 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
-    <div class="mb-6 flex items-center justify-between">
+  <div class="mx-auto max-w-4xl">
+    <div class="mb-6">
       <h1 class="text-3xl font-bold text-gray-800">My Orders</h1>
-      <NuxtLink
-        to="/"
-        class="cursor-pointer rounded-lg bg-green-600 px-6 py-3 text-white transition hover:bg-green-700"
-      >
-        + New Order
-      </NuxtLink>
     </div>
 
-    <!-- Search & Filters -->
-    <div class="mb-6 rounded-lg bg-white p-4 shadow">
-      <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <!-- Search -->
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="🔍 Search order number, product, or supermarket..."
-          class="rounded-lg border border-gray-300 px-4 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500"
-          @input="handleSearch"
-        />
-
-        <!-- Status Filter -->
-        <select
-          v-model="statusFilter"
-          class="cursor-pointer rounded-lg border border-gray-300 px-4 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500"
-          @change="handleSearch"
-        >
-          <option value="">All Statuses</option>
-          <option value="CONFIRMED">✅ Confirmed</option>
-          <option value="CANCELLED">❌ Cancelled</option>
-        </select>
-
-        <!-- Clear Filters -->
-        <button
-          v-if="searchQuery || statusFilter"
-          class="cursor-pointer rounded-lg bg-gray-200 px-4 py-2 text-gray-700 transition hover:bg-gray-300"
-          @click="clearFilters"
-        >
-          Clear Filters
-        </button>
-      </div>
-    </div>
+    <!-- Status tabs -->
+    <OrderStatusTabs
+      v-model="activeStatus"
+      :options="statusTabs"
+      class="mb-6"
+      @update:model-value="onTabChange"
+    />
 
     <LoadingState v-if="orderStore.loading" message="Loading orders..." />
     <ErrorAlert v-else-if="orderStore.error" :error="orderStore.error" class="mb-4" />
 
     <!-- Orders List -->
     <div v-else-if="orderStore.orders.length > 0" class="space-y-4">
-      <div
+      <OrderCard
         v-for="order in orderStore.orders"
         :key="order.id"
-        class="cursor-pointer rounded-lg bg-white p-6 shadow transition hover:shadow-md"
-        @click="navigateTo(`/orders/${order.id}`)"
-      >
-        <div class="mb-2 flex items-start justify-between">
-          <div>
-            <h3 class="text-lg font-semibold text-gray-800">Order #{{ order.orderNumber }}</h3>
-            <p class="text-sm text-gray-600">{{ formatDate(order.createdAt) }}</p>
-          </div>
-          <span
-            class="rounded-full px-3 py-1 text-sm font-semibold"
-            :class="getStatusClass(order.status)"
-          >
-            {{ getStatusLabel(order.status) }}
-          </span>
-        </div>
-
-        <div class="mb-2 flex items-center justify-between text-sm text-gray-600">
-          <span>{{ order.itemCount }} {{ order.itemCount === 1 ? 'item' : 'items' }}</span>
-        </div>
-
-        <div class="text-xl font-bold text-green-600">
-          {{ formatPrice(order.totalAmount) }}
-        </div>
-      </div>
+        :order="order"
+        @delete="requestDelete"
+      />
     </div>
 
     <!-- Empty State -->
-    <div v-else class="rounded-lg bg-white py-12 text-center shadow">
+    <div v-else class="rounded-xl bg-white py-12 text-center shadow">
       <p class="mb-4 text-lg text-gray-500">
         {{
-          searchQuery || statusFilter
-            ? 'No orders found matching your filters'
-            : "You haven't placed any orders yet"
+          activeStatus === 'CANCELLED' ? 'No cancelled orders' : "You haven't placed any orders yet"
         }}
       </p>
-      <p v-if="!searchQuery && !statusFilter" class="mb-6 text-sm text-gray-400">
-        Browse expiring products at discounted prices!
-      </p>
-      <NuxtLink
-        to="/"
-        class="inline-block cursor-pointer rounded-lg bg-green-600 px-6 py-3 text-white transition hover:bg-green-700"
-      >
-        🛒 Start Shopping
-      </NuxtLink>
+      <template v-if="activeStatus !== 'CANCELLED'">
+        <p class="mb-6 text-sm text-gray-400">Browse expiring products at discounted prices!</p>
+        <NuxtLink
+          to="/"
+          class="inline-flex items-center gap-1.5 rounded-[11px] bg-green-700 px-6 py-3 font-semibold text-white transition hover:bg-green-800"
+        >
+          <SvgIcon name="icon-shopping-cart" class="h-4 w-4" />
+          Start Shopping
+        </NuxtLink>
+      </template>
     </div>
+
+    <ConfirmModal
+      :show="showDeleteConfirm"
+      title="Delete this order?"
+      message="This will remove the order from your history."
+      confirm-label="Delete Order"
+      cancel-label="Keep Order"
+      variant="danger"
+      @confirm="confirmDelete"
+      @cancel="showDeleteConfirm = false"
+    />
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import OrderCard from '~/components/order/OrderCard.vue'
+import OrderStatusTabs from '~/components/order/OrderStatusTabs.vue'
+import ConfirmModal from '~/components/ui/ConfirmModal.vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
 import { useOrderStore } from '~/stores/order'
-import { formatDateTime } from '~/utils/date'
-import { getStatusClass, getStatusLabel } from '~/utils/order'
-import { formatPrice } from '~/utils/price'
 
 definePageMeta({ middleware: 'auth' })
 
+const route = useRoute()
+const router = useRouter()
 const orderStore = useOrderStore()
 
-const searchQuery = ref('')
-const statusFilter = ref('')
+const statusTabs = [
+  { value: 'CONFIRMED', label: 'Confirmed' },
+  { value: 'CANCELLED', label: 'Cancelled' },
+]
 
-// Fetch orders on mount
-onMounted(async () => {
-  await orderStore.fetchUserOrders()
-})
+// Initialize the active tab from ?status=, falling back to Confirmed.
+const isValidStatus = (s) => statusTabs.some((t) => t.value === s)
+const activeStatus = ref(isValidStatus(route.query.status) ? route.query.status : 'CONFIRMED')
 
-// Handle search with debounce
-let searchTimeout
-const handleSearch = () => {
-  clearTimeout(searchTimeout)
-  searchTimeout = setTimeout(async () => {
-    await orderStore.searchOrders(statusFilter.value || null, searchQuery.value || null)
-  }, 300)
+const loadOrders = () => orderStore.searchOrders(activeStatus.value, null)
+
+// Delete (cancelled orders only)
+const showDeleteConfirm = ref(false)
+const pendingDelete = ref(null)
+
+const requestDelete = (order) => {
+  pendingDelete.value = order
+  showDeleteConfirm.value = true
 }
 
-// Clear all filters
-const clearFilters = async () => {
-  searchQuery.value = ''
-  statusFilter.value = ''
-  await orderStore.fetchUserOrders()
+const confirmDelete = async () => {
+  showDeleteConfirm.value = false
+  if (!pendingDelete.value) return
+
+  try {
+    await orderStore.deleteOrder(pendingDelete.value.id)
+  } catch (error) {
+    console.error('Failed to delete order:', error)
+  } finally {
+    pendingDelete.value = null
+  }
 }
 
-// Use formatDateTime for orders (includes time)
-const formatDate = formatDateTime
+// Reflect the active tab in the URL so refresh/share keeps it.
+const onTabChange = () => {
+  router.replace({ query: { ...route.query, status: activeStatus.value } })
+  loadOrders()
+}
+
+onMounted(loadOrders)
 </script>

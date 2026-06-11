@@ -30,12 +30,15 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     Optional<Order> findByIdAndUserId(UUID id, UUID userId);
 
     // Search orders by user ID with filters
+    // CAST(:searchQuery AS string) pins the bind type to varchar so a null search
+    // param doesn't get bound as bytea on PostgreSQL ("function lower(bytea) does
+    // not exist")
     @Query("SELECT DISTINCT o FROM Order o LEFT JOIN o.items oi WHERE o.user.id = :userId " +
            "AND (:status IS NULL OR o.status = :status) " +
            "AND (:searchQuery IS NULL OR " +
-           "     LOWER(o.orderNumber) LIKE LOWER(CONCAT('%', :searchQuery, '%')) OR " +
-           "     LOWER(oi.productName) LIKE LOWER(CONCAT('%', :searchQuery, '%')) OR " +
-           "     LOWER(oi.supermarketName) LIKE LOWER(CONCAT('%', :searchQuery, '%'))) " +
+           "     LOWER(o.orderNumber) LIKE LOWER(CONCAT('%', CAST(:searchQuery AS string), '%')) OR " +
+           "     LOWER(oi.productName) LIKE LOWER(CONCAT('%', CAST(:searchQuery AS string), '%')) OR " +
+           "     LOWER(oi.supermarketName) LIKE LOWER(CONCAT('%', CAST(:searchQuery AS string), '%'))) " +
            "ORDER BY o.createdAt DESC")
     List<Order> searchOrders(@Param("userId") UUID userId,
                             @Param("status") OrderStatus status,

@@ -1,108 +1,64 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
+  <div class="mx-auto max-w-4xl">
     <LoadingState v-if="orderStore.loading" message="Loading order details..." />
-    <ErrorAlert v-else-if="orderStore.error" :error="orderStore.error" class="mb-4">
+    <ErrorAlert v-else-if="orderStore.error && !order" :error="orderStore.error" class="mb-4">
       <NuxtLink to="/orders" class="mt-2 inline-block text-red-800 underline">
         ← Back to Orders
       </NuxtLink>
     </ErrorAlert>
 
     <!-- Order Details -->
-    <div v-else-if="order" class="space-y-6">
-      <!-- Header -->
-      <div class="rounded-lg bg-white p-6 shadow">
-        <div class="mb-4 flex items-start justify-between">
-          <div>
-            <h1 class="text-3xl font-bold text-gray-800">Order #{{ order.orderNumber }}</h1>
-            <p class="text-gray-600">Placed on {{ formatDate(order.createdAt) }}</p>
-          </div>
-          <span
-            class="rounded-full px-4 py-2 text-sm font-semibold"
-            :class="getStatusClass(order.status)"
-          >
-            {{ getStatusLabel(order.status) }}
-          </span>
-        </div>
+    <div v-else-if="order">
+      <!-- Breadcrumb navigation -->
+      <nav class="mb-4 flex items-center gap-1.5 text-sm text-gray-500">
+        <NuxtLink to="/" class="transition hover:text-green-700">Home</NuxtLink>
+        <span>/</span>
+        <NuxtLink to="/orders" class="transition hover:text-green-700">My Orders</NuxtLink>
+        <span>/</span>
+        <span class="font-medium text-gray-800">Order #{{ order.orderNumber }}</span>
+      </nav>
 
-        <div class="border-t pt-4">
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <p class="text-sm text-gray-600">Total Items</p>
-              <p class="text-lg font-semibold">{{ order.itemCount }}</p>
-            </div>
-            <div>
-              <p class="text-sm text-gray-600">Total Amount</p>
-              <p class="text-2xl font-bold text-green-600">
-                {{ formatPrice(order.totalAmount ?? 0) }}
-              </p>
-            </div>
-          </div>
-        </div>
+      <ErrorAlert v-if="actionError" :error="actionError" class="mb-4" />
 
-        <!-- Actions -->
-        <div class="mt-4 flex gap-3">
-          <button
-            v-if="order.status === 'CONFIRMED'"
-            class="cursor-pointer rounded-lg bg-red-600 px-6 py-2 text-white transition hover:bg-red-700"
-            @click="handleCancelOrder"
-          >
-            Cancel Order
-          </button>
-          <button
-            class="cursor-pointer rounded-lg bg-gray-500 px-6 py-2 text-white transition hover:bg-gray-600"
-            @click="handleDeleteOrder"
-          >
-            Delete Order
-          </button>
-        </div>
-      </div>
-
-      <!-- Order Items -->
-      <div class="rounded-lg bg-white p-6 shadow">
-        <h2 class="mb-4 text-2xl font-bold">Order Items</h2>
-        <div class="space-y-4">
-          <div v-for="item in order.items" :key="item.id" class="border-b pb-4 last:border-b-0">
-            <div class="flex items-start justify-between">
-              <div class="flex-1">
-                <h3 class="text-lg font-semibold text-gray-800">{{ item.productName }}</h3>
-                <p class="text-sm text-gray-600">{{ item.supermarketName }}</p>
-                <p class="text-sm text-gray-500">Expires: {{ formatDate(item.expiryDate) }}</p>
-              </div>
-              <div class="text-right">
-                <p class="text-gray-600">
-                  {{ item.quantity }} × {{ formatPrice(item.price ?? 0) }}
-                </p>
-                <p class="text-lg font-bold text-green-600">
-                  {{ formatPrice(item.subtotal ?? 0) }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Back Button -->
-      <div class="text-center">
-        <NuxtLink
-          to="/orders"
-          class="inline-block cursor-pointer rounded-lg bg-gray-500 px-6 py-3 text-white transition hover:bg-gray-600"
-        >
-          ← Back to Orders
-        </NuxtLink>
-      </div>
+      <OrderDetailCard
+        :order="order"
+        @cancel="showCancelConfirm = true"
+        @delete="showDeleteConfirm = true"
+      />
     </div>
+
+    <ConfirmModal
+      :show="showCancelConfirm"
+      title="Cancel this order?"
+      message="This will cancel your order and can't be undone."
+      confirm-label="Cancel Order"
+      cancel-label="Keep Order"
+      variant="danger"
+      @confirm="confirmCancel"
+      @cancel="showCancelConfirm = false"
+    />
+
+    <ConfirmModal
+      :show="showDeleteConfirm"
+      title="Delete this order?"
+      message="This will remove the order from your history."
+      confirm-label="Delete Order"
+      cancel-label="Keep Order"
+      variant="danger"
+      @confirm="confirmDelete"
+      @cancel="showDeleteConfirm = false"
+    />
   </div>
 </template>
 
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import OrderDetailCard from '~/components/order/OrderDetailCard.vue'
+import ConfirmModal from '~/components/ui/ConfirmModal.vue'
 import ErrorAlert from '~/components/ui/ErrorAlert.vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
 import { useOrderStore } from '~/stores/order'
-import { formatDateTime } from '~/utils/date'
-import { getStatusClass, getStatusLabel } from '~/utils/order'
-import { formatPrice } from '~/utils/price'
 
 definePageMeta({ middleware: 'auth' })
 
@@ -114,6 +70,10 @@ const orderId = route.params.id
 
 const order = computed(() => orderStore.currentOrder)
 
+const showCancelConfirm = ref(false)
+const showDeleteConfirm = ref(false)
+const actionError = ref('')
+
 onMounted(async () => {
   try {
     await orderStore.fetchOrderById(orderId)
@@ -122,29 +82,26 @@ onMounted(async () => {
   }
 })
 
-const handleCancelOrder = async () => {
-  if (!confirm('Are you sure you want to cancel this order?')) return
+const confirmCancel = async () => {
+  showCancelConfirm.value = false
+  actionError.value = ''
 
   try {
     await orderStore.cancelOrder(orderId)
-    alert('Order cancelled successfully')
-  } catch (error) {
-    alert('Failed to cancel order')
+  } catch {
+    actionError.value = 'Could not cancel the order. Please try again.'
   }
 }
 
-const handleDeleteOrder = async () => {
-  if (!confirm('Are you sure you want to delete this order? This action cannot be undone.')) return
+const confirmDelete = async () => {
+  showDeleteConfirm.value = false
+  actionError.value = ''
 
   try {
     await orderStore.deleteOrder(orderId)
-    alert('Order deleted successfully')
     router.push('/orders')
-  } catch (error) {
-    alert('Failed to delete order')
+  } catch {
+    actionError.value = 'Could not delete the order. Please try again.'
   }
 }
-
-// Use formatDateTime for orders (includes time)
-const formatDate = formatDateTime
 </script>

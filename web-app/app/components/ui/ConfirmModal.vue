@@ -10,7 +10,7 @@
         <div class="mt-6 flex justify-end gap-3">
           <button
             type="button"
-            class="cursor-pointer rounded-[10px] border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+            class="cursor-pointer rounded-[10px] border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
             @click="emit('cancel')"
           >
             {{ cancelLabel }}

@@ -19,6 +19,8 @@ public class OrderItemResponse {
     private String productName;
     private Integer quantity;
     private String unit;
+    private BigDecimal originalPrice;
+    private BigDecimal price;
     private BigDecimal subtotal;
     private UUID supermarketId;
     private String supermarketName;
