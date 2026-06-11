@@ -210,6 +210,8 @@ public class OrderServiceImpl implements OrderService {
                                 .productName(item.getProductName())
                                 .quantity(item.getQuantity())
                                 .unit(item.getUnit())
+                                .originalPrice(item.getOriginalPrice())
+                                .price(item.getPrice())
                                 .subtotal(item.getSubtotal())
                                 .supermarketId(item.getSupermarketId())
                                 .supermarketName(item.getSupermarketName())
