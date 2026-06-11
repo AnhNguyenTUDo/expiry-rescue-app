@@ -1,11 +1,21 @@
 <template>
   <div class="mx-auto max-w-4xl">
     <LoadingState v-if="orderStore.loading" message="Loading order details..." />
-    <ErrorAlert v-else-if="orderStore.error && !order" :error="orderStore.error" class="mb-4">
-      <NuxtLink to="/orders" class="mt-2 inline-block text-red-800 underline">
-        ← Back to Orders
-      </NuxtLink>
-    </ErrorAlert>
+    <ErrorState
+      v-else-if="orderStore.error && !order"
+      message="We couldn't load this order right now. Please try again in a moment."
+      class="mb-4"
+      @retry="loadOrder"
+    >
+      <div class="mt-4">
+        <NuxtLink
+          to="/orders"
+          class="text-sm text-gray-500 underline transition hover:text-green-700"
+        >
+          ← Back to Orders
+        </NuxtLink>
+      </div>
+    </ErrorState>
 
     <!-- Order Details -->
     <div v-else-if="order">
@@ -54,7 +64,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import OrderDetailCard from '~/components/order/OrderDetailCard.vue'
 import ConfirmModal from '~/components/ui/ConfirmModal.vue'
-import ErrorAlert from '~/components/ui/ErrorAlert.vue'
+import ErrorState from '~/components/ui/ErrorState.vue'
 import LoadingState from '~/components/ui/LoadingState.vue'
 import { useNotify } from '~/composables/useNotify'
 import { useOrderStore } from '~/stores/order'
@@ -73,13 +83,15 @@ const order = computed(() => orderStore.currentOrder)
 const showCancelConfirm = ref(false)
 const showDeleteConfirm = ref(false)
 
-onMounted(async () => {
+const loadOrder = async () => {
   try {
     await orderStore.fetchOrderById(orderId)
   } catch (error) {
     console.error('Failed to load order:', error)
   }
-})
+}
+
+onMounted(loadOrder)
 
 const confirmCancel = async () => {
   showCancelConfirm.value = false

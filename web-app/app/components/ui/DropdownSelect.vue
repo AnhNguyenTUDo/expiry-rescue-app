@@ -74,6 +74,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  placeholder: {
+    type: String,
+    default: '',
+  },
 })
 
 const emit = defineEmits(['update:modelValue', 'change'])
@@ -82,7 +86,7 @@ const isOpen = ref(false)
 const dropdownRef = ref(null)
 
 const selectedLabel = computed(
-  () => props.options.find((o) => o.value === props.modelValue)?.label ?? props.modelValue
+  () => props.options.find((o) => o.value === props.modelValue)?.label ?? props.placeholder
 )
 
 const select = (value) => {
