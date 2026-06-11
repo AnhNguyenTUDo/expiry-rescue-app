@@ -2,7 +2,7 @@
   <ul class="space-y-2">
     <li v-for="item in visibleItems" :key="item.id" class="flex items-center gap-3">
       <div
-        class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-gray-100"
+        class="flex h-11 w-11 shrink-0 items-center justify-center rounded-[8px] border border-gray-200 bg-gray-100"
       >
         <SvgIcon name="icon-products" class="h-5 w-5 text-gray-300" />
       </div>
@@ -13,7 +13,7 @@
     </li>
 
     <li v-if="remainingCount > 0" class="pl-14 text-sm text-gray-500">
-      +{{ remainingCount }} more {{ remainingCount === 1 ? 'item' : 'items' }}
+      +{{ remainingCount }} more {{ remainingCount === 1 ? 'product' : 'products' }}
     </li>
   </ul>
 </template>

@@ -1,6 +1,9 @@
 <template>
   <div class="flex flex-col gap-0.5">
-    <span class="font-bold text-green-700" :class="sizeClasses.selling">
+    <span
+      class="font-bold"
+      :class="[sizeClasses.selling, tone === 'neutral' ? 'text-gray-800' : 'text-green-700']"
+    >
       {{ formatPrice(sellingPrice) }}
     </span>
     <div class="flex items-center gap-2">
@@ -31,6 +34,12 @@ const props = defineProps({
     type: String,
     default: 'md',
     validator: (v) => ['sm', 'md'].includes(v),
+  },
+  // 'deal' = green selling price (browsing/cart); 'neutral' = black selling price
+  tone: {
+    type: String,
+    default: 'deal',
+    validator: (v) => ['deal', 'neutral'].includes(v),
   },
 })
 

@@ -19,7 +19,18 @@
         </div>
       </div>
 
-      <OrderStatusTag :status="order.status" />
+      <div class="flex items-center gap-2">
+        <OrderStatusTag :status="order.status" />
+        <button
+          v-if="order.status === 'CANCELLED'"
+          type="button"
+          class="cursor-pointer rounded-md border border-gray-400 p-1 text-gray-400 hover:border-red-600 hover:bg-red-50 hover:text-red-600"
+          aria-label="Delete order"
+          @click="emit('delete', order)"
+        >
+          <SvgIcon name="icon-trash-outline" class="h-4.5 w-4.5" />
+        </button>
+      </div>
     </div>
 
     <OrderItemList :items="order.items" class="mt-4" />
@@ -30,7 +41,7 @@
         <span class="text-base font-bold">{{ formatPrice(order.totalAmount) }}</span>
         <span class="ml-2"
           >·<span class="ml-2"
-            >{{ order.itemCount }} {{ order.itemCount === 1 ? 'item' : 'items' }}</span
+            >{{ order.itemCount }} {{ order.itemCount === 1 ? 'product' : 'products' }}</span
           ></span
         >
       </span>
@@ -56,4 +67,6 @@ defineProps({
     required: true,
   },
 })
+
+const emit = defineEmits(['delete'])
 </script>
