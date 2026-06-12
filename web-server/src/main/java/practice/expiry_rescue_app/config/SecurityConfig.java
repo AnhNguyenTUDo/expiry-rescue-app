@@ -58,6 +58,7 @@ public class SecurityConfig {
                                                                 "/",
                                                                 "/error",
                                                                 "/favicon.ico",
+                                                                "/api/v1/health",
                                                                 "/auth/**",
                                                                 "/oauth2/**")
                                                 .permitAll()
