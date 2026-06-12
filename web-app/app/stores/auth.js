@@ -179,5 +179,27 @@ export const useAuthStore = defineStore('auth', {
       await this.fetchUser()
       return true
     },
+
+    /**
+     * Demo-mode one-click login. Authenticates as the configured demo user.
+     * Throws an Error (with a user-facing message) on failure.
+     */
+    async demoLogin() {
+      let response
+      try {
+        response = await AuthService.demoLogin()
+      } catch (error) {
+        throw new Error(error.response?.data?.message || 'Demo login failed. Please try again.')
+      }
+
+      const token = response.data.data?.token
+      if (!token) {
+        throw new Error('Demo login failed. Please try again.')
+      }
+
+      this.setAuth(token)
+      await this.fetchUser()
+      return true
+    },
   },
 })

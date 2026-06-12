@@ -14,4 +14,10 @@ public interface PasswordlessAuthService {
      * (creating the user if they don't exist yet).
      */
     OtpTokenResponse verifyOtp(String email, String code);
+
+    /**
+     * Demo-mode shortcut: returns a JWT for the configured demo user without any OTP.
+     * Only available when app.demo.enabled is true.
+     */
+    OtpTokenResponse demoLogin();
 }

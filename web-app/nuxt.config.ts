@@ -32,6 +32,10 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE,
+      // Portfolio demo mode: shows a one-click "Demo Login" + a fixed-OTP hint on the login page.
+      demoEnabled: process.env.NUXT_PUBLIC_DEMO_ENABLED === 'true',
+      demoEmail: process.env.NUXT_PUBLIC_DEMO_EMAIL || 'demo@expiryrescue.app',
+      demoCode: process.env.NUXT_PUBLIC_DEMO_CODE || '000000',
     },
   },
   ssr: false,

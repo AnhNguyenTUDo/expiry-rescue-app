@@ -11,6 +11,7 @@ import practice.expiry_rescue_app.entity.OtpCode;
 import practice.expiry_rescue_app.entity.User;
 import practice.expiry_rescue_app.exception.InvalidCredentialsException;
 import practice.expiry_rescue_app.exception.TooManyRequestsException;
+import practice.expiry_rescue_app.exception.UnauthorizedException;
 import practice.expiry_rescue_app.model.auth.OtpTokenResponse;
 import practice.expiry_rescue_app.repository.OtpCodeRepository;
 import practice.expiry_rescue_app.repository.UserRepository;
@@ -44,6 +45,15 @@ public class PasswordlessAuthServiceImpl implements PasswordlessAuthService {
 
     @Value("${jwt.expiration}")
     private long jwtExpiration;
+
+    @Value("${app.demo.enabled}")
+    private boolean demoEnabled;
+
+    @Value("${app.demo.email}")
+    private String demoEmail;
+
+    @Value("${app.demo.code}")
+    private String demoCode;
 
     private final SecureRandom secureRandom = new SecureRandom();
 
@@ -82,6 +92,12 @@ public class PasswordlessAuthServiceImpl implements PasswordlessAuthService {
     public OtpTokenResponse verifyOtp(String email, String code) {
         String normalizedEmail = normalize(email);
 
+        // Demo mode: the configured demo account accepts a fixed code with no DB-backed OTP.
+        // Scoped to the demo email only, so this is never a blanket backdoor.
+        if (isDemoLogin(normalizedEmail, code)) {
+            return issueTokenFor(normalizedEmail);
+        }
+
         OtpCode otpCode = otpCodeRepository
                 .findTopByEmailAndConsumedAtIsNullOrderByCreatedAtDesc(normalizedEmail)
                 .orElseThrow(() -> new InvalidCredentialsException(GENERIC_INVALID));
@@ -107,11 +123,28 @@ public class PasswordlessAuthServiceImpl implements PasswordlessAuthService {
         otpCode.setConsumedAt(System.currentTimeMillis());
         otpCodeRepository.save(otpCode);
 
-        User user = userRepository.findByEmail(normalizedEmail)
-                .orElseGet(() -> createUser(normalizedEmail));
+        return issueTokenFor(normalizedEmail);
+    }
 
+    @Override
+    @Transactional
+    public OtpTokenResponse demoLogin() {
+        if (!demoEnabled) {
+            throw new UnauthorizedException("Demo login is not enabled.");
+        }
+        return issueTokenFor(normalize(demoEmail));
+    }
+
+    // True only when demo mode is on and the credentials match the configured demo account.
+    private boolean isDemoLogin(String normalizedEmail, String code) {
+        return demoEnabled && normalizedEmail.equals(normalize(demoEmail)) && demoCode.equals(code);
+    }
+
+    // Find-or-create the user for an email and mint a JWT for them.
+    private OtpTokenResponse issueTokenFor(String email) {
+        User user = userRepository.findByEmail(email).orElseGet(() -> createUser(email));
         String token = jwtTokenProvider.generateToken(user.getEmail());
-        log.info("Passwordless login succeeded for {}", normalizedEmail);
+        log.info("Passwordless login succeeded for {}", email);
         return new OtpTokenResponse(token, jwtExpiration);
     }
 

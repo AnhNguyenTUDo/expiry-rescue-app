@@ -4,6 +4,7 @@ export default {
       GET_CURRENT_USER: '/auth/me',
       PASSWORDLESS_REQUEST: '/auth/passwordless/request',
       PASSWORDLESS_VERIFY: '/auth/passwordless/verify',
+      PASSWORDLESS_DEMO: '/auth/passwordless/demo',
     },
     product_inventory: {
       GET_INVENTORY_BY_SUPERMARKET: (supermarketId) =>

@@ -34,4 +34,12 @@ public class PasswordlessAuthController {
         OtpTokenResponse response = passwordlessAuthService.verifyOtp(request.getEmail(), request.getCode());
         return ResponseEntity.ok(ApiResponse.success("Login successful", response));
     }
+
+    // One-click demo login (portfolio). No-op unless app.demo.enabled is true.
+    @PostMapping("/demo")
+    public ResponseEntity<ApiResponse<OtpTokenResponse>> demoLogin() {
+        log.info("Demo login requested");
+        OtpTokenResponse response = passwordlessAuthService.demoLogin();
+        return ResponseEntity.ok(ApiResponse.success("Demo login successful", response));
+    }
 }

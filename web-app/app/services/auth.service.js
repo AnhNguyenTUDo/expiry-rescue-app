@@ -18,6 +18,10 @@ class AuthService {
   verifyOtp(email, code) {
     return this.axios.post(urlConstants.endpoints.auth.PASSWORDLESS_VERIFY, { email, code })
   }
+
+  demoLogin() {
+    return this.axios.post(urlConstants.endpoints.auth.PASSWORDLESS_DEMO)
+  }
 }
 
 export default new AuthService()
