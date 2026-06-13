@@ -1,6 +1,7 @@
 package practice.expiry_rescue_app.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,6 +31,9 @@ public class SecurityConfig {
         private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
         private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+        @Value("${cors.allowed.origins}")
+        private String allowedOrigins;
+
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 http
@@ -54,6 +58,7 @@ public class SecurityConfig {
                                                                 "/",
                                                                 "/error",
                                                                 "/favicon.ico",
+                                                                "/api/v1/health",
                                                                 "/auth/**",
                                                                 "/oauth2/**")
                                                 .permitAll()
@@ -129,8 +134,12 @@ public class SecurityConfig {
         public CorsConfigurationSource corsConfigurationSource() {
                 CorsConfiguration configuration = new CorsConfiguration();
 
-                // Allow frontend origin
-                configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+                // Allow configured frontend origin(s)
+                configuration.setAllowedOrigins(
+                                Arrays.stream(allowedOrigins.split(","))
+                                                .map(String::trim)
+                                                .filter(origin -> !origin.isEmpty())
+                                                .toList());
 
                 // Allow common HTTP methods
                 configuration.setAllowedMethods(Arrays.asList(
