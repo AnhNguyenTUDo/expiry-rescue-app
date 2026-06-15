@@ -20,7 +20,7 @@
           v-for="option in options"
           :key="option.id"
           type="button"
-          class="cursor-pointer flex-col items-center gap-1.5 rounded-[10px] px-3 py-1.5 whitespace-nowrap transition-all duration-150"
+          class="w-44 shrink-0 cursor-pointer flex-col items-center gap-1.5 rounded-[10px] px-3 py-1.5 transition-all duration-150"
           :class="
             modelValue === option.id ? 'bg-green-50' : 'bg-white text-gray-700 hover:bg-gray-100'
           "
@@ -29,7 +29,7 @@
           <div class="flex justify-center">
             <SvgIcon name="icon-shopping-cart" class="h-10 w-10 text-gray-400" />
           </div>
-          <div class="flex items-center gap-1">
+          <div class="flex flex-wrap items-center justify-center gap-1 text-center">
             <span>{{ option.name }}</span>
             <span class="text-sm opacity-70">({{ option.count }})</span>
           </div>
