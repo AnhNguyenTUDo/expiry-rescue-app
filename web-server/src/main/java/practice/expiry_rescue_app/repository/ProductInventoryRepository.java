@@ -3,6 +3,7 @@ package practice.expiry_rescue_app.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -72,4 +73,10 @@ public interface ProductInventoryRepository extends BaseRepository<ProductInvent
             Pageable pageable);
 
     List<ProductInventory> findByExpiryDateBeforeAndDeletedAtIsNull(Long date);
+
+    // Demo refresh: re-anchor every seeded item's expiry to (now + its offset) in one bulk update.
+    @Modifying
+    @Query("UPDATE ProductInventory pi SET pi.expiryDate = :now + pi.expiryOffsetDays * :dayMs " +
+           "WHERE pi.expiryOffsetDays IS NOT NULL AND pi.deletedAt IS NULL")
+    int refreshExpiriesRelativeToNow(@Param("now") long now, @Param("dayMs") long dayMs);
 }

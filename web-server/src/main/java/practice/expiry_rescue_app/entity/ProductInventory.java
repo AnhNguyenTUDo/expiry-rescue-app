@@ -44,6 +44,11 @@ public class ProductInventory extends BaseEntity {
     @Column(nullable = false)
     private InventoryStatus status = InventoryStatus.AVAILABLE;
 
+    // Demo-only: the item's intended "days from now" expiry position. Lets a scheduled job
+    // re-anchor expiryDate to (now + offset) so the demo's "ending soon" data never goes stale.
+    // Null for real (non-demo) inventory.
+    private Integer expiryOffsetDays;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
     private Staff createdBy;
