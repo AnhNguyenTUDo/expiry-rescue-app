@@ -19,14 +19,14 @@
       </nav>
 
       <!-- Product Header with Image-->
-      <div class="mb-6 flex gap-4">
+      <div class="mb-6 flex flex-col gap-4 lg:flex-row">
         <!-- Product image-->
-        <div class="flex h-114 w-1/2 items-center justify-center rounded-lg bg-white p-8">
+        <div class="flex h-114 w-full items-center justify-center rounded-lg bg-white p-8 lg:w-1/2">
           <SvgIcon name="icon-products" class="h-full w-full object-contain text-gray-400" />
         </div>
 
         <!-- Right column -->
-        <div class="flex w-1/2 flex-col gap-4">
+        <div class="flex w-full flex-col gap-4 lg:w-1/2">
           <!-- Product Info -->
           <div class="rounded-lg bg-white p-5">
             <h1 class="mb-1 text-2xl font-semibold text-gray-800">{{ productName }}</h1>
@@ -80,12 +80,12 @@
                   "
                   @click="addToCart"
                 >
-                  <span class="flex items-center justify-center gap-2">
+                  <span class="flex items-center justify-center gap-2 whitespace-nowrap">
                     <SvgIcon
                       :name="
                         isInCart ? 'icon-check-circle-outline' : 'icon-shopping-basket-add-outline'
                       "
-                      class="h-6 w-6"
+                      class="h-6 w-6 shrink-0"
                     />
                     {{ isInCart ? 'Added to cart' : 'Add to cart' }}
                   </span>
