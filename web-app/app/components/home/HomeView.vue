@@ -17,8 +17,8 @@
       @district-change="onDistrictChange"
     />
 
-    <!-- loading / error / the supermarkets section -->
-    <LoadingState v-if="loading || !initialLoadDone" message="Loading..." />
+    <!-- loading / error / the supermarkets section (no spinner while the city modal is up) -->
+    <LoadingState v-if="(loading || !initialLoadDone) && !showCityModal" message="Loading..." />
     <ErrorState
       v-else-if="error"
       message="We couldn't load supermarkets right now. Please try again in a moment."
@@ -100,15 +100,27 @@ const loadCities = async () => {
   if (response && response.data) cities.value = response.data
 }
 
+// Returns true if the city is valid and its districts loaded; false if the city
+// no longer exists so callers can recover from a stale id.
 const loadDistricts = async (cityId) => {
   if (!cityId || cityId === 'all') {
     districts.value = []
-    return
+    return true
+  }
+  // Don't fire a request for a city that isn't in the loaded list
+  if (cities.value.length && !cities.value.some((c) => c.id === cityId)) {
+    districts.value = []
+    return false
   }
   const response = await CityService.getDistrictsByCity(cityId, (err) => {
     console.error('Error fetching districts:', err)
   })
-  if (response && response.data) districts.value = response.data
+  if (response && response.data) {
+    districts.value = response.data
+    return true
+  }
+  districts.value = []
+  return false
 }
 
 const loadSupermarkets = async () => {
@@ -265,10 +277,17 @@ watch([selectedCityId, selectedDistrictId, selectedStatus, searchQuery], syncUrl
 
 // Apply URL params to filter state and load data
 const applyUrlParams = async (query) => {
-  const cityId = query.city || 'all'
-  const districtId = query.district || 'all'
+  let cityId = query.city || 'all'
+  let districtId = query.district || 'all'
   const status = query.status || 'all'
   const search = query.search || ''
+
+  // Drop a stale city id from the URL to avoid requesting a city that no longer
+  // exists; syncUrl then cleans it out of the URL.
+  if (cityId !== 'all' && !cities.value.some((c) => c.id === cityId)) {
+    cityId = 'all'
+    districtId = 'all'
+  }
 
   selectedCityId.value = cityId
   selectedDistrictId.value = districtId
@@ -311,9 +330,14 @@ onMounted(async () => {
   const saved = localStorage.getItem(LOCATION_KEY)
   if (saved) {
     const { cityId, districtId } = JSON.parse(saved)
-    selectedCityId.value = cityId
-    selectedDistrictId.value = districtId
-    await loadDistricts(cityId)
+    // Skip a saved city that no longer exists to avoid a doomed request.
+    if (cities.value.some((c) => c.id === cityId)) {
+      selectedCityId.value = cityId
+      selectedDistrictId.value = districtId
+      await loadDistricts(cityId)
+    } else {
+      localStorage.removeItem(LOCATION_KEY) // stale saved city - drop it, show all supermarkets
+    }
     await loadSupermarkets()
   } else {
     showCityModal.value = true
